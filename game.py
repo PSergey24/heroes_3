@@ -17,6 +17,7 @@ class Field:
         self.corner = corner
         self.color = color
         self.bold = bold
+        self.is_engaged = False
         self.coordinates = None
         self.position = None
         self.surf = None
@@ -42,7 +43,7 @@ class Game:
 
         self.fields = []
 
-        self.left_team = [Angel(0, 0, 13), Angel(5, 7, 13), Angel(5, 8, 13), Elf(8, 6, 13)]
+        self.left_team = [Angel(0, 0, 41), Angel(0, 2, 59), Elf(0, 5, 59)]
         self.right_team = []
 
         self.bg = pygame.image.load(os.path.join("data/bg", "CmBkDrDd.bmp"))
@@ -65,13 +66,13 @@ class Game:
 
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     pos = pygame.mouse.get_pos()
-                    if coordinates := self.get_cell(pos):
-                        pass
+                    if position := self.get_cell(pos):
+                        self.update_character_info(position)
 
                 if event.type == pygame.MOUSEMOTION:
                     pos = pygame.mouse.get_pos()
-                    if coordinates := self.get_cell(pos):
-                        self.update_fields_info(coordinates)
+                    if position := self.get_cell(pos):
+                        self.update_fields_info(position)
 
             self.draw_fields()
             self.draw_characters()
@@ -89,17 +90,12 @@ class Game:
                 field = Field(copy(corner), self.COLOR_BORDER, self.bold)
                 field.coordinates = copy(self.get_coordinates(corner, 0))
                 field.position = copy(self.get_position(0))
-                field.surf = pygame.Surface((2 * (r + 2), 2 * (R + 2)), pygame.SRCALPHA)
-
-                # field.left = field.corner[1]
-                # field.right = field.corner[1] + r * 2
-                # field.top = field.corner[0]
-                # field.bottom = field.corner[0] + R * 2
+                field.surf = pygame.Surface((2 * (r + self.bold), 2 * (R + self.bold)), pygame.SRCALPHA)
                 row.append(field)
 
                 corner[1] += 2 * r
-            self.fields.append(row)
 
+            self.fields.append(row)
             corner[0] += 1.5 * R
             corner[1] = (corner[1] - self.n_columns * 2 * r) + x * r
             x *= (-1)
@@ -110,6 +106,13 @@ class Game:
                 if cell.left <= pos[0] < cell.right and cell.top <= pos[1] < cell.bottom:
                     return i, j
         return None
+
+    def update_character_info(self, position):
+        old_pos = self.left_team[0].position
+        if self.fields[position[0]][position[1]].is_engaged is False:
+            self.fields[old_pos[0]][old_pos[1]].is_engaged = False
+            self.left_team[0].position = position
+            self.fields[position[0]][position[1]].is_engaged = True
 
     def update_fields_info(self, coordinates):
         pos_x, pos_y = coordinates
@@ -156,9 +159,9 @@ class Game:
 
     def draw_characters(self):
         for item in self.left_team:
-            x, y = self.get_cell_center(item.position)
+            x, y = self.get_cell_corner(item.position)
             item.draw(self.screen, x, y)
 
-    def get_cell_center(self, position):
+    def get_cell_corner(self, position):
         field = self.fields[position[0]][position[1]]
         return field.corner[1], field.corner[0]

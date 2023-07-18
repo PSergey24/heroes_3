@@ -4,19 +4,30 @@ import pygame
 import math
 
 
+pygame.init()
+FONT = pygame.font.Font('data/fonts/Times New Roman Bold.ttf', 12)
+
+R = 35
+r = round(math.sqrt(3) * R / 2, 2)
+
+
 class Unit:
     img_standing = []
     img_size_x = None
     img_size_y = None
 
-    def __init__(self, x, y, count):
+    def __init__(self, i, j, count):
         self.count = count
-        self.position = [x, y]
+        self.position = [i, j]
+        self.attack = None
+        self.defense = None
+        self.damage = None
+        self.health = None
+        self.speed = None
 
         self.width = 64
         self.height = 64
         self.animation_count = 0
-        self.health = 1
         self.vel = 3
         self.path = []
         self.img = None
@@ -24,14 +35,27 @@ class Unit:
         self.move_count = 0
 
     def draw(self, screen, x, y):
+        self.draw_character(screen, x, y)
+        self.draw_character_count(screen, x, y)
+
+        # self.move()
+
+    def draw_character(self, screen, x, y):
         self.img = self.img_standing[self.animation_count]
         self.animation_count += 1
 
         if self.animation_count >= len(self.img_standing):
             self.animation_count = 0
 
-        screen.blit(self.img, (x - self.img_size_x/4, y - self.img_size_y * (1/2)))
-        # self.move()
+        screen.blit(self.img, (x - self.img_size_x / 4, y - self.img_size_y * (1 / 2)))
+
+    def draw_character_count(self, screen, x, y):
+        txt = FONT.render(str(self.count), True, (255, 255, 255))
+        pygame.draw.rect(screen, (67, 19, 104),
+                         (x + R * 2 - txt.get_height() * 2.3, y + r * 2 - txt.get_width() * 1.2, 50, 20))
+        pygame.draw.rect(screen, (255, 255, 255),
+                         (x + R * 2 - txt.get_height() * 2.3, y + r * 2 - txt.get_width() * 1.2, 50, 20), 1)
+        screen.blit(txt, (x + R * 2 - txt.get_height(), y + r * 2 - txt.get_width()))
 
     # def collide(self, X, Y):
     #     if self.x + self.width >= X >= self.x:
@@ -68,8 +92,14 @@ class Angel(Unit):
             unit = pygame.transform.scale(unit, (img_size_x, img_size_y))
             img_standing.append(unit)
 
-    def __init__(self, x, y, count):
-        super().__init__(x, y, count)
+    def __init__(self, i, j, count):
+        super().__init__(i, j, count)
+
+        self.attack = 20
+        self.defense = 20
+        self.damage = [50, 50]
+        self.health = 200
+        self.speed = 12
 
 
 class Elf(Unit):
@@ -83,8 +113,14 @@ class Elf(Unit):
             unit = pygame.transform.scale(unit, (img_size_x, img_size_y))
             img_standing.append(unit)
 
-    def __init__(self, x, y, count):
-        super().__init__(x, y, count)
+    def __init__(self, i, j, count):
+        super().__init__(i, j, count)
+
+        self.attack = 9
+        self.defense = 5
+        self.damage = [3, 5]
+        self.health = 15
+        self.speed = 6
 
 
 
