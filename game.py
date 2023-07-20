@@ -18,6 +18,7 @@ class Field:
         self.color = color
         self.bold = bold
         self.is_engaged = False
+        self.who_engaged = None
         self.coordinates = None
         self.position = None
         self.surf = None
@@ -43,7 +44,7 @@ class Game:
 
         self.fields = []
 
-        self.left_team = [Angel(0, 0, 41), Angel(0, 2, 59), Elf(0, 5, 59)]
+        self.left_team = [Elf(6, 5, 59), Angel(0, 0, 41), Angel(0, 2, 59)]
         self.right_team = []
 
         self.bg = pygame.image.load(os.path.join("data/bg", "CmBkDrDd.bmp"))
@@ -56,6 +57,7 @@ class Game:
 
         self.screen.blit(self.bg, (0, 0))
         self.create_fields()
+        self.create_characters()
 
         while run:
             self.screen.blit(self.bg, (0, 0))
@@ -100,6 +102,17 @@ class Game:
             corner[1] = (corner[1] - self.n_columns * 2 * r) + x * r
             x *= (-1)
 
+    def create_characters(self):
+        for i, character in enumerate(self.left_team):
+            position = character.position
+            self.fields[position[0]][position[1]].is_engaged = True
+            self.fields[position[0]][position[1]].who_engaged = self.left_team[i]
+
+        for i, character in enumerate(self.right_team):
+            position = character.position
+            self.fields[position[0]][position[1]].is_engaged = True
+            self.fields[position[0]][position[1]].who_engaged = self.right_team[i]
+
     def get_cell(self, pos):
         for i, row in enumerate(self.fields):
             for j, cell in enumerate(row):
@@ -111,8 +124,11 @@ class Game:
         old_pos = self.left_team[0].position
         if self.fields[position[0]][position[1]].is_engaged is False:
             self.fields[old_pos[0]][old_pos[1]].is_engaged = False
+            self.fields[old_pos[0]][old_pos[1]].who_engaged = None
+
             self.left_team[0].position = position
             self.fields[position[0]][position[1]].is_engaged = True
+            self.fields[position[0]][position[1]].who_engaged = self.left_team[0]
 
     def update_fields_info(self, coordinates):
         pos_x, pos_y = coordinates
@@ -126,6 +142,45 @@ class Game:
                     self.get_features(is_hover)
                 self.fields[i][j].coordinates = self.get_coordinates(self.fields[i][j].corner, 0)
                 self.fields[i][j].position = self.get_position(self.fields[i][j].indent)
+
+        if self.fields[pos_x][pos_y].is_engaged:
+            speed = self.fields[pos_x][pos_y].who_engaged.speed
+            res = self.get_way(pos_x, pos_y, speed)
+            for i, j in res:
+                self.fields[i][j].color = (40, 40, 40, 120)
+                self.fields[i][j].bold = 0
+                self.fields[i][j].indent = 6
+                self.fields[i][j].position = self.get_position(self.fields[i][j].indent)
+
+    def get_way(self, pos_x, pos_y, speed):
+        dp = {}
+
+        def dfs(i, j, cur_speed):
+            if i < 0 or i > self.n_rows - 1:
+                return
+            if j < 0 or j > self.n_columns - 1:
+                return
+            if cur_speed > speed:
+                return
+            if (i, j) in dp and cur_speed > dp[(i, j)]:
+                return
+
+            dp[(i, j)] = cur_speed
+
+            if i % 2 == 0:
+                dfs(i - 1, j - 1, cur_speed + 1)
+                dfs(i + 1, j - 1, cur_speed + 1)
+            else:
+                dfs(i - 1, j + 1, cur_speed + 1)
+                dfs(i + 1, j + 1, cur_speed + 1)
+
+            dfs(i, j + 1, cur_speed + 1)
+            dfs(i, j - 1, cur_speed + 1)
+            dfs(i - 1, j, cur_speed + 1)
+            dfs(i + 1, j, cur_speed + 1)
+
+        dfs(pos_x, pos_y, 0)
+        return dp.keys()
 
     def get_features(self, is_hover):
         if is_hover:
