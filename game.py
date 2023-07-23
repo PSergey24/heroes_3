@@ -3,7 +3,8 @@ import math
 from copy import copy
 import os
 
-from unit import Angel, Elf
+from unit import Angel, Elf, Lich, Mage
+from modules.dijkstra import Graph, Node
 
 
 R = 35
@@ -44,8 +45,8 @@ class Game:
 
         self.fields = []
 
-        self.left_team = [Elf(6, 5, 59), Angel(0, 2, 59)]
-        self.right_team = [Angel(0, 0, 41)]
+        self.left_team = []
+        self.right_team = [Lich(10, 14, 17, 2), Mage(8, 13, 3, 2)]
         self.move_order = []
 
         self.bg = pygame.image.load(os.path.join("data/bg", "CmBkDrDd.bmp"))
@@ -107,11 +108,13 @@ class Game:
     def create_characters(self):
         for i, character in enumerate(self.left_team):
             position = character.position
+            character.x, character.y = self.get_cell_corner(character.position)
             self.fields[position[0]][position[1]].is_engaged = True
             self.fields[position[0]][position[1]].who_engaged = self.left_team[i]
 
         for i, character in enumerate(self.right_team):
             position = character.position
+            character.x, character.y = self.get_cell_corner(character.position)
             self.fields[position[0]][position[1]].is_engaged = True
             self.fields[position[0]][position[1]].who_engaged = self.right_team[i]
 
@@ -133,18 +136,141 @@ class Game:
                     return i, j
         return None
 
-    def update_character_info(self, position):
-        old_pos = self.move_order[0].position
-        possible_ways = self.get_way(old_pos[0], old_pos[1], self.move_order[0].speed)
+    def update_character_info(self, new_point):
+        old_point = self.move_order[0].position
+        possible_ways = self.get_way(old_point[0], old_point[1], self.move_order[0].speed)
 
-        if self.fields[position[0]][position[1]].is_engaged is False and position in possible_ways:
-            self.fields[old_pos[0]][old_pos[1]].is_engaged = False
-            self.fields[old_pos[0]][old_pos[1]].who_engaged = None
+        if self.fields[new_point[0]][new_point[1]].is_engaged is False and new_point in possible_ways:
+            self.move_order[0].change_animation('moving')
+            self.generate_way(old_point, new_point)
+            self.update_engaged_points(old_point, new_point)
 
-            self.move_order[0].position = position
-            self.fields[position[0]][position[1]].is_engaged = True
-            self.fields[position[0]][position[1]].who_engaged = self.move_order[0]
             self.move_order.append(self.move_order.pop(0))
+
+    def generate_way(self, old_point, new_point):
+        self.move_order[0].is_animation = True
+        path = self.find_path(old_point, new_point)
+        for i in range(1, len(path), 1):
+            self.generate_steps(path[i - 1], path[i])
+
+    def find_path(self, old_point, new_point):
+        nodes = [Node(i * len(self.fields[0]) + j) for i in range(len(self.fields)) for j in range(len(self.fields[0]))]
+        w_graph = Graph.create_from_nodes(nodes)
+
+        for i in range(len(self.fields)):
+            for j in range(len(self.fields[0])):
+                idx = i * len(self.fields[0]) + j
+                nearest_fields = self.get_nearest_fields(i, idx)
+                if self.fields[i][j].is_engaged is False:
+                    for neighbour in nearest_fields:
+                        if 0 < neighbour < self.n_columns * self.n_rows:
+                            w_graph.connect(idx, neighbour, 1)
+
+        idx_old = old_point[0] * len(self.fields[0]) + old_point[1]
+        idx_new = new_point[0] * len(self.fields[0]) + new_point[1]
+
+        path = self.get_path(w_graph, idx_old, idx_new)
+        return [(item // self.n_columns, item % self.n_columns) for item in path]
+
+    def get_nearest_fields(self, i, idx):
+        return [idx - len(self.fields[0]) - 1, idx - len(self.fields[0]), idx - 1, idx + 1,
+                idx + len(self.fields[0]) - 1, idx + len(self.fields[0])] if i % 2 == 0 else \
+            [idx - len(self.fields[0]), idx - len(self.fields[0]) + 1, idx - 1, idx + 1,
+             idx + len(self.fields[0]), idx + len(self.fields[0]) + 1]
+
+    @staticmethod
+    def get_path(w_graph, idx_old, idx_new):
+        for (weight, node) in w_graph.dijkstra(idx_old):
+            path = [n.data for n in node]
+            if path[len(path) - 1] == idx_new and path[0] == idx_old:
+                return path
+
+    def generate_steps(self, old_point, new_point):
+        old = self.get_cell_corner(old_point)
+        new = self.get_cell_corner(new_point)
+
+        if int(old[1]) > int(new[1]) and int(old[0]) == int(new[0]):
+            self.move_order[0].direction = True
+            for y_ in range(int(old[1]), int(new[1]), -2):
+                self.move_order[0].path.append((old[0], y_))
+        elif int(old[1]) < int(new[1]) and int(old[0]) == int(new[0]):
+            self.move_order[0].direction = True
+            for y_ in range(int(old[1]), int(new[1]), 2):
+                self.move_order[0].path.append((old[0], y_))
+        elif int(old[1]) == int(new[1]) and int(old[0]) > int(new[0]):
+            print(3)
+            self.move_order[0].direction = True
+            for x_ in range(int(old[0]), int(new[0]), -2):
+                self.move_order[0].path.append((x_, old[1]))
+        elif int(old[1]) == int(new[1]) and int(old[0]) < int(new[0]):
+            print(4)
+            self.move_order[0].direction = False
+            for x_ in range(int(old[0]), int(new[0]), 2):
+                self.move_order[0].path.append((x_, old[1]))
+        elif int(old[1]) < int(new[1]) and int(old[0]) < int(new[0]):
+            print(5)
+            self.move_order[0].direction = False
+            x, y = int(old[0]), int(old[1])
+
+            while y < int(new[1]) and x < int(new[0]):
+                self.move_order[0].path.append((x, y))
+                x += 2
+                self.move_order[0].path.append((x, y))
+                y += 2
+            for x in range(x, int(new[0]), 2):
+                self.move_order[0].path.append((x, y))
+            for y in range(y, int(new[1]), 2):
+                self.move_order[0].path.append((x, y))
+        elif int(old[1]) >= int(new[1]) and int(old[0]) >= int(new[0]):
+            print(6)
+            self.move_order[0].direction = True
+            x, y = int(old[0]), int(old[1])
+
+            while y >= int(new[1]) and x >= int(new[0]):
+                self.move_order[0].path.append((x, y))
+                x += -2
+                self.move_order[0].path.append((x, y))
+                y += -2
+            for x in range(x, int(new[0]), -2):
+                self.move_order[0].path.append((x, y))
+            for y in range(y, int(new[1]), -2):
+                self.move_order[0].path.append((x, y))
+        elif int(old[1]) < int(new[1]) and int(old[0]) >= int(new[0]):
+            print(7)
+            self.move_order[0].direction = True
+            x, y = int(old[0]), int(old[1])
+
+            while y < int(new[1]) and x >= int(new[0]):
+                self.move_order[0].path.append((x, y))
+                x += -2
+                self.move_order[0].path.append((x, y))
+                y += 2
+            for x in range(x, int(new[0]), -2):
+                self.move_order[0].path.append((x, y))
+            for y in range(y, int(new[1]), 2):
+                self.move_order[0].path.append((x, y))
+        elif int(old[1]) >= int(new[1]) and int(old[0]) < int(new[0]):
+            print(8)
+            self.move_order[0].direction = False
+            x, y = int(old[0]), int(old[1])
+
+            while y >= int(new[1]) and x < int(new[0]):
+                self.move_order[0].path.append((x, y))
+                x += 2
+                self.move_order[0].path.append((x, y))
+                y += -2
+            for x in range(x, int(new[0]), 2):
+                self.move_order[0].path.append((x, y))
+            for y in range(y, int(new[1]), -2):
+                self.move_order[0].path.append((x, y))
+
+        self.move_order[0].position = new_point
+
+    def update_engaged_points(self, old_point, new_point):
+        self.fields[old_point[0]][old_point[1]].is_engaged = False
+        self.fields[old_point[0]][old_point[1]].who_engaged = None
+        self.fields[new_point[0]][new_point[1]].is_engaged = True
+        self.fields[new_point[0]][new_point[1]].who_engaged = self.move_order[0]
 
     def update_fields_info(self, position):
         pos_x, pos_y = position
@@ -240,13 +366,8 @@ class Game:
         return coordinates
 
     def draw_characters(self):
-        for item in self.left_team:
-            x, y = self.get_cell_corner(item.position)
-            item.draw(self.screen, x, y)
-
-        for item in self.right_team:
-            x, y = self.get_cell_corner(item.position)
-            item.draw(self.screen, x, y)
+        for item in self.left_team + self.right_team:
+            item.draw(self.screen)
 
     def get_cell_corner(self, position):
         field = self.fields[position[0]][position[1]]
