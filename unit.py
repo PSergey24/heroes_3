@@ -3,12 +3,7 @@ import os.path
 import pygame
 import math
 
-
-pygame.init()
-FONT = pygame.font.Font('data/fonts/Times New Roman Bold.ttf', 12)
-
-R = 35
-r = round(math.sqrt(3) * R / 2, 2)
+from modules.settings import Settings
 
 
 class Unit:
@@ -60,18 +55,15 @@ class Unit:
         screen.blit(self.img, (self.x - self.img_size_x / 4, self.y - self.img_size_y * (1 / 2)))
 
     def draw_character_count(self, screen):
-        txt = FONT.render(str(self.count), True, (255, 255, 255))
+        txt = Settings.FONT.render(str(self.count), True, (255, 255, 255))
         pygame.draw.rect(screen, (67, 19, 104),
-                         (self.x + R * 2 - txt.get_height() * 2.3, self.y + r * 2 - txt.get_width() * 1.2, 50, 20))
+                         (self.x + Settings.R * 2 - txt.get_height() * 2.3,
+                          self.y + Settings.r * 2 - txt.get_width() * 1.2, 50, 20))
         pygame.draw.rect(screen, (255, 255, 255),
-                         (self.x + R * 2 - txt.get_height() * 2.3, self.y + r * 2 - txt.get_width() * 1.2, 50, 20), 1)
-        screen.blit(txt, (self.x + R * 2 - txt.get_height(), self.y + r * 2 - txt.get_width()))
-
-    # def collide(self, X, Y):
-    #     if self.x + self.width >= X >= self.x:
-    #         if self.y + self.height >= Y >= self.y:
-    #             return True
-    #     return False
+                         (self.x + Settings.R * 2 - txt.get_height() * 2.3,
+                          self.y + Settings.r * 2 - txt.get_width() * 1.2, 50, 20), 1)
+        screen.blit(txt, (self.x + Settings.R * 2 - txt.get_height(),
+                          self.y + Settings.r * 2 - txt.get_width()))
 
     def move(self):
         x1, y1 = self.path[self.path_pos]
@@ -144,7 +136,7 @@ class Angel(Unit):
         self.standing = ["00", "51", "52", "53", "54", "53", "52", "51"]
 
         self.current_animation = []
-        self.img_size_x = 160
+        self.img_size_x = 140
         self.img_size_y = self.img_size_x / 1.125
 
         self.create_animation()
@@ -172,7 +164,7 @@ class Elf(Unit):
         self.standing = ["72", "48", "49", "50", "51", "50", "49", "48"]
 
         self.current_animation = []
-        self.img_size_x = 140
+        self.img_size_x = 120
         self.img_size_y = self.img_size_x / 1.125
 
         self.create_animation()
@@ -202,7 +194,7 @@ class Lich(Unit):
         self.moving = ["56", "57", "58", "59", "60", "61", "62", "63"]
 
         self.current_animation = []
-        self.img_size_x = 140
+        self.img_size_x = 120
         self.img_size_y = self.img_size_x / 1.125
 
         self.change_animation('standing')
@@ -223,7 +215,7 @@ class Mage(Unit):
         self.moving = ["56", "57", "58", "59", "60", "61", "62", "63"]
 
         self.img_standing = []
-        self.img_size_x = 140
+        self.img_size_x = 120
         self.img_size_y = self.img_size_x / 1.125
 
         self.change_animation('standing')
