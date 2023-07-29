@@ -7,7 +7,7 @@ pygame.init()
 class Settings:
     width: int = 1200
     height: int = 800
-    start_battle_filed = [100, 140]
+    start_battle_filed = [100, 160]
     n_columns: int = 15
     n_rows: int = 11
     R: int = 33
@@ -18,3 +18,15 @@ class Settings:
     COLOR_ACTIVE = (255, 215, 0)
     COLOR_POSSIBLE = (0, 0, 140, 60)
     FONT = pygame.font.Font('data/fonts/Times New Roman Bold.ttf', 12)
+
+    info_block_margin = 100
+    info_block_width = width - 2 * info_block_margin
+    info_block_height = 90
+    left_ib_width = 115
+    right_ib_width = 115
+    center_ib_width = width - (left_ib_width + right_ib_width) - 2 * info_block_margin
+
+    button_width = 44
+    button_height = 36
+    avatar_width = 58
+    avatar_height = 64

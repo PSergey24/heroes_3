@@ -26,6 +26,7 @@ class Unit:
         self.standing = None
         self.moving = None
 
+        self.avatar = None
         self.is_animation = False
         self.direction = True
         self.img = None
@@ -74,8 +75,13 @@ class Unit:
         self.move_count += 1
         dirn = (x2 - x1), (y2 - y1)
 
-        if not self.direction:
-            self.direction = True
+        if (not self.direction and self.team == 2) or (self.direction and self.team == 1):
+            if self.team == 2:
+                self.direction = True
+            if self.team == 1:
+                self.direction = False
+
+
             for i, img in enumerate(self.current_animation):
                 self.current_animation[i] = pygame.transform.flip(img, True, False)
 
@@ -127,6 +133,8 @@ class Angel(Unit):
     def __init__(self, i, j, count, team):
         super().__init__(i, j, count, team)
 
+        self.character = 'angel'
+        self.avatar = 'CPrL012C.bmp'
         self.attack = 20
         self.defense = 20
         self.damage = [50, 50]
@@ -156,6 +164,8 @@ class Elf(Unit):
     def __init__(self, i, j, count, team):
         super().__init__(i, j, count, team)
 
+        self.character = 'elf'
+        self.avatar = 'CPrL018R.bmp'
         self.attack = 9
         self.defense = 5
         self.damage = [3, 5]
@@ -185,6 +195,7 @@ class Lich(Unit):
         super().__init__(i, j, count, team)
 
         self.character = 'lich'
+        self.avatar = 'CPrL064N.bmp'
         self.attack = 13
         self.defense = 10
         self.damage = [11, 13]
@@ -206,6 +217,7 @@ class Mage(Unit):
         super().__init__(i, j, count, team)
 
         self.character = 'mage'
+        self.avatar = 'CPrL034T.bmp'
         self.attack = 11
         self.defense = 18
         self.damage = [7, 9]

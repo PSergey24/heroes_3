@@ -3,6 +3,7 @@ import os
 
 from modules.settings import Settings
 from modules.info_updater import InfoUpdater
+from modules.block_updater import BlockUpdater
 from unit import Angel, Elf, Lich, Mage
 
 
@@ -12,7 +13,7 @@ class Game:
         self.screen = pygame.display.set_mode((Settings.width, Settings.height))
         self.fields = []
 
-        self.left_team = []
+        self.left_team = [Lich(8, 3, 15, 1), Mage(2, 5, 6, 1)]
         self.right_team = [Lich(10, 14, 17, 2), Mage(8, 13, 3, 2)]
         self.move_order = []
 
@@ -20,23 +21,40 @@ class Game:
         self.bg = pygame.transform.scale(self.bg, (Settings.width, Settings.height))
 
         self.info_updater = InfoUpdater()
+        self.block_updater = BlockUpdater()
 
     def run(self):
         run = True
 
         self.screen.blit(self.bg, (0, 0))
         self.create_fields()
+
         self.create_characters()
         self.generate_move_order()
 
+
         while run:
             self.screen.blit(self.bg, (0, 0))
+
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     run = False
 
                 if event.type == pygame.MOUSEBUTTONDOWN:
+                    print(event.pos)
+
+                    # if self.rect_left.collidepoint(event.pos):
+                    #     print("left")
+
+                    # if self.rect_main.collidepoint(event.pos):
+                    #     print("main")
+                    #
+                    #     if self.rect_left.collidepoint(event.pos):
+                    #         print("left")
+                    #     else:
+                    #         print("not left")
+
                     pos = pygame.mouse.get_pos()
                     if position := self.get_cell(pos):
                         self.update_character_info(position)
@@ -48,12 +66,16 @@ class Game:
 
             self.draw_fields()
             self.draw_characters()
+            self.create_info_block()
 
             pygame.display.update()
         pygame.quit()
 
     def create_fields(self):
         self.fields = self.info_updater.create_fields(self.fields)
+
+    def create_info_block(self):
+        self.block_updater.create_info_block(self.screen, self.move_order)
 
     def create_characters(self):
         self.fields = self.info_updater.create_characters(self.fields, self.left_team)
