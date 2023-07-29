@@ -16,12 +16,13 @@ class Game:
         self.left_team = [Lich(8, 3, 15, 1), Mage(2, 5, 6, 1)]
         self.right_team = [Lich(10, 14, 17, 2), Mage(8, 13, 3, 2)]
         self.move_order = []
+        self.buttons = []
 
         self.bg = pygame.image.load(os.path.join("data/bg", "CmBkDrDd.bmp"))
         self.bg = pygame.transform.scale(self.bg, (Settings.width, Settings.height))
 
         self.info_updater = InfoUpdater()
-        self.block_updater = BlockUpdater()
+        self.block_updater = BlockUpdater(self.buttons)
 
     def run(self):
         run = True
@@ -32,30 +33,21 @@ class Game:
         self.create_characters()
         self.generate_move_order()
 
-
         while run:
             self.screen.blit(self.bg, (0, 0))
-
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     run = False
 
                 if event.type == pygame.MOUSEBUTTONDOWN:
-                    print(event.pos)
-
-                    # if self.rect_left.collidepoint(event.pos):
-                    #     print("left")
-
-                    # if self.rect_main.collidepoint(event.pos):
-                    #     print("main")
-                    #
-                    #     if self.rect_left.collidepoint(event.pos):
-                    #         print("left")
-                    #     else:
-                    #         print("not left")
-
                     pos = pygame.mouse.get_pos()
+
+                    for btn in self.buttons:
+                        if (btn.top <= pos[1] <= btn.top + btn.height) and (btn.left <= pos[0] <= btn.left + btn.width):
+                            btn.switch_image(btn.parent, btn.left, btn.top)
+                            # self.screen.blit(btn.surf, btn.rect)
+
                     if position := self.get_cell(pos):
                         self.update_character_info(position)
 

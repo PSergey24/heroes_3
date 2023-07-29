@@ -81,7 +81,6 @@ class Unit:
             if self.team == 1:
                 self.direction = False
 
-
             for i, img in enumerate(self.current_animation):
                 self.current_animation[i] = pygame.transform.flip(img, True, False)
 

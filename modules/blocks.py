@@ -71,3 +71,10 @@ class Img(Block):
                 surf = pygame.transform.scale(surf, (self.width, self.height))
                 self.images.append(surf)
         self.surf = self.images[0]
+
+    def switch_image(self, parent, left, top):
+        print("switch")
+        self.images.append(self.images.pop(0))
+        self.surf = self.images[0]
+        parent.surf.blit(self.surf, (left, top))
+

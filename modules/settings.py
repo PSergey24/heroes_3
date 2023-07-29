@@ -19,7 +19,7 @@ class Settings:
     COLOR_POSSIBLE = (0, 0, 140, 60)
     FONT = pygame.font.Font('data/fonts/Times New Roman Bold.ttf', 12)
 
-    info_block_margin = 100
+    info_block_margin = 126
     info_block_width = width - 2 * info_block_margin
     info_block_height = 90
     left_ib_width = 115
