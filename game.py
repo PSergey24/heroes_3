@@ -2,6 +2,7 @@ import pygame
 import os
 
 from modules.settings import Settings
+from modules.helper import Helper
 from modules.info_updater import InfoUpdater
 from modules.block_updater import BlockUpdater
 from unit import Angel, Elf, Lich, Mage
@@ -22,21 +23,26 @@ class Game:
         self.bg = pygame.image.load(os.path.join("data/bg", "CmBkDrDd.bmp"))
         self.bg = pygame.transform.scale(self.bg, (Settings.width, Settings.height))
 
+        self.helper = Helper()
         self.info_updater = InfoUpdater()
         self.block_updater = BlockUpdater(self.buttons)
+
+        self.round = 1
+        self.steps = 0
 
     def run(self):
         run = True
 
         self.screen.blit(self.bg, (0, 0))
-        self.create_fields()
 
+        self.create_fields()
         self.create_characters()
         self.generate_move_order()
         self.create_info_block()
 
         while run:
             self.screen.blit(self.bg, (0, 0))
+            self.reset_properties()
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -44,14 +50,13 @@ class Game:
 
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     pos = pygame.mouse.get_pos()
-
-                    for btn in self.buttons:
-                        if (btn.top <= pos[1] <= btn.top + btn.height) and (btn.left <= pos[0] <= btn.left + btn.width):
-                            self.block_updater.switch_button(btn)
+                    self.update_buttons_info(pos)
 
                     if position := self.get_cell(pos):
-                        self.update_character_info(position)
-                        self.update_avatars()
+                        if self.helper.is_correct_step(self.fields, self.move_order, position):
+                            self.update_character_info(position)
+                            self.update_avatars()
+                            self.update_properties()
 
                 if event.type == pygame.MOUSEMOTION:
                     pos = pygame.mouse.get_pos()
@@ -71,8 +76,27 @@ class Game:
     def create_info_block(self):
         self.divs = self.block_updater.create_info_block(self.move_order)
 
+    def reset_properties(self):
+        self.reset_steps()
+        # here reset characters
+
+    def reset_steps(self):
+        if self.steps >= len(self.move_order):
+            self.steps = 0
+
     def update_avatars(self):
         self.block_updater.update_avatars(self.move_order)
+
+    def update_properties(self):
+        self.update_steps(1)
+        self.update_rounds()
+
+    def update_steps(self, count):
+        self.steps += count
+
+    def update_rounds(self):
+        if self.steps >= len(self.move_order):
+            self.round += 1
 
     def create_characters(self):
         self.fields = self.info_updater.create_characters(self.fields, self.left_team)
@@ -87,6 +111,19 @@ class Game:
                 if cell.left <= pos[0] < cell.right and cell.top <= pos[1] < cell.bottom:
                     return i, j
         return None
+
+    def update_buttons_info(self, pos):
+        for btn in self.buttons:
+            if (btn.top <= pos[1] <= btn.top + btn.height) and (btn.left <= pos[0] <= btn.left + btn.width):
+                self.block_updater.switch_button(btn)
+                self.update_button_click(btn.name)
+
+    def update_button_click(self, btn):
+        if btn.name == 'wait':
+            self.update_steps(1)
+        if btn.name == 'defense':
+            self.update_steps(2)
+        self.update_rounds()
 
     def update_character_info(self, new_point):
         self.fields, self.move_order = self.info_updater.update_character_info(self.fields, self.move_order, new_point)

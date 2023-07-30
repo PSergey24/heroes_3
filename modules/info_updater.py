@@ -71,15 +71,10 @@ class InfoUpdater:
         return move_order
 
     def update_character_info(self, fields, move_order, new_point):
-        old_point = move_order[0].position
-        possible_ways = self.get_way(old_point[0], old_point[1], move_order[0].speed)
-
-        if fields[new_point[0]][new_point[1]].is_engaged is False and new_point in possible_ways:
-            move_order[0].change_animation('moving')
-            move_order = self.generate_way(fields, move_order, old_point, new_point)
-            fields = self.update_engaged_points(fields, move_order, old_point, new_point)
-
-            move_order.append(move_order.pop(0))
+        move_order[0].change_animation('moving')
+        move_order = self.generate_way(fields, move_order, move_order[0].position, new_point)
+        fields = self.update_engaged_points(fields, move_order, move_order[0].position, new_point)
+        move_order.append(move_order.pop(0))
         return fields, move_order
 
     @staticmethod

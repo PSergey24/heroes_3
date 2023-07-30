@@ -47,7 +47,7 @@ class BlockUpdater:
                            parent=self.right)
 
     def create_button(self, left, top, width, height, full_way, parent=None):
-        img = Img(left, top, width, height, parent=parent)
+        img = Img(left, top, width, height, parent=parent, name=full_way.split('/')[-1])
         img.create_img(full_way)
 
         if parent:
@@ -70,7 +70,7 @@ class BlockUpdater:
 
         box = self.create_div(left, 0, Settings.avatar_width, 80, color, parent=self.top_center)
 
-        img = Img(0, 0, height=Settings.avatar_height, width=Settings.avatar_width, parent=box)
+        img = Img(0, 0, height=Settings.avatar_height, width=Settings.avatar_width, parent=box, name=item.character)
         img.create_img(f"data/move_order/{item.avatar}")
         box.update_children(img)
 

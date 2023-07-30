@@ -21,6 +21,7 @@ class Unit:
         self.damage = None
         self.health = None
         self.speed = None
+        self.wait = False
 
         self.path = []
         self.standing = None

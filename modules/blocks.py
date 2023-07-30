@@ -5,8 +5,9 @@ from modules.settings import Settings
 
 class Block:
 
-    def __init__(self, left, top, width=None, height=None, parent=None):
+    def __init__(self, left, top, width=None, height=None, parent=None, name=None):
         self.parent = parent
+        self.name = name
         self.children = []
         self.width = width
         self.height = height
@@ -29,9 +30,10 @@ class Block:
 
 class Div(Block):
 
-    def __init__(self, left, top, width=None, height=None, parent=None):
-        super().__init__(left, top, width=width, height=height, parent=parent)
+    def __init__(self, left, top, width=None, height=None, parent=None, name=None):
+        super().__init__(left, top, width=width, height=height, parent=parent, name=None)
         self.parent = parent
+        self.name = name
         self.children = []
         self.width = width
         self.height = height
@@ -56,9 +58,10 @@ class Div(Block):
 
 class Img(Block):
 
-    def __init__(self, left, top, width=None, height=None, parent=None):
-        super().__init__(left, top, width=width, height=height, parent=parent)
+    def __init__(self, left, top, width=None, height=None, parent=None, name=None):
+        super().__init__(left, top, width=width, height=height, parent=parent, name=name)
         self.parent = parent
+        self.name = name
         self.children = []
         self.width = width
         self.height = height
@@ -87,9 +90,10 @@ class Img(Block):
 
 class Txt(Block):
 
-    def __init__(self, left, top, width=None, height=None, parent=None):
-        super().__init__(left, top, width=width, height=height, parent=parent)
+    def __init__(self, left, top, width=None, height=None, parent=None, name=None):
+        super().__init__(left, top, width=width, height=height, parent=parent, name=None)
         self.parent = parent
+        self.name = name
         self.children = []
         self.width = width
         self.height = height
