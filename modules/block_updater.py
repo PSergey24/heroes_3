@@ -1,5 +1,4 @@
-import pygame
-from modules.blocks import Div, Img
+from modules.blocks import Div, Img, Txt
 from modules.settings import Settings
 
 
@@ -15,7 +14,7 @@ class BlockUpdater:
         self.top_center = None
         self.bottom_center = None
 
-    def create_info_block(self, screen, move_order):
+    def create_info_block(self, move_order):
         self.main = self.create_div(Settings.info_block_margin, Settings.height - 130, Settings.info_block_width,
                                     Settings.info_block_height, (220, 200, 0, 80))
         self.left = self.create_div(0, 0, Settings.left_ib_width, Settings.info_block_height, (255, 255, 255, 80),
@@ -28,14 +27,8 @@ class BlockUpdater:
         self.bottom_center = self.create_div(0, 80, Settings.center_ib_width, 10, (0, 155, 0, 80), parent=self.center)
 
         self.create_buttons()
-        self.create_avatars(move_order)
-
-        self.center.surf.blit(self.top_center.surf, self.top_center.rect)
-        self.center.surf.blit(self.bottom_center.surf, self.bottom_center.rect)
-        self.main.surf.blit(self.right.surf, self.right.rect)
-        self.main.surf.blit(self.center.surf, self.center.rect)
-        self.main.surf.blit(self.left.surf, self.left.rect)
-        screen.blit(self.main.surf, self.main.rect)
+        self.update_avatars(move_order)
+        return self.main
 
     @staticmethod
     def create_div(left, top, width, height, color, parent=None):
@@ -56,13 +49,14 @@ class BlockUpdater:
     def create_button(self, left, top, width, height, full_way, parent=None):
         img = Img(left, top, width, height, parent=parent)
         img.create_img(full_way)
-        parent.surf.blit(img.surf, (left, top))
 
+        if parent:
+            parent.update_children(img)
         self.buttons.append(img)
 
-    def create_avatars(self, move_order):
+    def update_avatars(self, move_order):
         i = 0
-        for _ in range(4):
+        for _ in range(1):
             for a, item in enumerate(move_order):
                 self.create_avatar(i, item)
                 i += 1
@@ -70,19 +64,26 @@ class BlockUpdater:
     def create_avatar(self, idx, item):
         left = self.get_avatar_position(idx)
 
-        color = (255, 0, 0, 120)
+        color = (255, 0, 0)
         if item.team == 2:
-            color = (0, 0, 255, 120)
+            color = (0, 0, 255)
+
         box = self.create_div(left, 0, Settings.avatar_width, 80, color, parent=self.top_center)
 
-        img = Img(0, 0, height=Settings.avatar_height, width=Settings.avatar_width, parent=self.center)
+        img = Img(0, 0, height=Settings.avatar_height, width=Settings.avatar_width, parent=box)
         img.create_img(f"data/move_order/{item.avatar}")
-        box.surf.blit(img.surf, (0, 0))
+        box.update_children(img)
 
-        txt = Settings.FONT.render(str(item.count), True, (255, 255, 255))
-        box.surf.blit(txt, (25, 65))
+        bg = self.create_div(25, Settings.avatar_height, Settings.avatar_width, 16, color, parent=box)
+        box.update_children(bg)
 
-        self.top_center.surf.blit(box.surf, box.rect)
+        txt = Txt(25, Settings.avatar_height, height=16, width=Settings.avatar_width, parent=box)
+        txt.create_txt(str(item.count), (255, 255, 255))
+        box.update_children(txt)
 
     def get_avatar_position(self, idx):
-        return 0 if idx == 0 else idx * (self.top_center.children[-1].width + 2)
+        return 0 if idx == 0 else idx * self.top_center.children[-1].width
+
+    @staticmethod
+    def switch_button(btn):
+        btn.switch_image()

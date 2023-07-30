@@ -1,5 +1,6 @@
 import os
 import pygame
+from modules.settings import Settings
 
 
 class Block:
@@ -14,6 +15,7 @@ class Block:
         self.rect = None
         self.surf = None
         self.images = None
+        self.txt = None
 
     def get_left(self, left):
         return left + self.parent.left if self.parent is not None else left
@@ -48,6 +50,9 @@ class Div(Block):
         self.surf = pygame.Surface((self.width, self.height), pygame.SRCALPHA)
         self.surf.fill(color)
 
+    def draw(self):
+        self.parent.surf.blit(self.surf, self.rect)
+
 
 class Img(Block):
 
@@ -72,9 +77,30 @@ class Img(Block):
                 self.images.append(surf)
         self.surf = self.images[0]
 
-    def switch_image(self, parent, left, top):
-        print("switch")
+    def switch_image(self):
         self.images.append(self.images.pop(0))
         self.surf = self.images[0]
-        parent.surf.blit(self.surf, (left, top))
 
+    def draw(self):
+        self.parent.surf.blit(self.surf, (self.left - self.parent.left, self.top - self.parent.top))
+
+
+class Txt(Block):
+
+    def __init__(self, left, top, width=None, height=None, parent=None):
+        super().__init__(left, top, width=width, height=height, parent=parent)
+        self.parent = parent
+        self.children = []
+        self.width = width
+        self.height = height
+        self.left = self.get_left(left)
+        self.top = self.get_top(top)
+        self.surf = None
+        self.txt = None
+
+    def create_txt(self, text, color):
+        self.txt = text
+        self.surf = Settings.FONT.render(text, True, color)
+
+    def draw(self):
+        self.parent.surf.blit(self.surf, (self.left - self.parent.left, self.top - self.parent.top))

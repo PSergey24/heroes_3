@@ -16,6 +16,7 @@ class Game:
         self.left_team = [Lich(8, 3, 15, 1), Mage(2, 5, 6, 1)]
         self.right_team = [Lich(10, 14, 17, 2), Mage(8, 13, 3, 2)]
         self.move_order = []
+        self.divs = None
         self.buttons = []
 
         self.bg = pygame.image.load(os.path.join("data/bg", "CmBkDrDd.bmp"))
@@ -32,6 +33,7 @@ class Game:
 
         self.create_characters()
         self.generate_move_order()
+        self.create_info_block()
 
         while run:
             self.screen.blit(self.bg, (0, 0))
@@ -45,20 +47,20 @@ class Game:
 
                     for btn in self.buttons:
                         if (btn.top <= pos[1] <= btn.top + btn.height) and (btn.left <= pos[0] <= btn.left + btn.width):
-                            btn.switch_image(btn.parent, btn.left, btn.top)
-                            # self.screen.blit(btn.surf, btn.rect)
+                            self.block_updater.switch_button(btn)
 
                     if position := self.get_cell(pos):
                         self.update_character_info(position)
+                        self.update_avatars()
 
                 if event.type == pygame.MOUSEMOTION:
                     pos = pygame.mouse.get_pos()
                     if position := self.get_cell(pos):
                         self.update_fields_info(position)
 
+            self.draw_info_block()
             self.draw_fields()
             self.draw_characters()
-            self.create_info_block()
 
             pygame.display.update()
         pygame.quit()
@@ -67,7 +69,10 @@ class Game:
         self.fields = self.info_updater.create_fields(self.fields)
 
     def create_info_block(self):
-        self.block_updater.create_info_block(self.screen, self.move_order)
+        self.divs = self.block_updater.create_info_block(self.move_order)
+
+    def update_avatars(self):
+        self.block_updater.update_avatars(self.move_order)
 
     def create_characters(self):
         self.fields = self.info_updater.create_characters(self.fields, self.left_team)
@@ -101,3 +106,12 @@ class Game:
         for item in self.left_team + self.right_team:
             item.draw(self.screen)
 
+    def draw_info_block(self):
+        def draw_child(parent):
+            for child in parent.children:
+                draw_child(child)
+                if child.parent is not None:
+                    child.draw()
+
+        draw_child(self.divs)
+        self.screen.blit(self.divs.surf, self.divs.rect)
