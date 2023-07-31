@@ -21,7 +21,10 @@ class Unit:
         self.damage = None
         self.health = None
         self.speed = None
-        self.wait = False
+
+        # btn
+        self.btn_wait = False
+        self.btn_defense = False
 
         self.path = []
         self.standing = None

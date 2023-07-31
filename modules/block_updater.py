@@ -1,4 +1,4 @@
-from modules.blocks import Div, Img, Txt
+from modules.blocks import Div, ImgAvatar, ImgBtn, Txt
 from modules.settings import Settings
 
 
@@ -32,8 +32,7 @@ class BlockUpdater:
 
     @staticmethod
     def create_div(left, top, width, height, color, parent=None):
-        div = Div(left, top, width, height, parent=parent)
-        div.create_surf(color)
+        div = Div(left, top, width=width, height=height, parent=parent, color=color)
         if parent:
             parent.update_children(div)
         return div
@@ -47,8 +46,7 @@ class BlockUpdater:
                            parent=self.right)
 
     def create_button(self, left, top, width, height, full_way, parent=None):
-        img = Img(left, top, width, height, parent=parent, name=full_way.split('/')[-1])
-        img.create_img(full_way)
+        img = ImgBtn(left, top, width, height, parent=parent, way=full_way)
 
         if parent:
             parent.update_children(img)
@@ -70,8 +68,8 @@ class BlockUpdater:
 
         box = self.create_div(left, 0, Settings.avatar_width, 80, color, parent=self.top_center)
 
-        img = Img(0, 0, height=Settings.avatar_height, width=Settings.avatar_width, parent=box, name=item.character)
-        img.create_img(f"data/move_order/{item.avatar}")
+        img = ImgAvatar(0, 0, height=Settings.avatar_height, width=Settings.avatar_width, parent=box,
+                        name=item.character, way=f"data/move_order/{item.avatar}")
         box.update_children(img)
 
         bg = self.create_div(25, Settings.avatar_height, Settings.avatar_width, 16, color, parent=box)

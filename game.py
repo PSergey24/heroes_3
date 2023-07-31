@@ -43,6 +43,7 @@ class Game:
         while run:
             self.screen.blit(self.bg, (0, 0))
             self.reset_properties()
+            self.get_buttons_info()
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -78,11 +79,31 @@ class Game:
 
     def reset_properties(self):
         self.reset_steps()
-        # here reset characters
+        self.reset_buttons()
+        self.reset_characters()
+        print(self.steps, self.round)
 
     def reset_steps(self):
-        if self.steps >= len(self.move_order):
+        if self.steps >= len(self.move_order) * 2:
             self.steps = 0
+
+    def reset_buttons(self):
+        if self.steps == 0:
+            for btn in self.buttons:
+                self.block_updater.switch_button(btn)
+
+    def reset_characters(self):
+        if self.steps == 0:
+            for ch in self.move_order:
+                ch.btn_wait = False
+                ch.btn_defense = False
+
+    def get_buttons_info(self):
+        for btn in self.buttons:
+            if btn.name == 'wait' and self.move_order[0].btn_wait is False and btn.isActive is False:
+                self.block_updater.switch_button(btn)
+            if btn.name == 'defense' and self.move_order[0].btn_defense is False and btn.isActive is False:
+                self.block_updater.switch_button(btn)
 
     def update_avatars(self):
         self.block_updater.update_avatars(self.move_order)
@@ -95,7 +116,7 @@ class Game:
         self.steps += count
 
     def update_rounds(self):
-        if self.steps >= len(self.move_order):
+        if self.steps >= len(self.move_order) * 2:
             self.round += 1
 
     def create_characters(self):
@@ -115,14 +136,24 @@ class Game:
     def update_buttons_info(self, pos):
         for btn in self.buttons:
             if (btn.top <= pos[1] <= btn.top + btn.height) and (btn.left <= pos[0] <= btn.left + btn.width):
-                self.block_updater.switch_button(btn)
-                self.update_button_click(btn.name)
+                self.update_button_click(btn)
 
     def update_button_click(self, btn):
-        if btn.name == 'wait':
+        if btn.name == 'wait' and btn.isActive is True:
             self.update_steps(1)
-        if btn.name == 'defense':
-            self.update_steps(2)
+            self.move_order[0].btn_wait = True
+            self.move_order.append(self.move_order.pop(0))
+            self.block_updater.switch_button(btn)
+            self.update_avatars()
+        if btn.name == 'defense' and btn.isActive is True:
+            if self.move_order[0].btn_wait is True:
+                self.update_steps(1)
+            else:
+                self.update_steps(2)
+            self.move_order[0].btn_defense = True
+            self.move_order.append(self.move_order.pop(0))
+            self.block_updater.switch_button(btn)
+            self.update_avatars()
         self.update_rounds()
 
     def update_character_info(self, new_point):
