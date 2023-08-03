@@ -49,28 +49,31 @@ class Div(Block):
 
 class ImgBtn(Block):
 
-    def __init__(self, left, top, width=None, height=None, parent=None, way=None):
-        super().__init__(left, top, width=width, height=height, parent=parent)
+    def __init__(self, left, top, width=None, height=None, parent=None, name=None):
+        super().__init__(left, top, width=width, height=height, parent=parent, name=name)
         self.surf = None
-        self.images = []
+        self.isActive = True
+        self.activeImg = None
+        self.notActiveImg = None
+
+        self.create_img(name)
+
+    def create_img(self, name):
+        self.activeImg = pygame.image.load(os.path.join(f"data/buttons/clean/{name}1.bmp"))
+        self.activeImg = pygame.transform.scale(self.activeImg, (self.width, self.height))
+
+        self.notActiveImg = pygame.image.load(os.path.join(f"data/buttons/clean/{name}2.bmp"))
+        self.notActiveImg = pygame.transform.scale(self.notActiveImg, (self.width, self.height))
+
+        self.surf = self.activeImg
+
+    def switch_to_active(self):
+        self.surf = self.activeImg
         self.isActive = True
 
-        self.create_img(way)
-
-    def create_img(self, full_way):
-        way, self.name = "/".join(full_way.split('/')[:-1]), full_way.split('/')[-1]
-        files = sorted(os.listdir(way))
-        for file in files:
-            if self.name in file:
-                surf = pygame.image.load(os.path.join(f"{way}/{file}"))
-                surf = pygame.transform.scale(surf, (self.width, self.height))
-                self.images.append(surf)
-        self.surf = self.images[0]
-
-    def switch_image(self):
-        self.images.append(self.images.pop(0))
-        self.surf = self.images[0]
-        self.isActive = not self.isActive
+    def switch_to_not_active(self):
+        self.surf = self.notActiveImg
+        self.isActive = False
 
     def draw(self):
         self.parent.surf.blit(self.surf, (self.left - self.parent.left, self.top - self.parent.top))

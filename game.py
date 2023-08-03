@@ -1,10 +1,12 @@
 import pygame
 import os
+from copy import copy
 
 from modules.settings import Settings
 from modules.helper import Helper
 from modules.info_updater import InfoUpdater
 from modules.block_updater import BlockUpdater
+from modules.queue import Queue
 from unit import Angel, Elf, Lich, Mage
 
 
@@ -16,19 +18,19 @@ class Game:
 
         self.left_team = [Lich(8, 3, 15, 1), Mage(2, 5, 6, 1)]
         self.right_team = [Lich(10, 14, 17, 2), Mage(8, 13, 3, 2)]
-        self.move_order = []
+
         self.divs = None
         self.buttons = []
 
         self.bg = pygame.image.load(os.path.join("data/bg", "CmBkDrDd.bmp"))
         self.bg = pygame.transform.scale(self.bg, (Settings.width, Settings.height))
 
+        self.queue = None
         self.helper = Helper()
         self.info_updater = InfoUpdater()
         self.block_updater = BlockUpdater(self.buttons)
 
         self.round = 1
-        self.steps = 0
 
     def run(self):
         run = True
@@ -54,7 +56,7 @@ class Game:
                     self.update_buttons_info(pos)
 
                     if position := self.get_cell(pos):
-                        if self.helper.is_correct_step(self.fields, self.move_order, position):
+                        if self.helper.is_correct_step(self.fields, self.queue.current, position):
                             self.update_character_info(position)
                             self.update_avatars()
                             self.update_properties()
@@ -75,48 +77,49 @@ class Game:
         self.fields = self.info_updater.create_fields(self.fields)
 
     def create_info_block(self):
-        self.divs = self.block_updater.create_info_block(self.move_order)
+        self.divs = self.block_updater.create_info_block(self.queue, self.round)
 
     def reset_properties(self):
-        self.reset_steps()
         self.reset_buttons()
         self.reset_characters()
-        print(self.steps, self.round)
+        self.reset_queue()
 
-    def reset_steps(self):
-        if self.steps >= len(self.move_order) * 2:
-            self.steps = 0
+    def reset_queue(self):
+        if len(self.queue.current) == 0:
+            self.queue.current = copy(self.queue.original)
 
     def reset_buttons(self):
-        if self.steps == 0:
+        if len(self.queue.current) == 0:
             for btn in self.buttons:
-                self.block_updater.switch_button(btn)
+                self.block_updater.switch_btn_to_active(btn)
 
     def reset_characters(self):
-        if self.steps == 0:
-            for ch in self.move_order:
+        if len(self.queue.current) == 0:
+            for ch in self.queue.original:
                 ch.btn_wait = False
                 ch.btn_defense = False
 
     def get_buttons_info(self):
         for btn in self.buttons:
-            if btn.name == 'wait' and self.move_order[0].btn_wait is False and btn.isActive is False:
-                self.block_updater.switch_button(btn)
-            if btn.name == 'defense' and self.move_order[0].btn_defense is False and btn.isActive is False:
-                self.block_updater.switch_button(btn)
+            if btn.name == 'wait':
+                if self.queue.current[0].btn_wait is False:
+                    self.block_updater.switch_btn_to_active(btn)
+                else:
+                    self.block_updater.switch_btn_to_not_active(btn)
+            if btn.name == 'defense':
+                if self.queue.current[0].btn_defense is False:
+                    self.block_updater.switch_btn_to_active(btn)
+                else:
+                    self.block_updater.switch_btn_to_not_active(btn)
 
     def update_avatars(self):
-        self.block_updater.update_avatars(self.move_order)
+        self.block_updater.update_avatars(self.queue, self.round)
 
     def update_properties(self):
-        self.update_steps(1)
         self.update_rounds()
 
-    def update_steps(self, count):
-        self.steps += count
-
     def update_rounds(self):
-        if self.steps >= len(self.move_order) * 2:
+        if len(self.queue.current) == 0:
             self.round += 1
 
     def create_characters(self):
@@ -124,7 +127,8 @@ class Game:
         self.fields = self.info_updater.create_characters(self.fields, self.right_team)
 
     def generate_move_order(self):
-        self.move_order = self.info_updater.generate_move_order(self.move_order, self.left_team, self.right_team)
+        move_order = self.info_updater.generate_move_order(self.left_team, self.right_team)
+        self.queue = Queue(move_order)
 
     def get_cell(self, pos):
         for i, row in enumerate(self.fields):
@@ -140,27 +144,27 @@ class Game:
 
     def update_button_click(self, btn):
         if btn.name == 'wait' and btn.isActive is True:
-            self.update_steps(1)
-            self.move_order[0].btn_wait = True
-            self.move_order.append(self.move_order.pop(0))
-            self.block_updater.switch_button(btn)
+            self.queue.current[0].btn_wait = True
+            self.queue.current.insert(self.get_wait_index(), self.queue.current.pop(0))
             self.update_avatars()
         if btn.name == 'defense' and btn.isActive is True:
-            if self.move_order[0].btn_wait is True:
-                self.update_steps(1)
-            else:
-                self.update_steps(2)
-            self.move_order[0].btn_defense = True
-            self.move_order.append(self.move_order.pop(0))
-            self.block_updater.switch_button(btn)
+            self.queue.current[0].btn_defense = True
+            self.queue.current.pop(0)
             self.update_avatars()
         self.update_rounds()
 
+    def get_wait_index(self):
+        for i, item in reversed(list(enumerate(self.queue.current))):
+            if item.btn_wait is False:
+                return i
+        return 0
+
     def update_character_info(self, new_point):
-        self.fields, self.move_order = self.info_updater.update_character_info(self.fields, self.move_order, new_point)
+        self.fields, self.queue.current = self.info_updater.update_character_info(self.fields, self.queue.current,
+                                                                                  new_point)
 
     def update_fields_info(self, point_over):
-        self.fields = self.info_updater.update_fields_info(self.fields, self.move_order, point_over)
+        self.fields = self.info_updater.update_fields_info(self.fields, self.queue.current, point_over)
 
     def draw_fields(self):
         for i in range(len(self.fields)):

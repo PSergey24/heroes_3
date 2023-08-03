@@ -58,9 +58,11 @@ class InfoUpdater:
         return fields[position[0]][position[1]].corner[1], fields[position[0]][position[1]].corner[0]
 
     @staticmethod
-    def generate_move_order(move_order, left_team, right_team):
+    def generate_move_order(left_team, right_team):
         left = sorted(left_team, key=lambda x: (x.speed, x.position[0], x.position[1]), reverse=True)
         right = sorted(right_team, key=lambda x: (x.speed, x.position[0], x.position[1]), reverse=True)
+
+        move_order = []
         while left and right:
             if left[0].speed >= right[0].speed:
                 move_order.append(left.pop(0))
@@ -74,7 +76,8 @@ class InfoUpdater:
         move_order[0].change_animation('moving')
         move_order = self.generate_way(fields, move_order, move_order[0].position, new_point)
         fields = self.update_engaged_points(fields, move_order, move_order[0].position, new_point)
-        move_order.append(move_order.pop(0))
+        move_order[0].position = new_point
+        move_order.pop(0)
         return fields, move_order
 
     @staticmethod
@@ -196,7 +199,6 @@ class InfoUpdater:
             move_order[0].path.extend((x, y) for x in range(x, int(new[0]), 2))
             move_order[0].path.extend((x, y) for y in range(y, int(new[1]), -2))
 
-        move_order[0].position = new_point
         return move_order
 
     @staticmethod
