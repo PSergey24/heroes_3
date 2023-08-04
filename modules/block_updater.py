@@ -59,18 +59,20 @@ class BlockUpdater:
 
         for _ in range(4):
             if _ == 0:
-                for a, item in enumerate(queue.current):
-                    self.create_avatar(i, item)
-                    i += 1
+                i = self.create_avatars(i, queue.current)
             else:
-                for a, item in enumerate(queue.original):
-                    self.create_avatar(i, item)
-                    i += 1
+                i = self.create_avatars(i, queue.original)
 
             if i != 0:
                 self.create_avatar_round(i, r)
                 i += 1
             r += 1
+
+    def create_avatars(self, i, queue):
+        for a, item in enumerate(queue):
+            self.create_avatar(i, item)
+            i += 1
+        return i
 
     def create_avatar(self, idx, item):
         left = self.get_avatar_position(idx)
@@ -112,10 +114,41 @@ class BlockUpdater:
     def get_avatar_position(self, idx):
         return 0 if idx == 0 else idx * self.top_center.children[-1].width
 
-    @staticmethod
-    def switch_btn_to_active(btn):
-        btn.switch_to_active()
+    def reset_buttons(self):
+        for btn in self.buttons:
+            btn.switch_to_active()
+
+    def update_buttons(self, queue):
+        for btn in self.buttons:
+            if btn.name == 'wait':
+                if queue.current[0].btn_wait is False:
+                    btn.switch_to_active()
+                else:
+                    btn.switch_to_not_active()
+            if btn.name == 'defense':
+                if queue.current[0].btn_defense is False:
+                    btn.switch_to_active()
+                else:
+                    btn.switch_to_not_active()
+
+    def update_buttons_by_click(self, pos, queue, current_round):
+        for btn in self.buttons:
+            if (btn.top <= pos[1] <= btn.top + btn.height) and (btn.left <= pos[0] <= btn.left + btn.width):
+                self.update_button_by_click(btn, queue, current_round)
+
+    def update_button_by_click(self, btn, queue, current_round):
+        if btn.name == 'wait' and btn.isActive is True:
+            queue.current[0].btn_wait = True
+            queue.current.insert(self.get_wait_index(queue), queue.current.pop(0))
+            self.update_avatars(queue, current_round)
+        if btn.name == 'defense' and btn.isActive is True:
+            queue.current[0].btn_defense = True
+            queue.current.pop(0)
+            self.update_avatars(queue, current_round)
 
     @staticmethod
-    def switch_btn_to_not_active(btn):
-        btn.switch_to_not_active()
+    def get_wait_index(queue):
+        for i, item in reversed(list(enumerate(queue.current))):
+            if item.btn_wait is False:
+                return i
+        return 0

@@ -1,6 +1,5 @@
-import pygame
 import os
-from copy import copy
+import pygame
 
 from modules.settings import Settings
 from modules.helper import Helper
@@ -45,7 +44,7 @@ class Game:
         while run:
             self.screen.blit(self.bg, (0, 0))
             self.reset_properties()
-            self.get_buttons_info()
+            self.update_buttons()
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -53,13 +52,12 @@ class Game:
 
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     pos = pygame.mouse.get_pos()
-                    self.update_buttons_info(pos)
+                    self.update_buttons_by_click(pos)
 
                     if position := self.get_cell(pos):
                         if self.helper.is_correct_step(self.fields, self.queue.current, position):
                             self.update_character_info(position)
                             self.update_avatars()
-                            self.update_properties()
 
                 if event.type == pygame.MOUSEMOTION:
                     pos = pygame.mouse.get_pos()
@@ -76,52 +74,6 @@ class Game:
     def create_fields(self):
         self.fields = self.info_updater.create_fields(self.fields)
 
-    def create_info_block(self):
-        self.divs = self.block_updater.create_info_block(self.queue, self.round)
-
-    def reset_properties(self):
-        self.reset_buttons()
-        self.reset_characters()
-        self.reset_queue()
-
-    def reset_queue(self):
-        if len(self.queue.current) == 0:
-            self.queue.current = copy(self.queue.original)
-
-    def reset_buttons(self):
-        if len(self.queue.current) == 0:
-            for btn in self.buttons:
-                self.block_updater.switch_btn_to_active(btn)
-
-    def reset_characters(self):
-        if len(self.queue.current) == 0:
-            for ch in self.queue.original:
-                ch.btn_wait = False
-                ch.btn_defense = False
-
-    def get_buttons_info(self):
-        for btn in self.buttons:
-            if btn.name == 'wait':
-                if self.queue.current[0].btn_wait is False:
-                    self.block_updater.switch_btn_to_active(btn)
-                else:
-                    self.block_updater.switch_btn_to_not_active(btn)
-            if btn.name == 'defense':
-                if self.queue.current[0].btn_defense is False:
-                    self.block_updater.switch_btn_to_active(btn)
-                else:
-                    self.block_updater.switch_btn_to_not_active(btn)
-
-    def update_avatars(self):
-        self.block_updater.update_avatars(self.queue, self.round)
-
-    def update_properties(self):
-        self.update_rounds()
-
-    def update_rounds(self):
-        if len(self.queue.current) == 0:
-            self.round += 1
-
     def create_characters(self):
         self.fields = self.info_updater.create_characters(self.fields, self.left_team)
         self.fields = self.info_updater.create_characters(self.fields, self.right_team)
@@ -130,34 +82,34 @@ class Game:
         move_order = self.info_updater.generate_move_order(self.left_team, self.right_team)
         self.queue = Queue(move_order)
 
+    def create_info_block(self):
+        self.divs = self.block_updater.create_info_block(self.queue, self.round)
+
+    def reset_properties(self):
+        if len(self.queue.current) == 0:
+            self.block_updater.reset_buttons()
+            self.queue.reset_characters()
+            self.queue.reset_queue()
+            self.update_rounds()
+
+    def update_rounds(self):
+        self.round += 1
+
+    def update_buttons(self):
+        self.block_updater.update_buttons(self.queue)
+
+    def update_buttons_by_click(self, pos):
+        self.block_updater.update_buttons_by_click(pos, self.queue, self.round)
+
+    def update_avatars(self):
+        self.block_updater.update_avatars(self.queue, self.round)
+
     def get_cell(self, pos):
         for i, row in enumerate(self.fields):
             for j, cell in enumerate(row):
                 if cell.left <= pos[0] < cell.right and cell.top <= pos[1] < cell.bottom:
                     return i, j
         return None
-
-    def update_buttons_info(self, pos):
-        for btn in self.buttons:
-            if (btn.top <= pos[1] <= btn.top + btn.height) and (btn.left <= pos[0] <= btn.left + btn.width):
-                self.update_button_click(btn)
-
-    def update_button_click(self, btn):
-        if btn.name == 'wait' and btn.isActive is True:
-            self.queue.current[0].btn_wait = True
-            self.queue.current.insert(self.get_wait_index(), self.queue.current.pop(0))
-            self.update_avatars()
-        if btn.name == 'defense' and btn.isActive is True:
-            self.queue.current[0].btn_defense = True
-            self.queue.current.pop(0)
-            self.update_avatars()
-        self.update_rounds()
-
-    def get_wait_index(self):
-        for i, item in reversed(list(enumerate(self.queue.current))):
-            if item.btn_wait is False:
-                return i
-        return 0
 
     def update_character_info(self, new_point):
         self.fields, self.queue.current = self.info_updater.update_character_info(self.fields, self.queue.current,
