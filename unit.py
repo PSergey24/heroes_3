@@ -48,7 +48,7 @@ class Unit:
         self.direction = True
         self.img = None
         self.list_animations = []
-        # self.current_animation = []
+
         self.animation_count = 0
         self.path_pos = 0
         self.move_count = 0
@@ -99,14 +99,7 @@ class Unit:
         self.move_count += 1
         dirn = (x2 - x1), (y2 - y1)
 
-        if (not self.direction and self.team == 2) or (self.direction and self.team == 1):
-            if self.team == 2:
-                self.direction = True
-            if self.team == 1:
-                self.direction = False
-
-            for i, img in enumerate(self.list_animations[0].animation):
-                self.list_animations[0].animation[i] = pygame.transform.flip(img, True, False)
+        self.change_direction()
 
         move_x, move_y = (self.x + dirn[0] * self.move_count, self.y + dirn[1] * self.move_count)
         self.dis += math.sqrt((move_x - x1) ** 2 + (move_y - y1) ** 2)
@@ -118,16 +111,19 @@ class Unit:
 
             if self.path_pos == len(self.path) - 1:
                 self.list_animations.pop(0)
-                self.x = x2
-                self.y = y2
 
         self.x = x2
         self.y = y2
 
-    def hit(self):
-        self.health -= 1
-        if self.health <= 0:
-            return True
+    def change_direction(self):
+        if (not self.direction and self.team == 2) or (self.direction and self.team == 1):
+            if self.team == 2:
+                self.direction = True
+            if self.team == 1:
+                self.direction = False
+
+            for i, img in enumerate(self.list_animations[0].animation):
+                self.list_animations[0].animation[i] = pygame.transform.flip(img, True, False)
 
     def change_animation(self, animation):
         self.animation_count = 0

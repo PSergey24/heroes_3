@@ -30,6 +30,8 @@ class Game:
         self.info_updater = InfoUpdater()
         self.block_updater = BlockUpdater(self.buttons)
 
+        self.point_attack = None
+        self.whom_attack = None
         self.round = 1
 
     def run(self):
@@ -62,11 +64,12 @@ class Game:
                     self.update_buttons_by_click(pos)
 
                     if position := self.get_cell(pos):
-                        if action := self.helper.is_correct_step(self.fields, self.queue.current, position):
+                        if action := self.helper.is_correct_step(self.fields, self.queue.current, position, self.whom_attack):
                             print(f"action: {action}")
                             self.update_character_info(position, action)
                             self.update_avatars()
 
+            # print(self.point_attack, self.whom_attack)
             self.draw_info_block()
             self.draw_fields()
             self.draw_characters()
@@ -124,17 +127,17 @@ class Game:
             self.fields, self.queue.current = self.info_updater.update_character_position(self.fields,
                                                                                           self.queue.current, new_point)
             self.queue.current[0].change_animation('standing')
-            self.queue.current.pop(0)
         if action == 'attack_straight':
             self.queue.current[0].change_animation('moving')
             self.fields, self.queue.current = self.info_updater.update_character_position(self.fields,
-                                                                                          self.queue.current, new_point)
+                                                                                          self.queue.current, self.point_attack)
             self.queue.current[0].change_animation('attack_straight')
             self.queue.current[0].change_animation('standing')
-            self.queue.current.pop(0)
+
+        self.queue.current.pop(0)
 
     def update_cursor_info(self, point_over, coordinates):
-        self.info_updater.update_cursor_info(self.fields, point_over, self.cursor, coordinates)
+        self.point_attack, self.whom_attack = self.info_updater.update_cursor_info(self.fields, self.queue.current, point_over, self.cursor, coordinates)
 
     def update_fields_info(self, point_over):
         self.fields = self.info_updater.update_fields_info(self.fields, self.queue.current, point_over)

@@ -217,50 +217,77 @@ class InfoUpdater:
         return fields
 
     @staticmethod
-    def update_cursor_info(fields, point_over, cursor, coordinates):
+    def update_cursor_info(fields, move_order, point_over, cursor, coordinates):
         pos_x, pos_y = point_over
+        point_attack = None
+        whom_attack = None
 
         if Settings.n_rows - 1 > pos_x >= 0 and Settings.n_columns - 1 > pos_y >= 0:
             if pos_x % 2 == 0:
-                if fields[pos_x - 1][pos_y].is_engaged:
+                if fields[pos_x - 1][pos_y].is_engaged and fields[pos_x - 1][pos_y].who_engaged.team != move_order[0].team:
                     if fields[pos_x - 1][pos_y].bottom + Settings.R / 2 > coordinates[1]:
-                        cursor = pygame.image.load(os.path.join(f"data/rcom/clean/Crcom015.png"))
-                if fields[pos_x - 1][pos_y - 1].is_engaged:
+                        point_attack = [pos_x, pos_y]
+                        whom_attack = fields[pos_x - 1][pos_y].who_engaged
+                        cursor = pygame.image.load(os.path.join(f"data/rcom/clean/Crcom016.png"))
+                if fields[pos_x - 1][pos_y - 1].is_engaged and fields[pos_x - 1][pos_y - 1].who_engaged.team != move_order[0].team:
                     if fields[pos_x - 1][pos_y - 1].bottom + Settings.R / 2 > coordinates[1]:
+                        point_attack = [pos_x, pos_y]
+                        whom_attack = fields[pos_x - 1][pos_y - 1].who_engaged
                         cursor = pygame.image.load(os.path.join(f"data/rcom/clean/Crcom022.png"))
-                if fields[pos_x][pos_y - 1].is_engaged:
+                if fields[pos_x][pos_y - 1].is_engaged and fields[pos_x][pos_y - 1].who_engaged.team != move_order[0].team:
                     if fields[pos_x][pos_y - 1].right + Settings.r > coordinates[0]:
+                        point_attack = [pos_x, pos_y]
+                        whom_attack = fields[pos_x][pos_y - 1].who_engaged
                         cursor = pygame.image.load(os.path.join(f"data/rcom/clean/Crcom021.png"))
-                if fields[pos_x][pos_y + 1].is_engaged:
+                if fields[pos_x][pos_y + 1].is_engaged and fields[pos_x][pos_y + 1].who_engaged.team != move_order[0].team:
                     if fields[pos_x][pos_y + 1].left - Settings.r < coordinates[0]:
+                        point_attack = [pos_x, pos_y]
+                        whom_attack = fields[pos_x][pos_y + 1].who_engaged
                         cursor = pygame.image.load(os.path.join(f"data/rcom/clean/Crcom017.png"))
-                if fields[pos_x + 1][pos_y].is_engaged:
+                if fields[pos_x + 1][pos_y].is_engaged and fields[pos_x + 1][pos_y].who_engaged.team != move_order[0].team:
                     if fields[pos_x + 1][pos_y].top - Settings.R / 2 < coordinates[1]:
-                        cursor = pygame.image.load(os.path.join(f"data/rcom/clean/Crcom019.png"))
-                if fields[pos_x + 1][pos_y - 1].is_engaged:
+                        point_attack = [pos_x, pos_y]
+                        whom_attack = fields[pos_x + 1][pos_y].who_engaged
+                        cursor = pygame.image.load(os.path.join(f"data/rcom/clean/Crcom018.png"))
+                if fields[pos_x + 1][pos_y - 1].is_engaged and fields[pos_x + 1][pos_y - 1].who_engaged.team != move_order[0].team:
                     if fields[pos_x + 1][pos_y - 1].top - Settings.R / 2 < coordinates[1]:
+                        point_attack = [pos_x, pos_y]
+                        whom_attack = fields[pos_x + 1][pos_y - 1].who_engaged
                         cursor = pygame.image.load(os.path.join(f"data/rcom/clean/Crcom020.png"))
 
             if pos_x % 2 == 1:
-                if fields[pos_x - 1][pos_y].is_engaged:
+                if fields[pos_x - 1][pos_y].is_engaged and fields[pos_x - 1][pos_y].who_engaged.team != move_order[0].team:
                     if fields[pos_x - 1][pos_y].bottom + Settings.R / 2 > coordinates[1]:
+                        point_attack = [pos_x, pos_y]
+                        whom_attack = fields[pos_x - 1][pos_y].who_engaged
                         cursor = pygame.image.load(os.path.join(f"data/rcom/clean/Crcom022.png"))
-                if fields[pos_x - 1][pos_y + 1].is_engaged:
+                if fields[pos_x - 1][pos_y + 1].is_engaged and fields[pos_x - 1][pos_y + 1].who_engaged.team != move_order[0].team:
                     if fields[pos_x - 1][pos_y + 1].bottom + Settings.R / 2 > coordinates[1]:
+                        point_attack = [pos_x, pos_y]
+                        whom_attack = fields[pos_x - 1][pos_y + 1].who_engaged
                         cursor = pygame.image.load(os.path.join(f"data/rcom/clean/Crcom016.png"))
-                if fields[pos_x][pos_y - 1].is_engaged:
+                if fields[pos_x][pos_y - 1].is_engaged and fields[pos_x][pos_y - 1].who_engaged.team != move_order[0].team:
                     if fields[pos_x][pos_y - 1].right + Settings.r > coordinates[0]:
+                        point_attack = [pos_x, pos_y]
+                        whom_attack = fields[pos_x][pos_y - 1].who_engaged
                         cursor = pygame.image.load(os.path.join(f"data/rcom/clean/Crcom021.png"))
-                if fields[pos_x][pos_y + 1].is_engaged:
+                if fields[pos_x][pos_y + 1].is_engaged and fields[pos_x][pos_y + 1].who_engaged.team != move_order[0].team:
                     if fields[pos_x][pos_y + 1].left - Settings.r < coordinates[0]:
+                        point_attack = [pos_x, pos_y]
+                        whom_attack = fields[pos_x][pos_y + 1].who_engaged
                         cursor = pygame.image.load(os.path.join(f"data/rcom/clean/Crcom017.png"))
-                if fields[pos_x + 1][pos_y].is_engaged:
+                if fields[pos_x + 1][pos_y].is_engaged and fields[pos_x + 1][pos_y].who_engaged.team != move_order[0].team:
                     if fields[pos_x + 1][pos_y].top - Settings.R / 2 < coordinates[1]:
+                        point_attack = [pos_x, pos_y]
+                        whom_attack = fields[pos_x + 1][pos_y].who_engaged
                         cursor = pygame.image.load(os.path.join(f"data/rcom/clean/Crcom020.png"))
-                if fields[pos_x + 1][pos_y + 1].is_engaged:
+                if fields[pos_x + 1][pos_y + 1].is_engaged and fields[pos_x + 1][pos_y + 1].who_engaged.team != move_order[0].team:
                     if fields[pos_x + 1][pos_y + 1].top - Settings.R / 2 < coordinates[1]:
+                        point_attack = [pos_x, pos_y]
+                        whom_attack = fields[pos_x + 1][pos_y + 1].who_engaged
                         cursor = pygame.image.load(os.path.join(f"data/rcom/clean/Crcom018.png"))
         pygame.mouse.set_cursor(pygame.cursors.Cursor((15, 0), cursor))
+        return point_attack, whom_attack
 
     def update_fields_info(self, fields, move_order, point_over):
         pos_x, pos_y = point_over
