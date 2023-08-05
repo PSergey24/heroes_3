@@ -2,6 +2,7 @@ import os.path
 
 import pygame
 import math
+from copy import copy
 
 from modules.settings import Settings
 
@@ -26,15 +27,28 @@ class Unit:
         self.btn_wait = False
         self.btn_defense = False
 
+        # type of animations
         self.path = []
-        self.standing = None
         self.moving = None
+        self.mouse_over = None
+        self.standing = None
+        self.getting_hit = None
+        self.defend = None
+        self.death = None
+        self.attack_up = None
+        self.attack_straight = None
+        self.attack_down = None
+        self.shoot_up = None
+        self.shoot_straight = None
+        self.shoot_down = None
 
+        # animations
         self.avatar = None
         self.is_animation = False
         self.direction = True
         self.img = None
-        self.current_animation = []
+        self.list_animations = []
+        # self.current_animation = []
         self.animation_count = 0
         self.path_pos = 0
         self.move_count = 0
@@ -45,17 +59,23 @@ class Unit:
 
     def draw(self, screen):
         self.draw_character(screen)
+
+        if self.list_animations[0].name == 'moving':
+            self.move()
+
         self.draw_character_count(screen)
 
-        if self.is_animation:
-            self.is_animation = self.move()
-
     def draw_character(self, screen):
-        self.img = self.current_animation[self.animation_count]
+        self.img = self.list_animations[0].animation[self.animation_count]
         self.animation_count += 1
 
-        if self.animation_count >= len(self.current_animation):
+        if self.animation_count >= len(self.list_animations[0].animation):
             self.animation_count = 0
+            if self.list_animations[0].name != 'standing' and self.list_animations[0].name != 'moving':
+                self.list_animations.pop(0)
+
+        if self.list_animations[0].name == 'standing' and len(self.list_animations) > 1:
+            self.list_animations.pop(0)
 
         screen.blit(self.img, (self.x - self.img_size_x / 4, self.y - self.img_size_y * (1 / 2)))
 
@@ -85,8 +105,8 @@ class Unit:
             if self.team == 1:
                 self.direction = False
 
-            for i, img in enumerate(self.current_animation):
-                self.current_animation[i] = pygame.transform.flip(img, True, False)
+            for i, img in enumerate(self.list_animations[0].animation):
+                self.list_animations[0].animation[i] = pygame.transform.flip(img, True, False)
 
         move_x, move_y = (self.x + dirn[0] * self.move_count, self.y + dirn[1] * self.move_count)
         self.dis += math.sqrt((move_x - x1) ** 2 + (move_y - y1) ** 2)
@@ -97,14 +117,12 @@ class Unit:
             self.path_pos += 1
 
             if self.path_pos == len(self.path) - 1:
-                self.change_animation('standing')
+                self.list_animations.pop(0)
                 self.x = x2
                 self.y = y2
-                return False
 
         self.x = x2
         self.y = y2
-        return True
 
     def hit(self):
         self.health -= 1
@@ -112,23 +130,37 @@ class Unit:
             return True
 
     def change_animation(self, animation):
-        self.current_animation.clear()
         self.animation_count = 0
-
         speed, images = self.choose_animation_info(animation)
+
+        current_animation = []
         for x in images:
             for j in range(speed):
                 unit = pygame.image.load(os.path.join(f"data/{self.character}/{animation}/c{self.character}{x}.png"))
                 unit = pygame.transform.scale(unit, (self.img_size_x, self.img_size_y))
                 if self.team == 2:
                     unit = pygame.transform.flip(unit, True, False)
-                self.current_animation.append(unit)
+                current_animation.append(unit)
+
+        self.update_states(animation, current_animation)
 
     def choose_animation_info(self, animation):
         if animation == 'standing':
             return 10, self.standing
         if animation == 'moving':
             return 6, self.moving
+        if animation == 'attack_straight':
+            return 6, self.attack_straight
+
+    def update_states(self, animation, current_animation):
+        self.list_animations.append(Animation(animation, current_animation))
+
+
+class Animation:
+
+    def __init__(self, name, animation):
+        self.name = name
+        self.animation = copy(animation)
 
 
 class Angel(Unit):
@@ -146,20 +178,10 @@ class Angel(Unit):
 
         self.standing = ["00", "51", "52", "53", "54", "53", "52", "51"]
 
-        self.current_animation = []
         self.img_size_x = 140
         self.img_size_y = self.img_size_x / 1.125
 
-        self.create_animation()
-
-    def create_animation(self):
-        for x in self.standing:
-            for j in range(30):
-                unit = pygame.image.load(os.path.join("data/angel/standing/", "cangel" + str(x) + ".png"))
-                unit = pygame.transform.scale(unit, (self.img_size_x, self.img_size_y))
-                if self.team == 2:
-                    unit = pygame.transform.flip(unit, True, False)
-                self.current_animation.append(unit)
+        self.change_animation('standing')
 
 
 class Elf(Unit):
@@ -176,20 +198,10 @@ class Elf(Unit):
         self.speed = 6
         self.standing = ["72", "48", "49", "50", "51", "50", "49", "48"]
 
-        self.current_animation = []
         self.img_size_x = 120
         self.img_size_y = self.img_size_x / 1.125
 
-        self.create_animation()
-
-    def create_animation(self):
-        for x in self.standing:
-            for j in range(30):
-                unit = pygame.image.load(os.path.join("data/elf/standing/", "celf" + str(x) + ".png"))
-                unit = pygame.transform.scale(unit, (self.img_size_x, self.img_size_y))
-                if self.team == 2:
-                    unit = pygame.transform.flip(unit, True, False)
-                self.current_animation.append(unit)
+        self.change_animation('standing')
 
 
 class Lich(Unit):
@@ -204,10 +216,20 @@ class Lich(Unit):
         self.damage = [11, 13]
         self.health = 30
         self.speed = 6
-        self.standing = ["74", "50", "51", "52", "53", "52", "51", "50"]
-        self.moving = ["56", "57", "58", "59", "60", "61", "62", "63"]
 
-        self.current_animation = []
+        self.moving = ["56", "57", "58", "59", "60", "61", "62", "63"]
+        self.mouse_over = ["46", "47", "48", "49", "49", "49", "49", "49", "48", "47", "46"]
+        self.standing = ["74", "50", "51", "52", "53", "52", "51", "50"]
+        self.getting_hit = ["66", "67", "68", "69", "70", "71"]
+        self.defend = ["42", "43", "44", "45", "45", "45", "45", "45", "44", "43", "42"]
+        self.death = ["35", "36", "37", "38", "39", "40", "41"]
+        self.attack_up = ["13", "14", "21", "22", "23", "24", "25", "26"]
+        self.attack_straight = ["13", "14", "15", "16", "17", "18", "19", "20"]
+        self.attack_down = ["27", "28", "29", "30", "31", "32", "33", "34"]
+        self.shoot_up = ["05", "06", "07", "08", "08", "08", "08", "08", "07", "06", "05"]
+        self.shoot_straight = ["01", "02", "03", "04", "04", "04", "04", "04", "03", "02", "01"]
+        self.shoot_down = ["09", "10", "11", "12", "12", "12", "12", "12", "11", "10", "09"]
+
         self.img_size_x = 120
         self.img_size_y = self.img_size_x / 1.125
 
@@ -226,8 +248,19 @@ class Mage(Unit):
         self.damage = [7, 9]
         self.health = 25
         self.speed = 5
-        self.standing = ["74", "50", "51", "52", "53", "52", "51", "50"]
+
         self.moving = ["56", "57", "58", "59", "60", "61", "62", "63"]
+        self.mouse_over = ["46", "47", "48", "49", "49", "49", "49", "49", "48", "47", "46"]
+        self.standing = ["74", "50", "51", "52", "53", "52", "51", "50"]
+        self.getting_hit = ["66", "67", "68", "69", "70", "71"]
+        self.defend = ["42", "43", "44", "45", "45", "45", "45", "45", "44", "43", "42"]
+        self.death = ["34", "35", "36", "37", "38", "39", "40", "41"]
+        self.attack_up = ["16", "17", "18", "19", "26", "27", "28", "29", "24", "25"]
+        self.attack_straight = ["16", "17", "18", "19", "20", "21", "22", "23", "24", "25"]
+        self.attack_down = ["16", "17", "18", "19", "30", "31", "32", "33", "24", "25"]
+        self.shoot_up = ["06", "07", "08", "09", "10", "10", "10", "10", "10", "09", "08", "07", "06"]
+        self.shoot_straight = ["01", "02", "03", "04", "05", "05", "05", "05", "05", "04", "03", "02", "01"]
+        self.shoot_down = ["11", "12", "13", "14", "15", "15", "15", "15", "15", "14", "13", "12", "11"]
 
         self.img_standing = []
         self.img_size_x = 120

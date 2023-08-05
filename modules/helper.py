@@ -9,8 +9,12 @@ class Helper:
     def is_correct_step(self, fields, move_order, new_point):
         old_point = move_order[0].position
         possible_ways = self.get_way(old_point[0], old_point[1], move_order[0].speed)
+
+        if fields[new_point[0]][new_point[1]].is_engaged is True:
+            if move_order[0].team != fields[new_point[0]][new_point[1]].who_engaged.team:
+                return 'attack_straight'
         if fields[new_point[0]][new_point[1]].is_engaged is False and new_point in possible_ways:
-            return True
+            return 'moving'
         return False
 
     @staticmethod

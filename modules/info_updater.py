@@ -72,12 +72,10 @@ class InfoUpdater:
         move_order.extend(right)
         return move_order
 
-    def update_character_info(self, fields, move_order, new_point):
-        move_order[0].change_animation('moving')
+    def update_character_position(self, fields, move_order, new_point):
         move_order = self.generate_way(fields, move_order, move_order[0].position, new_point)
         fields = self.update_engaged_points(fields, move_order, move_order[0].position, new_point)
         move_order[0].position = new_point
-        move_order.pop(0)
         return fields, move_order
 
     @staticmethod

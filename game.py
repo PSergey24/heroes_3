@@ -16,7 +16,7 @@ class Game:
         self.fields = []
 
         self.left_team = [Lich(8, 3, 15, 1), Mage(2, 5, 6, 1)]
-        self.right_team = [Lich(10, 14, 17, 2), Mage(8, 13, 3, 2)]
+        self.right_team = [Lich(8, 6, 17, 2), Mage(2, 7, 3, 2)]
 
         self.divs = None
         self.buttons = []
@@ -55,8 +55,9 @@ class Game:
                     self.update_buttons_by_click(pos)
 
                     if position := self.get_cell(pos):
-                        if self.helper.is_correct_step(self.fields, self.queue.current, position):
-                            self.update_character_info(position)
+                        if action := self.helper.is_correct_step(self.fields, self.queue.current, position):
+                            print(f"action: {action}")
+                            self.update_character_info(position, action)
                             self.update_avatars()
 
                 if event.type == pygame.MOUSEMOTION:
@@ -111,9 +112,20 @@ class Game:
                     return i, j
         return None
 
-    def update_character_info(self, new_point):
-        self.fields, self.queue.current = self.info_updater.update_character_info(self.fields, self.queue.current,
-                                                                                  new_point)
+    def update_character_info(self, new_point, action):
+        if action == 'moving':
+            self.queue.current[0].change_animation('moving')
+            self.fields, self.queue.current = self.info_updater.update_character_position(self.fields,
+                                                                                          self.queue.current, new_point)
+            self.queue.current[0].change_animation('standing')
+            self.queue.current.pop(0)
+        if action == 'attack_straight':
+            self.queue.current[0].change_animation('moving')
+            self.fields, self.queue.current = self.info_updater.update_character_position(self.fields,
+                                                                                          self.queue.current, new_point)
+            self.queue.current[0].change_animation('attack_straight')
+            self.queue.current[0].change_animation('standing')
+            self.queue.current.pop(0)
 
     def update_fields_info(self, point_over):
         self.fields = self.info_updater.update_fields_info(self.fields, self.queue.current, point_over)
