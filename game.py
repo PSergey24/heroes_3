@@ -13,6 +13,7 @@ class Game:
 
     def __init__(self):
         self.screen = pygame.display.set_mode((Settings.width, Settings.height))
+        self.cursor = None
         self.fields = []
 
         self.left_team = [Lich(8, 3, 15, 1), Mage(2, 5, 6, 1)]
@@ -35,7 +36,7 @@ class Game:
         run = True
 
         self.screen.blit(self.bg, (0, 0))
-
+        self.create_cursor()
         self.create_fields()
         self.create_characters()
         self.generate_move_order()
@@ -50,6 +51,12 @@ class Game:
                 if event.type == pygame.QUIT:
                     run = False
 
+                if event.type == pygame.MOUSEMOTION:
+                    pos = pygame.mouse.get_pos()
+                    if position := self.get_cell(pos):
+                        self.update_cursor_info(position, pos)
+                        self.update_fields_info(position)
+
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     pos = pygame.mouse.get_pos()
                     self.update_buttons_by_click(pos)
@@ -60,17 +67,16 @@ class Game:
                             self.update_character_info(position, action)
                             self.update_avatars()
 
-                if event.type == pygame.MOUSEMOTION:
-                    pos = pygame.mouse.get_pos()
-                    if position := self.get_cell(pos):
-                        self.update_fields_info(position)
-
             self.draw_info_block()
             self.draw_fields()
             self.draw_characters()
 
             pygame.display.update()
         pygame.quit()
+
+    def create_cursor(self):
+        self.cursor = pygame.image.load(os.path.join(f"data/rcom/clean/Crcom009.png"))
+        pygame.mouse.set_cursor(pygame.cursors.Cursor((15, 0), self.cursor))
 
     def create_fields(self):
         self.fields = self.info_updater.create_fields(self.fields)
@@ -126,6 +132,9 @@ class Game:
             self.queue.current[0].change_animation('attack_straight')
             self.queue.current[0].change_animation('standing')
             self.queue.current.pop(0)
+
+    def update_cursor_info(self, point_over, coordinates):
+        self.info_updater.update_cursor_info(self.fields, point_over, self.cursor, coordinates)
 
     def update_fields_info(self, point_over):
         self.fields = self.info_updater.update_fields_info(self.fields, self.queue.current, point_over)
