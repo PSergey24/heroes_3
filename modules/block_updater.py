@@ -1,13 +1,13 @@
 from modules.blocks import Div, ImgAvatar, ImgBtn, Txt
-from modules.settings import Settings
+from modules.settings import Settings, States
 
 from copy import copy
 
 
 class BlockUpdater:
 
-    def __init__(self, buttons):
-        self.buttons = buttons
+    def __init__(self):
+        self.buttons = []
         self.main = None
         self.left = None
         self.center = None
@@ -16,7 +16,7 @@ class BlockUpdater:
         self.top_center = None
         self.bottom_center = None
 
-    def create_info_block(self, queue, current_round):
+    def create_info_block(self):
         self.main = self.create_div(Settings.info_block_margin, Settings.height - 130, Settings.info_block_width,
                                     Settings.info_block_height, (220, 200, 0, 80))
         self.left = self.create_div(0, 0, Settings.left_ib_width, Settings.info_block_height, (255, 255, 255, 80),
@@ -29,7 +29,7 @@ class BlockUpdater:
         self.bottom_center = self.create_div(0, 80, Settings.center_ib_width, 10, (0, 155, 0, 80), parent=self.center)
 
         self.create_buttons()
-        self.update_avatars(queue, current_round)
+        self.update_avatars()
         return self.main
 
     @staticmethod
@@ -54,14 +54,14 @@ class BlockUpdater:
             parent.update_children(img)
         self.buttons.append(img)
 
-    def update_avatars(self, queue, current_round):
-        i, r = 0, copy(current_round)
+    def update_avatars(self):
+        i, r = 0, copy(States.round)
 
         for _ in range(4):
             if _ == 0:
-                i = self.create_avatars(i, queue.current)
+                i = self.create_avatars(i, States.queue.current)
             else:
-                i = self.create_avatars(i, queue.original)
+                i = self.create_avatars(i, States.queue.original)
 
             if i != 0:
                 self.create_avatar_round(i, r)
@@ -118,37 +118,37 @@ class BlockUpdater:
         for btn in self.buttons:
             btn.switch_to_active()
 
-    def update_buttons(self, queue):
+    def update_buttons(self):
         for btn in self.buttons:
             if btn.name == 'wait':
-                if queue.current[0].btn_wait is False:
+                if States.queue.current[0].btn_wait is False:
                     btn.switch_to_active()
                 else:
                     btn.switch_to_not_active()
             if btn.name == 'defense':
-                if queue.current[0].btn_defense is False:
+                if States.queue.current[0].btn_defense is False:
                     btn.switch_to_active()
                 else:
                     btn.switch_to_not_active()
 
-    def update_buttons_by_click(self, pos, queue, current_round):
+    def update_buttons_by_click(self, pos):
         for btn in self.buttons:
             if (btn.top <= pos[1] <= btn.top + btn.height) and (btn.left <= pos[0] <= btn.left + btn.width):
-                self.update_button_by_click(btn, queue, current_round)
+                self.update_button_by_click(btn)
 
-    def update_button_by_click(self, btn, queue, current_round):
+    def update_button_by_click(self, btn):
         if btn.name == 'wait' and btn.isActive is True:
-            queue.current[0].btn_wait = True
-            queue.current.insert(self.get_wait_index(queue), queue.current.pop(0))
-            self.update_avatars(queue, current_round)
+            States.queue.current[0].btn_wait = True
+            States.queue.current.insert(self.get_wait_index(), States.queue.current.pop(0))
+            self.update_avatars()
         if btn.name == 'defense' and btn.isActive is True:
-            queue.current[0].btn_defense = True
-            queue.current.pop(0)
-            self.update_avatars(queue, current_round)
+            States.queue.current[0].btn_defense = True
+            States.queue.current.pop(0)
+            self.update_avatars()
 
     @staticmethod
-    def get_wait_index(queue):
-        for i, item in reversed(list(enumerate(queue.current))):
+    def get_wait_index():
+        for i, item in reversed(list(enumerate(States.queue.current))):
             if item.btn_wait is False:
                 return i
         return 0

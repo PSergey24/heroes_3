@@ -1,4 +1,4 @@
-from modules.settings import Settings
+from modules.settings import Settings, States
 
 
 class Helper:
@@ -6,14 +6,14 @@ class Helper:
     def __init__(self):
         pass
 
-    def is_correct_step(self, fields, move_order, new_point, whom_attack):
-        old_point = move_order[0].position
-        possible_ways = self.get_way(old_point[0], old_point[1], move_order[0].speed)
+    def is_correct_step(self, new_point, whom_attack):
+        old_point = States.queue.current[0].position
+        possible_ways = self.get_way(old_point[0], old_point[1], States.queue.current[0].speed)
 
         if whom_attack:
-            if move_order[0].team != whom_attack.team:
+            if States.queue.current[0].team != whom_attack.team:
                 return 'attack_straight'
-        if fields[new_point[0]][new_point[1]].is_engaged is False and new_point in possible_ways:
+        if States.fields[new_point[0]][new_point[1]].is_engaged is False and new_point in possible_ways:
             return 'moving'
         return False
 

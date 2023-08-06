@@ -4,7 +4,7 @@ import pygame
 import math
 from copy import copy
 
-from modules.settings import Settings
+from modules.settings import Settings, States
 
 
 class Unit:
@@ -22,6 +22,7 @@ class Unit:
         self.damage = None
         self.health = None
         self.speed = None
+        self.is_shooter = False
 
         # btn
         self.btn_wait = False
@@ -71,7 +72,13 @@ class Unit:
 
         if self.animation_count >= len(self.list_animations[0].animation):
             self.animation_count = 0
+
+            if self.list_animations[0].who_next:
+                self.list_animations[0].who_next.change_animation(self.list_animations[0].what_next)
+                self.list_animations[0].who_next.change_animation('standing')
+
             if self.list_animations[0].name != 'standing' and self.list_animations[0].name != 'moving':
+                States.is_animate = False
                 self.list_animations.pop(0)
 
         if self.list_animations[0].name == 'standing' and len(self.list_animations) > 1:
@@ -110,6 +117,7 @@ class Unit:
             self.path_pos += 1
 
             if self.path_pos == len(self.path) - 1:
+                States.is_animate = False
                 self.list_animations.pop(0)
 
         self.x = x2
@@ -125,7 +133,7 @@ class Unit:
             for i, img in enumerate(self.list_animations[0].animation):
                 self.list_animations[0].animation[i] = pygame.transform.flip(img, True, False)
 
-    def change_animation(self, animation):
+    def change_animation(self, animation, who_next=None, what_next=None):
         self.animation_count = 0
         speed, images = self.choose_animation_info(animation)
 
@@ -138,25 +146,30 @@ class Unit:
                     unit = pygame.transform.flip(unit, True, False)
                 current_animation.append(unit)
 
-        self.update_states(animation, current_animation)
+        self.update_states(animation, current_animation, who_next=who_next, what_next=what_next)
 
     def choose_animation_info(self, animation):
         if animation == 'standing':
             return 10, self.standing
         if animation == 'moving':
+            States.is_animate = True
             return 6, self.moving
         if animation == 'attack_straight':
             return 6, self.attack_straight
+        if animation == 'getting_hit':
+            return 6, self.getting_hit
 
-    def update_states(self, animation, current_animation):
-        self.list_animations.append(Animation(animation, current_animation))
+    def update_states(self, animation, current_animation, who_next=None, what_next=None):
+        self.list_animations.append(Animation(animation, current_animation, who_next, what_next))
 
 
 class Animation:
 
-    def __init__(self, name, animation):
+    def __init__(self, name, animation, who_next, what_next):
         self.name = name
         self.animation = copy(animation)
+        self.who_next = who_next
+        self.what_next = what_next
 
 
 class Angel(Unit):
@@ -192,6 +205,8 @@ class Elf(Unit):
         self.damage = [3, 5]
         self.health = 15
         self.speed = 6
+        self.is_shooter = True
+
         self.standing = ["72", "48", "49", "50", "51", "50", "49", "48"]
 
         self.img_size_x = 120
@@ -212,6 +227,7 @@ class Lich(Unit):
         self.damage = [11, 13]
         self.health = 30
         self.speed = 6
+        self.is_shooter = True
 
         self.moving = ["56", "57", "58", "59", "60", "61", "62", "63"]
         self.mouse_over = ["46", "47", "48", "49", "49", "49", "49", "49", "48", "47", "46"]
@@ -244,6 +260,7 @@ class Mage(Unit):
         self.damage = [7, 9]
         self.health = 25
         self.speed = 5
+        self.is_shooter = True
 
         self.moving = ["56", "57", "58", "59", "60", "61", "62", "63"]
         self.mouse_over = ["46", "47", "48", "49", "49", "49", "49", "49", "48", "47", "46"]
@@ -258,7 +275,6 @@ class Mage(Unit):
         self.shoot_straight = ["01", "02", "03", "04", "05", "05", "05", "05", "05", "04", "03", "02", "01"]
         self.shoot_down = ["11", "12", "13", "14", "15", "15", "15", "15", "15", "14", "13", "12", "11"]
 
-        self.img_standing = []
         self.img_size_x = 120
         self.img_size_y = self.img_size_x / 1.125
 

@@ -30,3 +30,10 @@ class Settings:
     button_height = 36
     avatar_width = 58
     avatar_height = 64
+
+
+class States:
+    round = 1
+    fields = []
+    queue = None
+    is_animate = False
