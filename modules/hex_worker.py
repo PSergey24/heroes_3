@@ -90,8 +90,18 @@ class HexWorker:
                                 States.whom_attack = States.hexagons[nb_r][nb_c].who_engaged
                                 States.cursor = pygame.image.load(os.path.join(f"data/rcom/clean/Crcom016.png"))
             else:
-                States.whom_attack = None
-                States.cursor = pygame.image.load(os.path.join(f"data/rcom/clean/Crcom028.png"))
+                if States.btn_shooter is True and States.hexagons[States.row_active][States.col_active].who_engaged.team != States.hexagons[States.point_r][States.point_c].who_engaged.team:
+                    States.whom_attack = States.hexagons[States.point_r][States.point_c].who_engaged
+                    dist = self.cube_distance(self.offset2cube(States.row_active, States.col_active), [States.point_x, States.point_y, States.point_z])
+                    if dist <= 10:
+                        States.penalty_shooter = 1
+                        States.cursor = pygame.image.load(os.path.join(f"data/rcom/clean/Crcom023.png"))
+                    else:
+                        States.penalty_shooter = 0.5
+                        States.cursor = pygame.image.load(os.path.join(f"data/rcom/clean/Crcom026.png"))
+                else:
+                    States.whom_attack = None
+                    States.cursor = pygame.image.load(os.path.join(f"data/rcom/clean/Crcom028.png"))
 
     @staticmethod
     def update_hexagons():
@@ -178,7 +188,10 @@ class HexWorker:
         if States.whom_attack:
             if States.queue.current[0].team != States.whom_attack.team:
                 States.point_attack = (States.point_r, States.point_c)
-                return 'attack_straight'
+                if States.btn_shooter:
+                    return 'shoot_straight'
+                else:
+                    return 'attack_straight'
 
         if 0 <= States.point_r < Settings.n_rows and 0 <= States.point_c < Settings.n_columns and \
                 States.hexagons[States.point_r][States.point_c].who_engaged is None and \
@@ -238,50 +251,46 @@ class HexWorker:
         old = States.hexagons[old_point[0]][old_point[1]].corner
         new = States.hexagons[new_point[0]][new_point[1]].corner
 
-        move_order[0].direction = True
-
+        step = 4
         if int(old[1]) > int(new[1]) and int(old[0]) == int(new[0]):
-            move_order[0].path.extend((old[0], y) for y in range(int(old[1]), int(new[1]), -2))
+            move_order[0].path.extend((old[0], y) for y in range(int(old[1]), int(new[1]), -step))
         elif int(old[1]) < int(new[1]) and int(old[0]) == int(new[0]):
-            move_order[0].path.extend((old[0], y) for y in range(int(old[1]), int(new[1]), 2))
+            move_order[0].path.extend((old[0], y) for y in range(int(old[1]), int(new[1]), step))
         elif int(old[1]) == int(new[1]) and int(old[0]) > int(new[0]):
-            move_order[0].path.extend((x, old[1]) for x in range(int(old[0]), int(new[0]), -2))
+            move_order[0].path.extend((x, old[1]) for x in range(int(old[0]), int(new[0]), -step))
         elif int(old[1]) == int(new[1]) and int(old[0]) < int(new[0]):
-            move_order[0].direction = False
-            move_order[0].path.extend((x, old[1]) for x in range(int(old[0]), int(new[0]), 2))
+            move_order[0].path.extend((x, old[1]) for x in range(int(old[0]), int(new[0]), step))
         elif int(old[1]) < int(new[1]) and int(old[0]) < int(new[0]):
-            move_order[0].direction = False
             x, y = int(old[0]), int(old[1])
             while y < int(new[1]) and x < int(new[0]):
-                move_order, x, y = self.append_(move_order, x, y, 2, 2)
+                move_order, x, y = self.append_(move_order, x, y, step, step)
 
-            move_order[0].path.extend((x, y) for x in range(x, int(new[0]), 2))
-            move_order[0].path.extend((x, y) for y in range(y, int(new[1]), 2))
+            move_order[0].path.extend((x, y) for x in range(x, int(new[0]), step))
+            move_order[0].path.extend((x, y) for y in range(y, int(new[1]), step))
         elif int(old[1]) >= int(new[1]) and int(old[0]) >= int(new[0]):
             x, y = int(old[0]), int(old[1])
 
             while y >= int(new[1]) and x >= int(new[0]):
-                move_order, x, y = self.append_(move_order, x, y, -2, -2)
+                move_order, x, y = self.append_(move_order, x, y, -step, -step)
 
-            move_order[0].path.extend((x, y) for x in range(x, int(new[0]), -2))
-            move_order[0].path.extend((x, y) for y in range(y, int(new[1]), -2))
+            move_order[0].path.extend((x, y) for x in range(x, int(new[0]), -step))
+            move_order[0].path.extend((x, y) for y in range(y, int(new[1]), -step))
         elif int(old[1]) < int(new[1]) and int(old[0]) >= int(new[0]):
             x, y = int(old[0]), int(old[1])
 
             while y < int(new[1]) and x >= int(new[0]):
-                move_order, x, y = self.append_(move_order, x, y, -2, 2)
+                move_order, x, y = self.append_(move_order, x, y, -step, step)
 
-            move_order[0].path.extend((x, y) for x in range(x, int(new[0]), -2))
-            move_order[0].path.extend((x, y) for y in range(y, int(new[1]), 2))
+            move_order[0].path.extend((x, y) for x in range(x, int(new[0]), -step))
+            move_order[0].path.extend((x, y) for y in range(y, int(new[1]), step))
         elif int(old[1]) >= int(new[1]) and int(old[0]) < int(new[0]):
-            move_order[0].direction = False
             x, y = int(old[0]), int(old[1])
 
             while y >= int(new[1]) and x < int(new[0]):
-                move_order, x, y = self.append_(move_order, x, y, 2, -2)
+                move_order, x, y = self.append_(move_order, x, y, step, -step)
 
-            move_order[0].path.extend((x, y) for x in range(x, int(new[0]), 2))
-            move_order[0].path.extend((x, y) for y in range(y, int(new[1]), -2))
+            move_order[0].path.extend((x, y) for x in range(x, int(new[0]), step))
+            move_order[0].path.extend((x, y) for y in range(y, int(new[1]), -step))
 
         return move_order
 

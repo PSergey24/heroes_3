@@ -52,6 +52,7 @@ class States:
 
     # shooter btn info:
     btn_shooter = False
+    penalty_shooter = 1
 
     # mouse cursor info:
     cursor = None

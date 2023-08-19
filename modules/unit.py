@@ -46,7 +46,7 @@ class Unit:
 
         # animations
         self.avatar = None
-        self.direction = True
+        self.direction = None
         self.img = None
         self.list_animations = []
 
@@ -58,6 +58,30 @@ class Unit:
         self.img_size_x = None
         self.img_size_y = None
 
+        self.reset_direction()
+
+    def reset_direction(self):
+        self.direction = False if self.team == 1 else True
+
+    def update_direction(self):
+        if self.team == 2:
+            if States.col_active < States.point_c:
+                self.direction = False
+            elif States.col_active == States.point_c and States.whom_attack is not None:
+                if (States.point_c == States.whom_attack.hex[1] and States.row_active % 2 == 1) or (States.point_c < States.whom_attack.hex[1] and States.row_active % 2 == 0):
+                    self.direction = False
+                if States.point_r == States.whom_attack.hex[0] and States.point_c < States.whom_attack.hex[1]:
+                    self.direction = False
+
+        if self.team == 1:
+            if States.col_active > States.point_c:
+                self.direction = True
+            elif States.col_active == States.point_c and States.whom_attack is not None:
+                if (States.point_c == States.whom_attack.hex[1] and States.row_active % 2 == 0) or (States.point_c > States.whom_attack.hex[1] and States.row_active % 2 == 1):
+                    self.direction = True
+                if States.point_r == States.whom_attack.hex[0] and States.point_c > States.whom_attack.hex[1]:
+                    self.direction = True
+
     def draw(self, screen):
         self.draw_character(screen)
 
@@ -67,6 +91,9 @@ class Unit:
         self.draw_character_count(screen)
 
     def draw_character(self, screen):
+        # if self.list_animations[0].name != 'standing' and self.animation_count > 0:
+        #     self.list_animations[0].animation[self.animation_count-1].fill(0)
+
         self.img = self.list_animations[0].animation[self.animation_count]
         self.animation_count += 1
 
@@ -76,6 +103,7 @@ class Unit:
             if self.list_animations[0].who_next:
                 self.list_animations[0].who_next.change_animation(self.list_animations[0].what_next)
                 self.list_animations[0].who_next.change_animation('standing')
+                self.reset_direction()
 
             if self.list_animations[0].name != 'standing' and self.list_animations[0].name != 'moving':
                 States.is_animate = False
@@ -107,8 +135,6 @@ class Unit:
         self.move_count += 1
         dirn = (x2 - x1), (y2 - y1)
 
-        self.change_direction()
-
         move_x, move_y = (self.x + dirn[0] * self.move_count, self.y + dirn[1] * self.move_count)
         self.dis += math.sqrt((move_x - x1) ** 2 + (move_y - y1) ** 2)
 
@@ -125,52 +151,48 @@ class Unit:
         self.x = x2
         self.y = y2
 
-    def change_direction(self):
-        if (not self.direction and self.team == 2) or (self.direction and self.team == 1):
-            if self.team == 2:
-                self.direction = True
-            if self.team == 1:
-                self.direction = False
-
-            for i, img in enumerate(self.list_animations[0].animation):
-                self.list_animations[0].animation[i] = pygame.transform.flip(img, True, False)
-
-    def change_animation(self, animation, who_next=None, what_next=None):
+    def change_animation(self, animation_name, who_next=None, what_next=None):
         self.animation_count = 0
-        speed, images = self.choose_animation_info(animation)
+        speed, images = self.choose_animation_info(animation_name)
 
-        current_animation = []
+        animation_img = []
         for x in images:
             for j in range(speed):
-                unit = pygame.image.load(os.path.join(f"data/{self.character}/{animation}/c{self.character}{x}.png"))
+                unit = pygame.image.load(os.path.join(f"data/{self.character}/{animation_name}/c{self.character}{x}.png"))
                 unit = pygame.transform.scale(unit, (self.img_size_x, self.img_size_y))
-                if self.team == 2:
-                    unit = pygame.transform.flip(unit, True, False)
-                current_animation.append(unit)
+                unit = pygame.transform.flip(unit, self.direction, False)
+                animation_img.append(unit)
 
-        self.update_states(animation, current_animation, who_next=who_next, what_next=what_next)
+        self.update_states(animation_name, animation_img, who_next=who_next, what_next=what_next)
 
     def choose_animation_info(self, animation):
         if animation == 'standing':
+            self.reset_direction()
             return 10, self.standing
 
         States.is_animate = True
         if animation == 'moving':
+            self.update_direction()
             return 6, self.moving
         if animation == 'attack_straight':
+            self.update_direction()
             return 6, self.attack_straight
+        if animation == 'shoot_straight':
+            self.update_direction()
+            return 6, self.shoot_straight
+
         if animation == 'getting_hit':
             return 6, self.getting_hit
 
-    def update_states(self, animation, current_animation, who_next=None, what_next=None):
-        self.list_animations.append(Animation(animation, current_animation, who_next, what_next))
+    def update_states(self, animation_name, animation_img, who_next=None, what_next=None):
+        self.list_animations.append(Animation(animation_name, animation_img, who_next, what_next))
 
 
 class Animation:
 
     def __init__(self, name, animation, who_next, what_next):
         self.name = name
-        self.animation = copy(animation)
+        self.animation = animation
         self.who_next = who_next
         self.what_next = what_next
 

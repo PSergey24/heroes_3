@@ -1,9 +1,7 @@
 import os
 import pygame
-import math
 
 from modules.settings import Settings, States
-from modules.hex import Hex
 from modules.my_queue import MyQueue
 from modules.unit import Angel, Lich, Mage, Elf
 from modules.hex_worker import HexWorker
@@ -19,8 +17,8 @@ class Game:
         self.bg = pygame.image.load(os.path.join("data/bg", "CmBkDrDd.bmp"))
         self.bg = pygame.transform.scale(self.bg, (Settings.width, Settings.height))
 
-        self.left_team = [Angel(0, 0, 1, 1)]
-        self.right_team = [Lich(0, 1, 17, 2), Lich(1, 1, 16, 2), Lich(1, 0, 15, 2), Lich(2, 1, 14, 2)]
+        self.left_team = [Angel(2, 1, 1, 1)]
+        self.right_team = [Lich(1, 1, 17, 2), Lich(1, 2, 16, 2), Lich(2, 0, 15, 2), Lich(3, 1, 14, 2)]
 
         self.hex_worker = HexWorker()
         self.unit_worker = UnitWorker()
@@ -102,7 +100,6 @@ class Game:
         if action == 'moving':
             States.queue.current[0].change_animation('moving')
             self.hex_worker.update_character_position()
-
             States.queue.current[0].change_animation('standing')
 
         if action == 'attack_straight':
@@ -113,7 +110,12 @@ class Game:
             States.queue.current[0].change_animation('attack_straight', who_next=States.whom_attack,
                                                      what_next='getting_hit')
             States.queue.current[0].change_animation('standing')
-            
+
+        if action == 'shoot_straight':
+            States.queue.current[0].change_animation('shoot_straight', who_next=States.whom_attack,
+                                                     what_next='getting_hit')
+            States.queue.current[0].change_animation('standing')
+
         States.queue.current.append(States.queue.current.pop(0))
         self.block_updater.update_avatars()
 

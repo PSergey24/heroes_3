@@ -137,10 +137,10 @@ class BlockUpdater:
             if btn.name == 'shooter':
                 if btn.isActive and States.queue.current[0].is_shooter is True:
                     btn.switch_to_not_active()
-                    States.btn_shooter = False
+                    States.btn_shooter = True
                 elif btn.isActive is False and States.queue.current[0].is_shooter is False:
                     btn.switch_to_active()
-                    States.btn_shooter = True
+                    States.btn_shooter = False
 
     def update_buttons_by_click(self):
         for btn in self.buttons:
