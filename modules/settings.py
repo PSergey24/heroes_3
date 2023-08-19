@@ -7,11 +7,11 @@ pygame.init()
 class Settings:
     width: int = 1200
     height: int = 800
-    start_battle_filed = [100, 160]
+    start_battle_filed = [160, 70]
     n_columns: int = 15
     n_rows: int = 11
-    R: int = 33
-    r: float = round(math.sqrt(3) * R / 2, 2)
+    R: int = 35
+    r: float = round(math.sqrt(3) / 2 * R)
     bold: int = 1
     COLOR_BORDER = (128, 140, 64)
     COLOR_HOVER = (40, 40, 40, 120)
@@ -33,7 +33,36 @@ class Settings:
 
 
 class States:
+    # game info:
+    step = 0
     round = 1
-    fields = []
-    queue = None
     is_animate = False
+    hexagons = []
+
+    # all units info:
+    queue = None
+
+    # active unit info:
+    row_active = None
+    col_active = None
+    speed_active = None
+    reachable_points = None
+    whom_attack = None
+    point_attack = None
+
+    # shooter btn info:
+    btn_shooter = False
+
+    # mouse cursor info:
+    cursor = None
+    point_over = None
+    point_x = None
+    point_y = None
+    point_z = None
+    point_r = None
+    point_c = None
+
+    # block info:
+    main = None
+
+

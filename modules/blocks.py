@@ -62,8 +62,9 @@ class ImgBtn(Block):
         self.activeImg = pygame.image.load(os.path.join(f"data/buttons/clean/{name}1.bmp"))
         self.activeImg = pygame.transform.scale(self.activeImg, (self.width, self.height))
 
-        self.notActiveImg = pygame.image.load(os.path.join(f"data/buttons/clean/{name}2.bmp"))
-        self.notActiveImg = pygame.transform.scale(self.notActiveImg, (self.width, self.height))
+        if os.path.exists(os.path.join(f"data/buttons/clean/{name}2.bmp")):
+            self.notActiveImg = pygame.image.load(os.path.join(f"data/buttons/clean/{name}2.bmp"))
+            self.notActiveImg = pygame.transform.scale(self.notActiveImg, (self.width, self.height))
 
         self.surf = self.activeImg
 

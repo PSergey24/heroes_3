@@ -12,7 +12,7 @@ class Unit:
     def __init__(self, i, j, count, team):
         self.count = count
         self.team = team
-        self.position = [i, j]
+        self.hex = [i, j]
         self.x = None
         self.y = None
 
@@ -23,6 +23,7 @@ class Unit:
         self.health = None
         self.speed = None
         self.is_shooter = False
+        self.is_flyer = False
 
         # btn
         self.btn_wait = False
@@ -45,7 +46,6 @@ class Unit:
 
         # animations
         self.avatar = None
-        self.is_animation = False
         self.direction = True
         self.img = None
         self.list_animations = []
@@ -82,6 +82,7 @@ class Unit:
                 self.list_animations.pop(0)
 
         if self.list_animations[0].name == 'standing' and len(self.list_animations) > 1:
+            self.animation_count = 0
             self.list_animations.pop(0)
 
         screen.blit(self.img, (self.x - self.img_size_x / 4, self.y - self.img_size_y * (1 / 2)))
@@ -117,6 +118,7 @@ class Unit:
             self.path_pos += 1
 
             if self.path_pos == len(self.path) - 1:
+                self.animation_count, self.path_pos = 0, 0
                 States.is_animate = False
                 self.list_animations.pop(0)
 
@@ -151,8 +153,9 @@ class Unit:
     def choose_animation_info(self, animation):
         if animation == 'standing':
             return 10, self.standing
+
+        States.is_animate = True
         if animation == 'moving':
-            States.is_animate = True
             return 6, self.moving
         if animation == 'attack_straight':
             return 6, self.attack_straight
@@ -185,7 +188,17 @@ class Angel(Unit):
         self.health = 200
         self.speed = 12
 
+        self.is_flyer = True
+
+        self.moving = ["41", "42", "43", "44", "45", "46", "47"]
+        self.mouse_over = ["35", "36", "37", "38", "38", "38", "38", "37", "36", "35"]
         self.standing = ["00", "51", "52", "53", "54", "53", "52", "51"]
+        self.getting_hit = ["19", "20", "21", "22", "23", "24"]
+        self.defend = ["31", "32", "33", "34", "34", "34", "34", "33", "32", "31", "42"]
+        self.death = ["19", "20", "25", "26", "27", "28", "29", "30"]
+        self.attack_up = ["07", "08", "09", "10", "11", "12"]
+        self.attack_straight = ["01", "02", "03", "04", "05", "06"]
+        self.attack_down = ["13", "14", "15", "16", "17", "18"]
 
         self.img_size_x = 140
         self.img_size_y = self.img_size_x / 1.125
@@ -207,7 +220,18 @@ class Elf(Unit):
         self.speed = 6
         self.is_shooter = True
 
+        self.moving = ["54", "55", "56", "57", "58", "59", "60", "61"]
+        self.mouse_over = ["44", "45", "46", "47", "47", "47", "47", "47", "46", "45", "44"]
         self.standing = ["72", "48", "49", "50", "51", "50", "49", "48"]
+        self.getting_hit = ["64", "65", "66", "67", "68", "69"]
+        self.defend = ["40", "41", "42", "43", "43", "43", "43", "43", "42", "41", "40"]
+        self.death = ["64", "65", "37", "38", "39"]
+        self.attack_up = ["19", "20", "27", "28", "29", "30", "31", "26"]
+        self.attack_straight = ["19", "20", "21", "22", "23", "24", "25", "26"]
+        self.attack_down = ["19", "20", "32", "33", "34", "35", "36", "26"]
+        self.shoot_up = ["01", "02", "09", "10", "11", "12", "12", "12", "12", "12", "13", "08"]
+        self.shoot_straight = ["01", "02", "03", "04", "05", "06", "06", "06", "06", "06", "07", "08"]
+        self.shoot_down = ["01", "02", "14", "15", "16", "17", "17", "17", "17", "17", "18", "08"]
 
         self.img_size_x = 120
         self.img_size_y = self.img_size_x / 1.125
