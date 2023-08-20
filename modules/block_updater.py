@@ -57,6 +57,7 @@ class BlockUpdater:
         self.buttons.append(img)
 
     def update_avatars(self):
+        self.top_center.children.clear()
         count = 15
 
         max_step = len(States.queue.current)
