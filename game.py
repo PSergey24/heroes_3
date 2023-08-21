@@ -102,18 +102,16 @@ class Game:
             self.hex_worker.update_character_position()
             States.queue.current[0].change_animation('standing')
 
-        if action == 'attack_straight':
+        if action.find('attack') != -1:
             if States.row_active != States.point_r or States.col_active != States.point_c:
                 States.queue.current[0].change_animation('moving')
                 self.hex_worker.update_character_position()
 
-            States.queue.current[0].change_animation('attack_straight', who_next=States.whom_attack,
-                                                     what_next='getting_hit')
+            States.queue.current[0].change_animation(action, who_next=States.whom_attack, what_next='getting_hit')
             States.queue.current[0].change_animation('standing')
 
-        if action == 'shoot_straight':
-            States.queue.current[0].change_animation('shoot_straight', who_next=States.whom_attack,
-                                                     what_next='getting_hit')
+        if action.find('shoot') != -1:
+            States.queue.current[0].change_animation(action, who_next=States.whom_attack, what_next='getting_hit')
             States.queue.current[0].change_animation('standing')
 
         States.queue.current.append(States.queue.current.pop(0))

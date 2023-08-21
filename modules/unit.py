@@ -2,7 +2,6 @@ import os.path
 
 import pygame
 import math
-from copy import copy
 
 from modules.settings import Settings, States
 
@@ -24,6 +23,7 @@ class Unit:
         self.speed = None
         self.is_shooter = False
         self.is_flyer = False
+        self.is_answer = True
 
         # btn
         self.btn_wait = False
@@ -91,9 +91,6 @@ class Unit:
         self.draw_character_count(screen)
 
     def draw_character(self, screen):
-        # if self.list_animations[0].name != 'standing' and self.animation_count > 0:
-        #     self.list_animations[0].animation[self.animation_count-1].fill(0)
-
         self.img = self.list_animations[0].animation[self.animation_count]
         self.animation_count += 1
 
@@ -105,7 +102,7 @@ class Unit:
                 self.list_animations[0].who_next.change_animation('standing')
                 self.reset_direction()
 
-            if self.list_animations[0].name != 'standing' and self.list_animations[0].name != 'moving':
+            if self.list_animations[0].name not in ['standing', 'moving']:
                 States.is_animate = False
                 self.list_animations.pop(0)
 
@@ -177,9 +174,21 @@ class Unit:
         if animation == 'attack_straight':
             self.update_direction()
             return 6, self.attack_straight
+        if animation == 'attack_down':
+            self.update_direction()
+            return 6, self.attack_down
+        if animation == 'attack_up':
+            self.update_direction()
+            return 6, self.attack_up
         if animation == 'shoot_straight':
             self.update_direction()
             return 6, self.shoot_straight
+        if animation == 'shoot_down':
+            self.update_direction()
+            return 6, self.shoot_down
+        if animation == 'shoot_up':
+            self.update_direction()
+            return 6, self.shoot_up
 
         if animation == 'getting_hit':
             return 6, self.getting_hit

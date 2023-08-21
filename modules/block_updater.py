@@ -136,10 +136,11 @@ class BlockUpdater:
                 else:
                     btn.switch_to_not_active()
             if btn.name == 'shooter':
-                if btn.isActive and States.queue.current[0].is_shooter is True:
+                if btn.isActive and States.btn_shooter and States.queue.current[0].is_shooter is True:
                     btn.switch_to_not_active()
                     States.btn_shooter = True
-                elif btn.isActive is False and States.queue.current[0].is_shooter is False:
+                elif (not btn.isActive and not States.btn_shooter and States.queue.current[0].is_shooter is True) or \
+                        States.queue.current[0].is_shooter is False:
                     btn.switch_to_active()
                     States.btn_shooter = False
 
@@ -162,10 +163,10 @@ class BlockUpdater:
             States.queue.current.append(States.queue.current.pop(0))
             self.update_avatars()
         if btn.name == 'shooter':
-            if btn.isActive:
-                btn.switch_to_not_active()
-            else:
-                btn.switch_to_active()
+            if States.queue.current[0].is_shooter is False or (States.queue.current[0].is_shooter and States.btn_shooter):
+                States.btn_shooter = False
+            elif States.queue.current[0].is_shooter and not States.btn_shooter:
+                States.btn_shooter = True
 
     @staticmethod
     def get_wait_index():

@@ -21,6 +21,7 @@ class MyQueue:
         for ch in self.current:
             ch.btn_wait = False
             ch.btn_defense = False
+            ch.is_answer = True
 
     def get_order(self):
         return [self.objects_by_id(id_) for id_ in self.ids]
