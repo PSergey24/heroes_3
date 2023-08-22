@@ -98,21 +98,25 @@ class Game:
         print(f"action: {action}")
 
         if action == 'moving':
-            States.queue.current[0].change_animation('moving')
+            States.is_animate = True
+            States.queue.current[0].change_animation('moving', who=States.queue.current[0])
             self.hex_worker.update_character_position()
-            States.queue.current[0].change_animation('standing')
 
         if action.find('attack') != -1:
+            States.is_animate = True
             if States.row_active != States.point_r or States.col_active != States.point_c:
-                States.queue.current[0].change_animation('moving')
+                States.queue.current[0].change_animation('moving', who=States.queue.current[0])
                 self.hex_worker.update_character_position()
 
-            States.queue.current[0].change_animation(action, who_next=States.whom_attack, what_next='getting_hit')
-            States.queue.current[0].change_animation('standing')
+            States.queue.current[0].change_animation(action, who=States.queue.current[0])
+            States.whom_attack.change_animation('getting_hit', who=States.whom_attack)
+            States.whom_attack.change_animation('attack_straight', who=States.whom_attack)
+            States.queue.current[0].change_animation('getting_hit', who=States.queue.current[0])
 
         if action.find('shoot') != -1:
-            States.queue.current[0].change_animation(action, who_next=States.whom_attack, what_next='getting_hit')
-            States.queue.current[0].change_animation('standing')
+            States.is_animate = True
+            States.queue.current[0].change_animation(action, who=States.queue.current[0])
+            States.whom_attack.change_animation('getting_hit', who=States.whom_attack)
 
         States.queue.current.append(States.queue.current.pop(0))
         self.block_updater.update_avatars()

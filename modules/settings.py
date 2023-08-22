@@ -41,6 +41,7 @@ class States:
 
     # all units info:
     queue = None
+    animations = []
 
     # active unit info:
     row_active = None

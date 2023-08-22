@@ -48,7 +48,8 @@ class Unit:
         self.avatar = None
         self.direction = None
         self.img = None
-        self.list_animations = []
+        self.list_animations = None
+        self.is_active = False
 
         self.animation_count = 0
         self.path_pos = 0
@@ -85,30 +86,26 @@ class Unit:
     def draw(self, screen):
         self.draw_character(screen)
 
-        if self.list_animations[0].name == 'moving':
+        if self.is_active and States.animations[0].name == 'moving':
             self.move()
 
         self.draw_character_count(screen)
 
     def draw_character(self, screen):
-        self.img = self.list_animations[0].animation[self.animation_count]
+        animation = self.list_animations
+        if self.is_active:
+            animation = States.animations[0]
+
+        self.img = animation.animation[self.animation_count]
         self.animation_count += 1
 
-        if self.animation_count >= len(self.list_animations[0].animation):
+        if self.animation_count >= len(animation.animation):
             self.animation_count = 0
+            self.reset_direction()
 
-            if self.list_animations[0].who_next:
-                self.list_animations[0].who_next.change_animation(self.list_animations[0].what_next)
-                self.list_animations[0].who_next.change_animation('standing')
-                self.reset_direction()
-
-            if self.list_animations[0].name not in ['standing', 'moving']:
-                States.is_animate = False
-                self.list_animations.pop(0)
-
-        if self.list_animations[0].name == 'standing' and len(self.list_animations) > 1:
-            self.animation_count = 0
-            self.list_animations.pop(0)
+            if animation.name not in ['standing', 'moving']:
+                self.is_active, States.is_animate = False, False
+                States.animations.pop(0)
 
         screen.blit(self.img, (self.x - self.img_size_x / 4, self.y - self.img_size_y * (1 / 2)))
 
@@ -136,19 +133,20 @@ class Unit:
         self.dis += math.sqrt((move_x - x1) ** 2 + (move_y - y1) ** 2)
 
         if self.dis >= move_dis:
-            self.dis = 0
-            self.move_count = 0
+            self.dis, self.move_count = 0, 0
             self.path_pos += 1
 
             if self.path_pos == len(self.path) - 1:
                 self.animation_count, self.path_pos = 0, 0
-                States.is_animate = False
-                self.list_animations.pop(0)
+                self.is_active, States.is_animate = False, False
+                States.animations.pop(0)
+                if len(States.animations) > 0:
+                    States.animations[0].who.is_active = True
 
         self.x = x2
         self.y = y2
 
-    def change_animation(self, animation_name, who_next=None, what_next=None):
+    def change_animation(self, animation_name, who=None):
         self.animation_count = 0
         speed, images = self.choose_animation_info(animation_name)
 
@@ -160,11 +158,12 @@ class Unit:
                 unit = pygame.transform.flip(unit, self.direction, False)
                 animation_img.append(unit)
 
-        self.update_states(animation_name, animation_img, who_next=who_next, what_next=what_next)
+        self.update_states(animation_name, animation_img, who)
 
     def choose_animation_info(self, animation):
         if animation == 'standing':
             self.reset_direction()
+            self.is_active = False
             return 10, self.standing
 
         States.is_animate = True
@@ -191,19 +190,24 @@ class Unit:
             return 6, self.shoot_up
 
         if animation == 'getting_hit':
+            self.update_direction()
             return 6, self.getting_hit
 
-    def update_states(self, animation_name, animation_img, who_next=None, what_next=None):
-        self.list_animations.append(Animation(animation_name, animation_img, who_next, what_next))
+    def update_states(self, animation_name, animation_img, who):
+        if animation_name != 'standing':
+            if len(States.animations) == 0:
+                self.is_active = True
+            States.animations.append(Animation(animation_name, animation_img, who))
+        else:
+            self.list_animations = Animation(animation_name, animation_img, who)
 
 
 class Animation:
 
-    def __init__(self, name, animation, who_next, what_next):
+    def __init__(self, name, animation, who):
         self.name = name
         self.animation = animation
-        self.who_next = who_next
-        self.what_next = what_next
+        self.who = who
 
 
 class Angel(Unit):
