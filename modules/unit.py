@@ -64,23 +64,33 @@ class Unit:
     def reset_direction(self):
         self.direction = False if self.team == 1 else True
 
-    def update_direction(self):
+    def update_direction(self, animation):
         if self.team == 2:
-            if States.col_active < States.point_c:
-                self.direction = False
-            elif States.col_active == States.point_c and States.whom_attack is not None:
-                if (States.point_c == States.whom_attack.hex[1] and States.row_active % 2 == 1) or (States.point_c < States.whom_attack.hex[1] and States.row_active % 2 == 0):
+            self.direction = True
+            if animation == 'getting_hit':
+                if States.cursor_direction is not None:
+                    self.direction = not States.cursor_direction
+                    States.cursor_direction = not States.cursor_direction
+                elif States.col_active > States.point_c:
                     self.direction = False
-                if States.point_r == States.whom_attack.hex[0] and States.point_c < States.whom_attack.hex[1]:
+            else:
+                if animation != 'moving' and States.cursor_direction is not None:
+                    self.direction = States.cursor_direction
+                elif States.col_active < States.point_c:
                     self.direction = False
 
         if self.team == 1:
-            if States.col_active > States.point_c:
-                self.direction = True
-            elif States.col_active == States.point_c and States.whom_attack is not None:
-                if (States.point_c == States.whom_attack.hex[1] and States.row_active % 2 == 0) or (States.point_c > States.whom_attack.hex[1] and States.row_active % 2 == 1):
+            self.direction = False
+            if animation == 'getting_hit':
+                if States.cursor_direction is not None:
+                    self.direction = not States.cursor_direction
+                    States.cursor_direction = not States.cursor_direction
+                elif States.col_active < States.point_c:
                     self.direction = True
-                if States.point_r == States.whom_attack.hex[0] and States.point_c > States.whom_attack.hex[1]:
+            else:
+                if animation != 'moving' and States.cursor_direction is not None:
+                    self.direction = States.cursor_direction
+                elif States.col_active > States.point_c:
                     self.direction = True
 
     def draw(self, screen):
@@ -167,30 +177,23 @@ class Unit:
             return 10, self.standing
 
         States.is_animate = True
+        self.update_direction(animation)
         if animation == 'moving':
-            self.update_direction()
             return 6, self.moving
         if animation == 'attack_straight':
-            self.update_direction()
             return 6, self.attack_straight
         if animation == 'attack_down':
-            self.update_direction()
             return 6, self.attack_down
         if animation == 'attack_up':
-            self.update_direction()
             return 6, self.attack_up
         if animation == 'shoot_straight':
-            self.update_direction()
             return 6, self.shoot_straight
         if animation == 'shoot_down':
-            self.update_direction()
             return 6, self.shoot_down
         if animation == 'shoot_up':
-            self.update_direction()
             return 6, self.shoot_up
 
         if animation == 'getting_hit':
-            self.update_direction()
             return 6, self.getting_hit
 
     def update_states(self, animation_name, animation_img, who):

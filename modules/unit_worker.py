@@ -16,14 +16,14 @@ class UnitWorker:
 
     @staticmethod
     def draw_units(screen):
+        id_ = None
         if len(States.animations) > 0:
+            id_ = id(States.animations[0].who)
             if States.animations[0].who.is_active is False:
                 States.animations[0].who.is_active = True
                 States.animations[0].who.animation_count = 0
-
             States.animations[0].who.draw(screen)
 
         for item in States.queue.current:
-            if len(States.animations) == 0 or (len(States.animations) > 0 and item != States.animations[0]):
+            if id_ != id(item):
                 item.draw(screen)
-

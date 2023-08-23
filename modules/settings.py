@@ -57,6 +57,7 @@ class States:
 
     # mouse cursor info:
     cursor = None
+    cursor_direction = None
     point_over = None
     point_x = None
     point_y = None

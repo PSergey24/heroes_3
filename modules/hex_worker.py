@@ -45,6 +45,7 @@ class HexWorker:
 
     def update_cursor(self):
         States.cursor = pygame.image.load(os.path.join(f"data/rcom/clean/Crcom000.png"))
+        States.cursor_direction = None
 
         if 0 <= States.point_r < Settings.n_rows and 0 <= States.point_c < Settings.n_columns and \
                 States.is_animate is False:
@@ -74,21 +75,27 @@ class HexWorker:
                                 if (0 <= degrees < 45 or 315 <= degrees < 360) and i == 0:
                                     States.point_attack = [States.point_r, States.point_c]
                                     States.whom_attack = States.hexagons[nb_r][nb_c].who_engaged
+                                    States.cursor_direction = False
                                     States.cursor = pygame.image.load(os.path.join(f"data/rcom/clean/Crcom017.png"))
                                 elif 45 <= degrees < 90 and i == 5:
                                     States.whom_attack = States.hexagons[nb_r][nb_c].who_engaged
+                                    States.cursor_direction = False
                                     States.cursor = pygame.image.load(os.path.join(f"data/rcom/clean/Crcom018.png"))
                                 elif 90 <= degrees < 135 and i == 4:
                                     States.whom_attack = States.hexagons[nb_r][nb_c].who_engaged
+                                    States.cursor_direction = True
                                     States.cursor = pygame.image.load(os.path.join(f"data/rcom/clean/Crcom020.png"))
                                 elif 135 <= degrees < 225 and i == 3:
                                     States.whom_attack = States.hexagons[nb_r][nb_c].who_engaged
+                                    States.cursor_direction = True
                                     States.cursor = pygame.image.load(os.path.join(f"data/rcom/clean/Crcom021.png"))
                                 elif 225 <= degrees < 270 and i == 2:
                                     States.whom_attack = States.hexagons[nb_r][nb_c].who_engaged
+                                    States.cursor_direction = True
                                     States.cursor = pygame.image.load(os.path.join(f"data/rcom/clean/Crcom022.png"))
                                 elif 270 <= degrees < 315 and i == 1:
                                     States.whom_attack = States.hexagons[nb_r][nb_c].who_engaged
+                                    States.cursor_direction = False
                                     States.cursor = pygame.image.load(os.path.join(f"data/rcom/clean/Crcom016.png"))
             else:
                 x, y, z = self.offset2cube(States.row_active, States.col_active)
