@@ -58,7 +58,7 @@ class Game:
                     self.block_updater.update_buttons_by_click()
 
                     if action := self.hex_worker.get_move_type():
-                        self.update_character_info(action)
+                        self.update_unit_info(action)
 
             self.draw_cursor()
             self.draw_info_block()
@@ -92,33 +92,8 @@ class Game:
     def update_buttons(self):
         self.block_updater.update_buttons()
 
-    def update_character_info(self, action):
-        States.step += 1
-        States.queue.current[0].btn_defense, States.queue.current[0].btn_wait = True, True
-        print(f"action: {action}")
-
-        if action == 'moving':
-            States.is_animate = True
-            States.queue.current[0].change_animation('moving', who=States.queue.current[0])
-            self.hex_worker.update_character_position()
-
-        if action.find('attack') != -1:
-            States.is_animate = True
-            if States.row_active != States.point_r or States.col_active != States.point_c:
-                States.queue.current[0].change_animation('moving', who=States.queue.current[0])
-                self.hex_worker.update_character_position()
-
-            States.queue.current[0].change_animation(action, who=States.queue.current[0])
-            States.whom_attack.change_animation('getting_hit', who=States.whom_attack)
-            States.whom_attack.change_animation('attack_straight', who=States.whom_attack)
-            States.queue.current[0].change_animation('getting_hit', who=States.queue.current[0])
-
-        if action.find('shoot') != -1:
-            States.is_animate = True
-            States.queue.current[0].change_animation(action, who=States.queue.current[0])
-            States.whom_attack.change_animation('getting_hit', who=States.whom_attack)
-
-        States.queue.current.append(States.queue.current.pop(0))
+    def update_unit_info(self, action):
+        self.unit_worker.update_units(action)
         self.block_updater.update_avatars()
 
     @staticmethod

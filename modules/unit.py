@@ -23,7 +23,7 @@ class Unit:
         self.speed = None
         self.is_shooter = False
         self.is_flyer = False
-        self.is_answer = True
+        self.is_answer = 1
 
         # btn
         self.btn_wait = False
@@ -37,6 +37,7 @@ class Unit:
         self.getting_hit = None
         self.defend = None
         self.death = None
+        self.dead = None
         self.attack_up = None
         self.attack_straight = None
         self.attack_down = None
@@ -178,6 +179,8 @@ class Unit:
 
         States.is_animate = True
         self.update_direction(animation)
+        if animation == 'death':
+            return 6, self.death
         if animation == 'moving':
             return 6, self.moving
         if animation == 'attack_straight':
@@ -234,6 +237,7 @@ class Angel(Unit):
         self.getting_hit = ["19", "20", "21", "22", "23", "24"]
         self.defend = ["31", "32", "33", "34", "34", "34", "34", "33", "32", "31", "42"]
         self.death = ["19", "20", "25", "26", "27", "28", "29", "30"]
+        self.dead = "30"
         self.attack_up = ["07", "08", "09", "10", "11", "12"]
         self.attack_straight = ["01", "02", "03", "04", "05", "06"]
         self.attack_down = ["13", "14", "15", "16", "17", "18"]
@@ -264,6 +268,7 @@ class Elf(Unit):
         self.getting_hit = ["64", "65", "66", "67", "68", "69"]
         self.defend = ["40", "41", "42", "43", "43", "43", "43", "43", "42", "41", "40"]
         self.death = ["64", "65", "37", "38", "39"]
+        self.dead = "39"
         self.attack_up = ["19", "20", "27", "28", "29", "30", "31", "26"]
         self.attack_straight = ["19", "20", "21", "22", "23", "24", "25", "26"]
         self.attack_down = ["19", "20", "32", "33", "34", "35", "36", "26"]
@@ -297,6 +302,7 @@ class Lich(Unit):
         self.getting_hit = ["66", "67", "68", "69", "70", "71"]
         self.defend = ["42", "43", "44", "45", "45", "45", "45", "45", "44", "43", "42"]
         self.death = ["35", "36", "37", "38", "39", "40", "41"]
+        self.dead = "41"
         self.attack_up = ["13", "14", "21", "22", "23", "24", "25", "26"]
         self.attack_straight = ["13", "14", "15", "16", "17", "18", "19", "20"]
         self.attack_down = ["27", "28", "29", "30", "31", "32", "33", "34"]
@@ -330,6 +336,7 @@ class Mage(Unit):
         self.getting_hit = ["66", "67", "68", "69", "70", "71"]
         self.defend = ["42", "43", "44", "45", "45", "45", "45", "45", "44", "43", "42"]
         self.death = ["34", "35", "36", "37", "38", "39", "40", "41"]
+        self.dead = "41"
         self.attack_up = ["16", "17", "18", "19", "26", "27", "28", "29", "24", "25"]
         self.attack_straight = ["16", "17", "18", "19", "20", "21", "22", "23", "24", "25"]
         self.attack_down = ["16", "17", "18", "19", "30", "31", "32", "33", "24", "25"]

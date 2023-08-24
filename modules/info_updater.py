@@ -1,4 +1,3 @@
-
 from modules.hex_worker import HexWorker
 from modules.settings import Settings, States
 
