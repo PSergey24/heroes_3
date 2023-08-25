@@ -1,4 +1,6 @@
+import os
 import random
+import pygame
 
 from modules.hex_worker import HexWorker
 from modules.settings import Settings, States
@@ -34,34 +36,26 @@ class UnitWorker:
                 self.hex_worker.update_character_position()
 
             States.queue.current[0].change_animation(action, who=States.queue.current[0])
-            States.whom_attack.change_animation('getting_hit', who=States.whom_attack)
+
             damage = self.damage_counter(States.queue.current[0], States.whom_attack)
-            States.whom_attack = self.update_health(States.whom_attack, damage)
+            States.whom_attack = self.health_updater(States.whom_attack, damage)
+            States.whom_attack = self.animation_updater(States.whom_attack)
 
             if States.whom_attack.is_answer > 0 and States.whom_attack.count > 0:
                 States.whom_attack.change_animation('attack_straight', who=States.whom_attack)
-                States.queue.current[0].change_animation('getting_hit', who=States.queue.current[0])
-                damage = self.damage_counter(States.whom_attack, States.queue.current[0])
-                States.queue.current[0] = self.update_health(States.queue.current[0], damage)
-                States.whom_attack.is_answer -= 1
-                if States.queue.current[0].count < 1:
-                    States.queue.current[0].change_animation('death', who=States.queue.current[0])
-                    if States.queue.current[0].btn_defense is True:
-                        States.step -= 1
-                    States.queue.drop_unit_by_id(id(States.queue.current[0]))
-                    States.hexagons[States.queue.current[0].hex[0]][States.queue.current[0].hex[1]].who_engaged = None
 
-            if States.whom_attack.count < 1:
-                States.whom_attack.change_animation('death', who=States.whom_attack)
-                if States.whom_attack.btn_defense is True:
-                    States.step -= 1
-                States.queue.drop_unit_by_id(id(States.whom_attack))
-                States.hexagons[States.whom_attack.hex[0]][States.whom_attack.hex[1]].who_engaged = None
+                damage = self.damage_counter(States.whom_attack, States.queue.current[0])
+                States.queue.current[0] = self.health_updater(States.queue.current[0], damage)
+                States.queue.current[0] = self.animation_updater(States.queue.current[0])
+                States.whom_attack.is_answer -= 1
 
         if action.find('shoot') != -1:
             States.is_animate = True
             States.queue.current[0].change_animation(action, who=States.queue.current[0])
-            States.whom_attack.change_animation('getting_hit', who=States.whom_attack)
+
+            damage = self.damage_counter(States.queue.current[0], States.whom_attack)
+            States.whom_attack = self.health_updater(States.whom_attack, damage)
+            States.whom_attack = self.animation_updater(States.whom_attack)
 
         States.queue.current.append(States.queue.current.pop(0))
 
@@ -87,14 +81,29 @@ class UnitWorker:
         return 1
 
     @staticmethod
-    def update_health(defender, damage):
+    def health_updater(defender, damage):
         count_dead, count_health = int(damage // defender.health), damage % defender.health
         defender.count -= count_dead
         defender.health = count_health
         return defender
 
     @staticmethod
-    def draw_units(screen):
+    def animation_updater(defender):
+        if defender.count < 1:
+            defender.change_animation('death', who=defender)
+            if defender.btn_defense is True:
+                States.step -= 1
+        else:
+            defender.change_animation('getting_hit', who=defender)
+        return defender
+
+    def draw_units(self, screen):
+        for item in States.queue.dead:
+            if self.is_animate(item) is False:
+                unit = pygame.image.load(os.path.join(f"data/{item.character}/dead/c{item.character}{item.dead}.png"))
+                unit = pygame.transform.scale(unit, (item.img_size_x, item.img_size_y))
+                screen.blit(unit, (item.x - item.img_size_x / 4, item.y - item.img_size_y * (1 / 2)))
+
         id_ = None
         if len(States.animations) > 0:
             id_ = id(States.animations[0].who)
@@ -106,3 +115,10 @@ class UnitWorker:
         for item in States.queue.current:
             if id_ != id(item):
                 item.draw(screen)
+
+    @staticmethod
+    def is_animate(item):
+        for animation in States.animations:
+            if id(item) == id(animation.who):
+                return True
+        return False

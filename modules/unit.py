@@ -4,6 +4,7 @@ import pygame
 import math
 
 from modules.settings import Settings, States
+from modules.block_updater import BlockUpdater
 
 
 class Unit:
@@ -60,6 +61,7 @@ class Unit:
         self.img_size_x = None
         self.img_size_y = None
 
+        self.block_updater = BlockUpdater()
         self.reset_direction()
 
     def reset_direction(self):
@@ -117,6 +119,11 @@ class Unit:
             if animation.name not in ['standing', 'moving']:
                 self.is_active, States.is_animate = False, False
                 States.animations.pop(0)
+
+            if animation.name == 'death':
+                States.queue.drop_unit_by_id(id(animation.who))
+                States.hexagons[animation.who.hex[0]][animation.who.hex[1]].who_engaged = None
+                self.block_updater.update_avatars()
 
         screen.blit(self.img, (self.x - self.img_size_x / 4, self.y - self.img_size_y * (1 / 2)))
 

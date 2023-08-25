@@ -8,25 +8,19 @@ class BlockUpdater:
 
     def __init__(self):
         self.buttons = []
-        self.main = None
-        self.left = None
-        self.center = None
-        self.right = None
-
-        self.top_center = None
-        self.bottom_center = None
 
     def create_info_block(self):
         States.main = self.create_div(Settings.info_block_margin, Settings.height - 130, Settings.info_block_width,
                                       Settings.info_block_height, (220, 200, 0, 80))
-        self.left = self.create_div(0, 0, Settings.left_ib_width, Settings.info_block_height, (255, 255, 255, 80),
-                                    parent=States.main)
-        self.center = self.create_div(Settings.left_ib_width, 0, Settings.center_ib_width, Settings.info_block_height,
-                                      (0, 0, 155, 120), parent=States.main)
-        self.right = self.create_div(Settings.left_ib_width + Settings.center_ib_width, 0, Settings.right_ib_width,
-                                     Settings.info_block_height, (255, 255, 255, 80), parent=States.main)
-        self.top_center = self.create_div(0, 0, Settings.center_ib_width, 80, (155, 0, 0, 80), parent=self.center)
-        self.bottom_center = self.create_div(0, 80, Settings.center_ib_width, 10, (0, 155, 0, 80), parent=self.center)
+        States.left = self.create_div(0, 0, Settings.left_ib_width, Settings.info_block_height, (255, 255, 255, 80),
+                                      parent=States.main)
+        States.center = self.create_div(Settings.left_ib_width, 0, Settings.center_ib_width, Settings.info_block_height,
+                                        (0, 0, 155, 120), parent=States.main)
+        States.right = self.create_div(Settings.left_ib_width + Settings.center_ib_width, 0, Settings.right_ib_width,
+                                       Settings.info_block_height, (255, 255, 255, 80), parent=States.main)
+        States.top_center = self.create_div(0, 0, Settings.center_ib_width, 80, (155, 0, 0, 80), parent=States.center)
+        States.bottom_center = self.create_div(0, 80, Settings.center_ib_width, 10, (0, 155, 0, 80),
+                                               parent=States.center)
 
         self.create_buttons()
         self.update_avatars()
@@ -40,14 +34,14 @@ class BlockUpdater:
 
     def create_buttons(self):
         self.create_button(0, 0, Settings.right_ib_width / 2,
-                           Settings.info_block_height / 2, "shooter", parent=self.right)
+                           Settings.info_block_height / 2, "shooter", parent=States.right)
 
         self.create_button(0, Settings.info_block_height / 2, Settings.right_ib_width / 2,
-                           Settings.info_block_height / 2, "wait", parent=self.right)
+                           Settings.info_block_height / 2, "wait", parent=States.right)
 
         self.create_button(Settings.right_ib_width / 2, Settings.info_block_height / 2,
                            Settings.right_ib_width / 2, Settings.info_block_height / 2, "defense",
-                           parent=self.right)
+                           parent=States.right)
 
     def create_button(self, left, top, width, height, name, parent=None):
         img = ImgBtn(left, top, width, height, parent=parent, name=name)
@@ -57,7 +51,7 @@ class BlockUpdater:
         self.buttons.append(img)
 
     def update_avatars(self):
-        self.top_center.children.clear()
+        States.top_center.children.clear()
         count = 15
 
         max_step = len(States.queue.current)
@@ -90,7 +84,7 @@ class BlockUpdater:
         if item.team == 2:
             color = (0, 0, 255)
 
-        box = self.create_div(left, 0, Settings.avatar_width, 80, color, parent=self.top_center)
+        box = self.create_div(left, 0, Settings.avatar_width, 80, color, parent=States.top_center)
 
         img = ImgAvatar(0, 0, height=Settings.avatar_height, width=Settings.avatar_width, parent=box,
                         name=item.character, way=f"data/move_order/{item.avatar}")
@@ -107,7 +101,7 @@ class BlockUpdater:
         left = self.get_avatar_position(idx)
         color = (100, 100, 0)
 
-        box = self.create_div(left, 0, Settings.avatar_width, 80, color, parent=self.top_center)
+        box = self.create_div(left, 0, Settings.avatar_width, 80, color, parent=States.top_center)
 
         img = ImgAvatar(0, 0, height=Settings.avatar_height, width=Settings.avatar_width, parent=box,
                         name='round', way=f"data/move_order/CPrLBlk.bmp")
@@ -121,7 +115,7 @@ class BlockUpdater:
         box.update_children(txt)
 
     def get_avatar_position(self, idx):
-        return 0 if idx == 0 else idx * self.top_center.children[-1].width
+        return 0 if idx == 0 else idx * States.top_center.children[-1].width
 
     def update_buttons(self):
         for btn in self.buttons:

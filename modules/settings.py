@@ -67,5 +67,10 @@ class States:
 
     # block info:
     main = None
+    left = None
+    center = None
+    right = None
+    top_center = None
+    bottom_center = None
 
 
