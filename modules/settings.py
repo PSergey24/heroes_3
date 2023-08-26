@@ -48,6 +48,7 @@ class States:
     col_active = None
     speed_active = None
     reachable_points = None
+    double_reachable_points = None
     whom_attack = None
     point_attack = None
 
@@ -72,5 +73,8 @@ class States:
     right = None
     top_center = None
     bottom_center = None
+
+    # special units
+    double_hex_units = ["bdrgn"]
 
 

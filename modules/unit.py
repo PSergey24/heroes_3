@@ -21,6 +21,7 @@ class Unit:
         self.defense = None
         self.damage = None
         self.health = None
+        self.cur_health = None
         self.speed = None
         self.is_shooter = False
         self.is_flyer = False
@@ -123,6 +124,9 @@ class Unit:
             if animation.name == 'death':
                 States.queue.drop_unit_by_id(id(animation.who))
                 States.hexagons[animation.who.hex[0]][animation.who.hex[1]].who_engaged = None
+
+                if animation.who.character in States.double_hex_units:
+                    States.hexagons[animation.who.hex[0]][animation.who.hex[1] + 1].who_engaged = None
                 self.block_updater.update_avatars()
 
         screen.blit(self.img, (self.x - self.img_size_x / 4, self.y - self.img_size_y * (1 / 2)))
@@ -236,6 +240,7 @@ class Angel(Unit):
         self.health = 200
         self.speed = 12
 
+        self.cur_health = self.health
         self.is_flyer = True
 
         self.moving = ["41", "42", "43", "44", "45", "46", "47"]
@@ -267,6 +272,8 @@ class Elf(Unit):
         self.damage = [3, 5]
         self.health = 15
         self.speed = 6
+
+        self.cur_health = self.health
         self.is_shooter = True
 
         self.moving = ["54", "55", "56", "57", "58", "59", "60", "61"]
@@ -301,6 +308,8 @@ class Lich(Unit):
         self.damage = [11, 13]
         self.health = 30
         self.speed = 6
+
+        self.cur_health = self.health
         self.is_shooter = True
 
         self.moving = ["56", "57", "58", "59", "60", "61", "62", "63"]
@@ -335,6 +344,8 @@ class Mage(Unit):
         self.damage = [7, 9]
         self.health = 25
         self.speed = 5
+
+        self.cur_health = self.health
         self.is_shooter = True
 
         self.moving = ["56", "57", "58", "59", "60", "61", "62", "63"]
@@ -356,3 +367,38 @@ class Mage(Unit):
 
         self.change_animation('standing')
 
+
+class BDragon(Unit):
+
+    def __init__(self, i, j, count, team):
+        super().__init__(i, j, count, team)
+
+        self.character = 'bdrgn'
+        self.avatar = 'CPrLBlk.bmp'
+        self.attack = 25
+        self.defense = 25
+        self.damage = [40, 50]
+        self.health = 300
+        self.speed = 15
+
+        self.cur_health = self.health
+        self.is_flyer = True
+
+        self.moving = ["11", "12", "11", "10"]
+        self.mouse_over = ["01", "04", "05", "06", "01"]
+        self.standing = ["01", "02", "03", "03", "03", "02", "01", "01"]
+        self.getting_hit = ["01", "49", "50", "51", "52", "53", "01"]
+        self.defend = ["01", "20", "21", "22", "23", "23", "24", "25", "01"]
+        self.death = ["01", "49", "50", "51", "54", "55", "56", "57", "58", "59"]
+        self.dead = "59"
+        self.attack_up = ["01", "26", "27", "28", "29", "30", "31", "32", "33", "01"]
+        self.attack_straight = ["01", "34", "35", "36", "37", "38", "39", "01"]
+        self.attack_down = ["01", "40", "41", "42", "43", "44", "45", "46", "47", "48", "01"]
+        self.dhex_attack_up = ["01", "26", "27", "28", "60", "61", "62", "63", "33", "01"]
+        self.dhex_attack_straight = ["01", "64", "65", "66", "67", "68", "69", "01"]
+        self.dhex_attack_down = ["01", "40", "41", "42", "70", "71", "72", "73", "47", "48", "01"]
+
+        self.img_size_x = 280
+        self.img_size_y = self.img_size_x / 1.125
+
+        self.change_animation('standing')

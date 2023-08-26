@@ -3,7 +3,7 @@ import pygame
 
 from modules.settings import Settings, States
 from modules.my_queue import MyQueue
-from modules.unit import Angel, Lich, Mage, Elf
+from modules.unit import Angel, Lich, Mage, Elf, BDragon
 from modules.hex_worker import HexWorker
 from modules.unit_worker import UnitWorker
 from modules.info_updater import InfoUpdater
@@ -17,8 +17,8 @@ class Game:
         self.bg = pygame.image.load(os.path.join("data/bg", "CmBkDrDd.bmp"))
         self.bg = pygame.transform.scale(self.bg, (Settings.width, Settings.height))
 
-        self.left_team = [Angel(2, 1, 1, 1)]
-        self.right_team = [Lich(1, 1, 17, 2), Lich(1, 2, 16, 2), Lich(2, 0, 15, 2), Lich(3, 1, 14, 2)]
+        self.left_team = [Angel(2, 1, 1, 1), BDragon(7, 0, 3, 1)]
+        self.right_team = [Lich(2, 13, 17, 2), Lich(1, 2, 16, 2), Lich(2, 0, 15, 2), Lich(3, 1, 14, 2)]
 
         self.hex_worker = HexWorker()
         self.unit_worker = UnitWorker()

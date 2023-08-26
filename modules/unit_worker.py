@@ -14,7 +14,12 @@ class UnitWorker:
     @staticmethod
     def create_units(team):
         for unit in team:
-            States.hexagons[unit.hex[0]][unit.hex[1]].who_engaged = unit
+            if unit.character in States.double_hex_units and unit.hex[1] + 1 < Settings.n_columns:
+                States.hexagons[unit.hex[0]][unit.hex[1]].who_engaged = unit
+                States.hexagons[unit.hex[0]][unit.hex[1] + 1].who_engaged = unit
+            else:
+                States.hexagons[unit.hex[0]][unit.hex[1]].who_engaged = unit
+
             unit.x = States.hexagons[unit.hex[0]][unit.hex[1]].corner[0]
             unit.y = States.hexagons[unit.hex[0]][unit.hex[1]].corner[1]
 
@@ -82,9 +87,13 @@ class UnitWorker:
 
     @staticmethod
     def health_updater(defender, damage):
-        count_dead, count_health = int(damage // defender.health), damage % defender.health
-        defender.count -= count_dead
-        defender.health = count_health
+        total_health = (defender.count - 1) * defender.health + defender.cur_health
+
+        count_alive, count_health = int((total_health - damage) // defender.health) + 1, (total_health - damage) % defender.health
+        defender.count = count_alive
+        defender.cur_health = count_health
+        if defender.count <= 0:
+            defender.count, defender.cur_health = 0, 0
         return defender
 
     @staticmethod
