@@ -159,6 +159,7 @@ class Unit:
             self.path_pos += 1
 
             if self.path_pos == len(self.path) - 1:
+                self.path.clear()
                 self.animation_count, self.path_pos = 0, 0
                 self.is_active, States.is_animate = False, False
                 States.animations.pop(0)

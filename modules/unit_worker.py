@@ -27,16 +27,22 @@ class UnitWorker:
     def update_units(self, action):
         States.step += 1
         States.queue.current[0].btn_defense, States.queue.current[0].btn_wait = True, True
+        is_double_hex = States.queue.current[0].character in States.double_hex_units
         print(f"action: {action}")
 
         if action == 'moving':
             States.is_animate = True
             States.queue.current[0].change_animation('moving', who=States.queue.current[0])
+            if is_double_hex:
+                self.hex_worker.update_double_hex_position()
             self.hex_worker.update_character_position()
 
         if action.find('attack') != -1:
             States.is_animate = True
-            if States.row_active != States.point_r or States.col_active != States.point_c:
+            if is_double_hex:
+                self.hex_worker.update_double_hex_attack()
+
+            if States.row_active != States.point_attack[0] or States.col_active != States.point_attack[1]:
                 States.queue.current[0].change_animation('moving', who=States.queue.current[0])
                 self.hex_worker.update_character_position()
 
