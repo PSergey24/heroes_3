@@ -18,7 +18,7 @@ class Game:
         self.bg = pygame.transform.scale(self.bg, (Settings.width, Settings.height))
 
         self.left_team = [Angel(2, 4, 1, 1), BDragon(7, 0, 3, 1)]
-        self.right_team = [Lich(2, 13, 17, 2), BDragon(1, 2, 2, 2), BDragon(2, 0, 3, 2), Lich(3, 1, 14, 2)]
+        self.right_team = [Lich(2, 13, 17, 2), Lich(8, 0, 17, 2), BDragon(1, 2, 2, 2), BDragon(6, 0, 3, 2), Lich(3, 1, 14, 2)]
 
         self.hex_worker = HexWorker()
         self.unit_worker = UnitWorker()

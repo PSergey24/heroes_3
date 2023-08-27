@@ -31,6 +31,9 @@ class Settings:
     avatar_width = 58
     avatar_height = 64
 
+    # special units
+    double_hex_units = ["bdrgn"]
+
 
 class States:
     # game info:
@@ -44,8 +47,7 @@ class States:
     animations = []
 
     # active unit info:
-    row_active = None
-    col_active = None
+    unit_active = None
     speed_active = None
     reachable_points = None
     double_reachable_points = None
@@ -74,7 +76,6 @@ class States:
     top_center = None
     bottom_center = None
 
-    # special units
-    double_hex_units = ["bdrgn"]
+
 
 

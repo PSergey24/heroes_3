@@ -14,20 +14,20 @@ class UnitWorker:
     @staticmethod
     def create_units(team):
         for unit in team:
-            if unit.character in States.double_hex_units and unit.hex[1] + 1 < Settings.n_columns:
-                States.hexagons[unit.hex[0]][unit.hex[1]].who_engaged = unit
-                States.hexagons[unit.hex[0]][unit.hex[1] + 1].who_engaged = unit
-            else:
-                States.hexagons[unit.hex[0]][unit.hex[1]].who_engaged = unit
+            States.hexagons[unit.hex[0][0]][unit.hex[0][1]].who_engaged = unit
+            if unit.character in Settings.double_hex_units:
+                States.hexagons[unit.hex[1][0]][unit.hex[1][1]].who_engaged = unit
 
-            unit.x = States.hexagons[unit.hex[0]][unit.hex[1]].corner[0]
-            unit.y = States.hexagons[unit.hex[0]][unit.hex[1]].corner[1]
+            unit.x = States.hexagons[unit.hex[0][0]][unit.hex[0][1]].corner[0]
+            unit.y = States.hexagons[unit.hex[0][0]][unit.hex[0][1]].corner[1]
 
     # action and damage handler
     def update_units(self, action):
         States.step += 1
         States.queue.current[0].btn_defense, States.queue.current[0].btn_wait = True, True
-        is_double_hex = States.queue.current[0].character in States.double_hex_units
+        is_double_hex = States.queue.current[0].character in Settings.double_hex_units
+
+        row_active, col_active = States.unit_active.hex[0][0], States.unit_active.hex[0][1]
         print(f"action: {action}")
 
         if action == 'moving':
@@ -40,11 +40,15 @@ class UnitWorker:
         if action.find('attack') != -1:
             States.is_animate = True
             if is_double_hex:
-                self.hex_worker.update_double_hex_attack()
+                # todo
+                # start: row_active, col_active
+                # goal: States.point_r, States.point_c
+                row_active, col_active = self.hex_worker.update_double_hex_attack(row_active, col_active)
 
-            if States.row_active != States.point_attack[0] or States.col_active != States.point_attack[1]:
-                States.queue.current[0].change_animation('moving', who=States.queue.current[0])
-                self.hex_worker.update_character_position()
+            else:
+                if row_active != States.point_attack[0] or col_active != States.point_attack[1]:
+                    States.queue.current[0].change_animation('moving', who=States.queue.current[0])
+                    self.hex_worker.update_character_position()
 
             States.queue.current[0].change_animation(action, who=States.queue.current[0])
 

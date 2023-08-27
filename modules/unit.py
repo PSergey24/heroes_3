@@ -12,7 +12,7 @@ class Unit:
     def __init__(self, i, j, count, team):
         self.count = count
         self.team = team
-        self.hex = [i, j]
+        self.hex = []
         self.x = None
         self.y = None
 
@@ -65,22 +65,29 @@ class Unit:
         self.block_updater = BlockUpdater()
         self.reset_direction()
 
+    def update_hex(self, i, j):
+        self.hex.append([i, j])
+        if self.character in Settings.double_hex_units:
+            self.hex.append([i, j + 1])
+
     def reset_direction(self):
         self.direction = False if self.team == 1 else True
 
     def update_direction(self, animation):
+        col_active = States.unit_active.hex[0][1]
+
         if self.team == 2:
             self.direction = True
             if animation == 'getting_hit':
                 if States.cursor_direction is not None:
                     self.direction = not States.cursor_direction
                     States.cursor_direction = not States.cursor_direction
-                elif States.col_active > States.point_c:
+                elif col_active > States.point_c:
                     self.direction = False
             else:
                 if animation != 'moving' and States.cursor_direction is not None:
                     self.direction = States.cursor_direction
-                elif States.col_active < States.point_c:
+                elif col_active < States.point_c:
                     self.direction = False
 
         if self.team == 1:
@@ -89,12 +96,12 @@ class Unit:
                 if States.cursor_direction is not None:
                     self.direction = not States.cursor_direction
                     States.cursor_direction = not States.cursor_direction
-                elif States.col_active < States.point_c:
+                elif col_active < States.point_c:
                     self.direction = True
             else:
                 if animation != 'moving' and States.cursor_direction is not None:
                     self.direction = States.cursor_direction
-                elif States.col_active > States.point_c:
+                elif col_active > States.point_c:
                     self.direction = True
 
     def draw(self, screen):
@@ -123,10 +130,10 @@ class Unit:
 
             if animation.name == 'death':
                 States.queue.drop_unit_by_id(id(animation.who))
-                States.hexagons[animation.who.hex[0]][animation.who.hex[1]].who_engaged = None
+                States.hexagons[animation.who.hex[0][0]][animation.who.hex[0][1]].who_engaged = None
 
-                if animation.who.character in States.double_hex_units:
-                    States.hexagons[animation.who.hex[0]][animation.who.hex[1] + 1].who_engaged = None
+                if animation.who.character in Settings.double_hex_units:
+                    States.hexagons[animation.who.hex[1][0]][animation.who.hex[1][1]].who_engaged = None
                 self.block_updater.update_avatars()
 
         screen.blit(self.img, (self.x - self.img_size_x / 4, self.y - self.img_size_y * (1 / 2)))
@@ -258,6 +265,7 @@ class Angel(Unit):
         self.img_size_x = 140
         self.img_size_y = self.img_size_x / 1.125
 
+        self.update_hex(i, j)
         self.change_animation('standing')
 
 
@@ -294,6 +302,7 @@ class Elf(Unit):
         self.img_size_x = 120
         self.img_size_y = self.img_size_x / 1.125
 
+        self.update_hex(i, j)
         self.change_animation('standing')
 
 
@@ -330,6 +339,7 @@ class Lich(Unit):
         self.img_size_x = 120
         self.img_size_y = self.img_size_x / 1.125
 
+        self.update_hex(i, j)
         self.change_animation('standing')
 
 
@@ -366,6 +376,7 @@ class Mage(Unit):
         self.img_size_x = 120
         self.img_size_y = self.img_size_x / 1.125
 
+        self.update_hex(i, j)
         self.change_animation('standing')
 
 
@@ -402,4 +413,5 @@ class BDragon(Unit):
         self.img_size_x = 280
         self.img_size_y = self.img_size_x / 1.125
 
+        self.update_hex(i, j)
         self.change_animation('standing')

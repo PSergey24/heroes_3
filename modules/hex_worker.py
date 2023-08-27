@@ -44,107 +44,128 @@ class HexWorker:
         States.point_r, States.point_c = self.cube2offset(States.point_x, States.point_y, States.point_z)
 
     def update_cursor(self):
-        States.cursor = pygame.image.load(os.path.join(f"data/rcom/clean/Crcom000.png"))
+        row_active, col_active = States.unit_active.hex[0][0], States.unit_active.hex[0][1]
+        r_over, c_over = States.point_r, States.point_c
+        x_over, y_over, z_over = States.point_x, States.point_y, States.point_z
+
+        is_shooter = States.btn_shooter
+        is_flyer = States.queue.current[0].is_flyer
+        is_double = States.queue.current[0].character in Settings.double_hex_units
+
         States.cursor_direction = None
+        States.point_attack, States.whom_attack = None, None
+        States.cursor = pygame.image.load(os.path.join(f"data/rcom/clean/Crcom000.png"))
 
-        if 0 <= States.point_r < Settings.n_rows and 0 <= States.point_c < Settings.n_columns and \
-                States.is_animate is False:
-            if States.hexagons[States.point_r][States.point_c].who_engaged is None or \
-                    ((States.row_active == States.point_r) and (States.col_active == States.point_c)) or \
-                    (States.queue.current[0].character in States.double_hex_units and States.queue.current[0].hex[1] + 1 == States.point_c):
+        if 0 <= r_over < Settings.n_rows and 0 <= c_over < Settings.n_columns and States.is_animate is False:
+            over_is_double = States.hexagons[r_over][c_over].who_engaged is not None
+
+            if (r_over, c_over) in States.reachable_points or is_shooter:
                 States.cursor = pygame.image.load(os.path.join(f"data/rcom/clean/Crcom009.png"))
-                if States.queue.current[0].is_flyer:
+                if is_flyer:
                     States.cursor = pygame.image.load(os.path.join(f"data/rcom/clean/Crcom012.png"))
-                if (States.row_active == States.point_r) and (States.col_active == States.point_c):
-                    States.cursor = pygame.image.load(os.path.join(f"data/rcom/clean/Crcom028.png"))
+                if is_shooter:
+                    States.cursor = pygame.image.load(os.path.join(f"data/rcom/clean/Crcom006.png"))
 
-                States.point_attack, States.whom_attack = None, None
-                if States.btn_shooter is False:
-                    x = States.hexagons[States.point_r][States.point_c].corner[0] + Settings.r
-                    y = States.hexagons[States.point_r][States.point_c].corner[1] + Settings.R
-                    degrees = ((math.atan2(States.point_over[1] - y,
-                                           States.point_over[0] - x) + 2 * math.pi) * 180 / math.pi) % 360
-
-                    for i in range(6):
-                        nb_x, nb_y, nb_z = self.cube_neighbor((States.point_x, States.point_y, States.point_z), i)
-                        nb_r, nb_c = self.cube2offset(nb_x, nb_y, nb_z)
-
-                        if 0 <= nb_r < Settings.n_rows and 0 <= nb_c < Settings.n_columns and \
-                                (States.point_r, States.point_c) in States.reachable_points:
-                            if States.hexagons[nb_r][nb_c].who_engaged is not None and \
-                                    States.hexagons[States.row_active][States.col_active].who_engaged.team != States.hexagons[nb_r][nb_c].who_engaged.team:
-                                States.point_attack = [States.point_r, States.point_c]
-                                if (0 <= degrees < 45 or 315 <= degrees < 360) and i == 0:
-                                    States.whom_attack = States.hexagons[nb_r][nb_c].who_engaged
-                                    States.cursor_direction = False
-                                    States.cursor = pygame.image.load(os.path.join(f"data/rcom/clean/Crcom017.png"))
-                                elif 45 <= degrees < 90 and i == 5:
-                                    States.whom_attack = States.hexagons[nb_r][nb_c].who_engaged
-                                    States.cursor_direction = False
-                                    States.cursor = pygame.image.load(os.path.join(f"data/rcom/clean/Crcom018.png"))
-                                elif 90 <= degrees < 135 and i == 4:
-                                    States.whom_attack = States.hexagons[nb_r][nb_c].who_engaged
-                                    States.cursor_direction = True
-                                    States.cursor = pygame.image.load(os.path.join(f"data/rcom/clean/Crcom020.png"))
-                                elif 135 <= degrees < 225 and i == 3:
-                                    States.whom_attack = States.hexagons[nb_r][nb_c].who_engaged
-                                    States.cursor_direction = True
-                                    States.cursor = pygame.image.load(os.path.join(f"data/rcom/clean/Crcom021.png"))
-                                elif 225 <= degrees < 270 and i == 2:
-                                    States.whom_attack = States.hexagons[nb_r][nb_c].who_engaged
-                                    States.cursor_direction = True
-                                    States.cursor = pygame.image.load(os.path.join(f"data/rcom/clean/Crcom022.png"))
-                                elif 270 <= degrees < 315 and i == 1:
-                                    States.whom_attack = States.hexagons[nb_r][nb_c].who_engaged
-                                    States.cursor_direction = False
-                                    States.cursor = pygame.image.load(os.path.join(f"data/rcom/clean/Crcom016.png"))
-            else:
-                x, y, z = self.offset2cube(States.row_active, States.col_active)
-                is_neighbor_enemy = False
-                for i in range(6):
-                    nb_x, nb_y, nb_z = self.cube_neighbor((x, y, z), i)
-                    nb_r, nb_c = self.cube2offset(nb_x, nb_y, nb_z)
-                    if 0 <= nb_c < Settings.n_columns and 0 <= nb_r < Settings.n_rows:
-                        if States.hexagons[nb_r][nb_c].who_engaged is not None and States.hexagons[nb_r][nb_c].who_engaged.team != States.hexagons[States.row_active][States.col_active].who_engaged.team:
-                            is_neighbor_enemy = True
-                            break
-
-                if is_neighbor_enemy is False and States.btn_shooter is True and States.hexagons[States.row_active][States.col_active].who_engaged.team != States.hexagons[States.point_r][States.point_c].who_engaged.team:
-                    States.whom_attack = States.hexagons[States.point_r][States.point_c].who_engaged
-                    dist = self.cube_distance(self.offset2cube(States.row_active, States.col_active), [States.point_x, States.point_y, States.point_z])
-                    if dist <= 10:
-                        States.penalty_shooter = 1
-                        States.cursor = pygame.image.load(os.path.join(f"data/rcom/clean/Crcom023.png"))
+                if States.hexagons[r_over][c_over].who_engaged is not None:
+                    # is enemy ???
+                    if States.hexagons[r_over][c_over].who_engaged.team != States.unit_active.team:
+                        is_neighbor_enemy = self.enemy_is_neighbor(row_active, col_active)
+                        if is_shooter and is_neighbor_enemy is False:
+                            States.whom_attack = States.hexagons[States.point_r][States.point_c].who_engaged
+                            dist = self.cube_distance(self.offset2cube(row_active, col_active), [x_over, y_over, z_over])
+                            if dist <= 10:
+                                States.penalty_shooter = 1
+                                States.cursor = pygame.image.load(os.path.join(f"data/rcom/clean/Crcom023.png"))
+                            else:
+                                States.penalty_shooter = 0.5
+                                States.cursor = pygame.image.load(os.path.join(f"data/rcom/clean/Crcom026.png"))
+                        else:
+                            States.cursor = pygame.image.load(os.path.join(f"data/rcom/clean/Crcom006.png"))
                     else:
-                        States.penalty_shooter = 0.5
-                        States.cursor = pygame.image.load(os.path.join(f"data/rcom/clean/Crcom026.png"))
-                else:
-                    States.whom_attack = None
-                    States.cursor = pygame.image.load(os.path.join(f"data/rcom/clean/Crcom028.png"))
+                        States.cursor = pygame.image.load(os.path.join(f"data/rcom/clean/Crcom028.png"))
+                        if is_double and col_active + 1 == c_over and row_active == r_over:
+                            States.cursor = pygame.image.load(os.path.join(f"data/rcom/clean/Crcom009.png"))
+                            if is_flyer:
+                                States.cursor = pygame.image.load(os.path.join(f"data/rcom/clean/Crcom012.png"))
+                if is_shooter is False and (over_is_double is False or [r_over, c_over] in States.unit_active.hex):
+                    self.update_cursor_by_degree(r_over, c_over, row_active, col_active)
+            else:
+                States.cursor = pygame.image.load(os.path.join(f"data/rcom/clean/Crcom006.png"))
 
-    @staticmethod
-    def update_hexagons():
+    def enemy_is_neighbor(self, row_active, col_active):
+        x, y, z = self.offset2cube(row_active, col_active)
+        for i in range(6):
+            nb_x, nb_y, nb_z = self.cube_neighbor((x, y, z), i)
+            nb_r, nb_c = self.cube2offset(nb_x, nb_y, nb_z)
+            if 0 <= nb_c < Settings.n_columns and 0 <= nb_r < Settings.n_rows:
+                if States.hexagons[nb_r][nb_c].who_engaged is not None and States.hexagons[nb_r][nb_c].who_engaged.team != States.hexagons[row_active][col_active].who_engaged.team:
+                    return True
+        return False
+
+    def update_cursor_by_degree(self, r_over, c_over, row_active, col_active):
+        x = States.hexagons[r_over][c_over].corner[0] + Settings.r
+        y = States.hexagons[r_over][c_over].corner[1] + Settings.R
+        degrees = ((math.atan2(States.point_over[1] - y,
+                               States.point_over[0] - x) + 2 * math.pi) * 180 / math.pi) % 360
+        for i in range(6):
+            nb_x, nb_y, nb_z = self.cube_neighbor((States.point_x, States.point_y, States.point_z), i)
+            nb_r, nb_c = self.cube2offset(nb_x, nb_y, nb_z)
+
+            if 0 <= nb_r < Settings.n_rows and 0 <= nb_c < Settings.n_columns:
+                if States.hexagons[nb_r][nb_c].who_engaged is not None and States.hexagons[row_active][col_active].who_engaged.team != States.hexagons[nb_r][nb_c].who_engaged.team:
+                    States.point_attack = [States.point_r, States.point_c]
+                    if (0 <= degrees < 45 or 315 <= degrees < 360) and i == 0:
+                        States.whom_attack = States.hexagons[nb_r][nb_c].who_engaged
+                        States.cursor_direction = False
+                        States.cursor = pygame.image.load(os.path.join(f"data/rcom/clean/Crcom017.png"))
+                    elif 45 <= degrees < 90 and i == 5:
+                        States.whom_attack = States.hexagons[nb_r][nb_c].who_engaged
+                        States.cursor_direction = False
+                        States.cursor = pygame.image.load(os.path.join(f"data/rcom/clean/Crcom018.png"))
+                    elif 90 <= degrees < 135 and i == 4:
+                        States.whom_attack = States.hexagons[nb_r][nb_c].who_engaged
+                        States.cursor_direction = True
+                        States.cursor = pygame.image.load(os.path.join(f"data/rcom/clean/Crcom020.png"))
+                    elif 135 <= degrees < 225 and i == 3:
+                        States.whom_attack = States.hexagons[nb_r][nb_c].who_engaged
+                        States.cursor_direction = True
+                        States.cursor = pygame.image.load(os.path.join(f"data/rcom/clean/Crcom021.png"))
+                    elif 225 <= degrees < 270 and i == 2:
+                        States.whom_attack = States.hexagons[nb_r][nb_c].who_engaged
+                        States.cursor_direction = True
+                        States.cursor = pygame.image.load(os.path.join(f"data/rcom/clean/Crcom022.png"))
+                    elif 270 <= degrees < 315 and i == 1:
+                        States.whom_attack = States.hexagons[nb_r][nb_c].who_engaged
+                        States.cursor_direction = False
+                        States.cursor = pygame.image.load(os.path.join(f"data/rcom/clean/Crcom016.png"))
+
+    def update_hexagons(self):
         for r in range(len(States.hexagons)):
             for c in range(len(States.hexagons[0])):
-                States.hexagons[r][c].color = Settings.COLOR_BORDER
-                States.hexagons[r][c].bold = Settings.bold
+                self.update_hexagon(r, c, Settings.COLOR_BORDER, Settings.bold)
+                self.update_reachable_hexagons(r, c)
 
-                if (r, c) in States.reachable_points and States.hexagons[r][c].who_engaged is None and \
-                        States.is_animate is False:
-                    States.hexagons[r][c].color = Settings.COLOR_POSSIBLE
-                    States.hexagons[r][c].bold = 0
+        self.update_hover_hexagons()
+        self.update_active_hexagons()
 
+    def update_reachable_hexagons(self, r, c):
+        if (r, c) in States.reachable_points and States.hexagons[r][c].who_engaged is None and \
+                States.is_animate is False:
+            self.update_hexagon(r, c, Settings.COLOR_POSSIBLE, 0)
+
+    def update_hover_hexagons(self):
         if 0 <= States.point_r < Settings.n_rows and 0 <= States.point_c < Settings.n_columns and \
                 States.is_animate is False:
-            States.hexagons[States.point_r][States.point_c].color = Settings.COLOR_HOVER
-            States.hexagons[States.point_r][States.point_c].bold = 0
+            self.update_hexagon(States.point_r, States.point_c, Settings.COLOR_HOVER, 0)
 
-        States.hexagons[States.row_active][States.col_active].color = Settings.COLOR_ACTIVE
-        States.hexagons[States.row_active][States.col_active].bold = 3
+    def update_active_hexagons(self):
+        for r, c in States.unit_active.hex:
+            self.update_hexagon(r, c, Settings.COLOR_ACTIVE, 3)
 
-        if States.queue.current[0].character in States.double_hex_units:
-            States.hexagons[States.row_active][States.col_active + 1].color = Settings.COLOR_ACTIVE
-            States.hexagons[States.row_active][States.col_active + 1].bold = 3
+    @staticmethod
+    def update_hexagon(r, c, color, bold):
+        States.hexagons[r][c].color = color
+        States.hexagons[r][c].bold = bold
 
     @staticmethod
     def pixel_to_hex(x, y):
@@ -169,14 +190,16 @@ class HexWorker:
         return rx, ry, rz
 
     def update_reachable_points(self):
-        x_active, y_active, z_active = self.offset2cube(States.row_active, States.col_active)
+        row_active, col_active = States.unit_active.hex[0][0], States.unit_active.hex[0][1]
+        is_double_hex = States.queue.current[0].character in Settings.double_hex_units
+
+        x_active, y_active, z_active = self.offset2cube(row_active, col_active)
         speed_active = States.queue.current[0].speed
         States.reachable_points = self.cube_reachable((x_active, y_active, z_active), speed_active,
                                                       States.queue.current[0].is_flyer)
 
-        is_double = States.queue.current[0].character in States.double_hex_units
-        if is_double:
-            x_active, y_active, z_active = self.offset2cube(States.row_active, States.col_active + 1)
+        if is_double_hex:
+            x_active, y_active, z_active = self.offset2cube(row_active, col_active + 1)
             reachable = self.cube_reachable((x_active, y_active, z_active), speed_active,
                                             States.queue.current[0].is_flyer)
             States.double_reachable_points = reachable - States.reachable_points
@@ -231,15 +254,15 @@ class HexWorker:
     def get_move_type():
         if States.whom_attack:
             if States.btn_shooter:
-                if States.point_r > States.whom_attack.hex[0]:
+                if States.point_r > States.whom_attack.hex[0][0]:
                     return 'shoot_up'
-                if States.point_r < States.whom_attack.hex[0]:
+                if States.point_r < States.whom_attack.hex[0][0]:
                     return 'shoot_down'
                 return 'shoot_straight'
             else:
-                if States.point_r > States.whom_attack.hex[0]:
+                if States.point_r > States.whom_attack.hex[0][0]:
                     return 'attack_up'
-                if States.point_r < States.whom_attack.hex[0]:
+                if States.point_r < States.whom_attack.hex[0][0]:
                     return 'attack_down'
                 return 'attack_straight'
 
@@ -247,8 +270,10 @@ class HexWorker:
             if States.hexagons[States.point_r][States.point_c].who_engaged is None and \
                     (States.point_r, States.point_c) in States.reachable_points:
                 return 'moving'
-            if States.queue.current[0].character in States.double_hex_units and \
-                    (States.queue.current[0].hex[1] + 2 < Settings.n_columns and States.hexagons[States.point_r][States.point_c + 1].who_engaged is None):
+            if States.queue.current[0].character in Settings.double_hex_units and \
+                    (States.queue.current[0].hex[0][1] + 2 < Settings.n_columns and
+                     States.hexagons[States.point_r][States.point_c + 1].who_engaged is None and
+                     (States.hexagons[States.point_r][States.point_c].who_engaged is None or id(States.hexagons[States.point_r][States.point_c].who_engaged) == id(States.hexagons[States.point_r][States.point_c-1].who_engaged))):
                 return 'moving'
         return False
 
@@ -258,26 +283,26 @@ class HexWorker:
             if States.point_c + 1 >= Settings.n_columns or (States.point_r, States.point_c + 1) not in States.double_reachable_points and (States.point_r, States.point_c + 1) not in States.reachable_points or States.hexagons[States.point_r][States.point_c + 1].who_engaged is not None and id(States.hexagons[States.point_r][States.point_c + 1].who_engaged) != id(States.queue.current[0]):
                 States.point_c -= 1
 
-    def update_double_hex_attack(self):
-        if States.point_attack[0] == States.queue.current[0].hex[0] and States.point_attack[1] == States.queue.current[0].hex[1] + 1:
-            if self.is_nb(States.queue.current[0].hex[0], States.queue.current[0].hex[1]) is False and \
-                    self.is_nb(States.queue.current[0].hex[0], States.queue.current[0].hex[1] + 1) is True and \
-                    States.hexagons[States.queue.current[0].hex[0]][States.queue.current[0].hex[1] + 2].who_engaged is not None:
-                States.col_active = States.point_attack[1]
-            if self.is_nb(States.queue.current[0].hex[0], States.queue.current[0].hex[1]) is True and \
-                    self.is_nb(States.queue.current[0].hex[0], States.queue.current[0].hex[1] + 1) is True and \
-                    States.queue.current[0].hex[1] + 2 >= Settings.n_columns:
-                States.point_attack[1] = States.col_active
-        elif States.point_attack[0] == States.queue.current[0].hex[0] and States.point_attack[1] - States.queue.current[0].hex[1] > 1:
-            States.point_c = States.point_attack[1] - 1
+    # todo
+    def update_double_hex_attack(self, row_active, col_active):
+        if col_active + 2 < Settings.n_columns and (States.hexagons[row_active][col_active + 2].who_engaged is not None and States.hexagons[row_active][col_active - 1].who_engaged is None and id(States.whom_attack) != id(States.hexagons[row_active][col_active + 2].who_engaged)):
+            col_active = States.point_attack[1]
+        elif States.point_attack[1] + 1 >= Settings.n_columns and (States.point_attack[1] - col_active == 1):
+            # справа на границе
+            States.point_attack[1] = col_active
         elif States.point_attack[1] + 1 >= Settings.n_columns:
+            # справа на границе
             States.point_c = States.point_attack[1] - 1
-        elif States.point_attack[0] != States.queue.current[0].hex[0] and States.hexagons[States.point_attack[0]][States.point_attack[1] + 1].who_engaged is not None:
+        elif States.hexagons[row_active][col_active - 1].who_engaged is not None and States.hexagons[States.point_attack[0]][States.point_attack[1] + 1].who_engaged is not None:
+            col_active = States.point_attack[1]
+        elif States.hexagons[States.point_attack[0]][States.point_attack[1] + 1].who_engaged is not None:
             States.point_c = States.point_attack[1] - 1
+            # States.point_attack[1] -= 1
+        return row_active, col_active
 
     def is_nb(self, x, y):
         current = self.offset2cube(x, y)
-        who_attack = self.offset2cube(States.whom_attack.hex[0], States.whom_attack.hex[1])
+        who_attack = self.offset2cube(States.whom_attack.hex[0][0], States.whom_attack.hex[0][1])
         for i in range(6):
             if self.cube_neighbor(current, i) == who_attack:
                 return True
@@ -285,19 +310,15 @@ class HexWorker:
 
     # way search
     def update_character_position(self):
-        start = self.offset2cube(States.row_active, States.col_active)
-        goal = self.offset2cube(States.point_r, States.point_c)
+        row_active, col_active = States.unit_active.hex[0][0], States.unit_active.hex[0][1]
 
-        # if States.queue.current[0].character in States.double_hex_units:
-        #     if States.point_c > 0:
-        #         if States.point_c + 1 >= Settings.n_columns or (States.point_r, States.point_c + 1) not in States.double_reachable_points and (States.point_r, States.point_c + 1) not in States.reachable_points or States.hexagons[States.point_r][States.point_c + 1].who_engaged is not None and id(States.hexagons[States.point_r][States.point_c + 1].who_engaged) != id(States.queue.current[0]):
-        #             States.point_c -= 1
-        #             goal = self.offset2cube(States.point_r, States.point_c)
+        start = self.offset2cube(row_active, col_active)
+        goal = self.offset2cube(States.point_r, States.point_c)
 
         way = self.way_search(start, goal)
         self.generate_steps(way)
 
-        self.update_engaged_points()
+        self.update_engaged_points(row_active, col_active)
 
     def way_search(self, start, goal):
         frontier = queue.PriorityQueue()
@@ -393,18 +414,21 @@ class HexWorker:
         return move_order, x, y
 
     @staticmethod
-    def update_engaged_points():
-        new, old = (States.point_r, States.point_c), (States.row_active, States.col_active)
+    def update_engaged_points(row_active, col_active):
+        new, old = (States.point_r, States.point_c), (row_active, col_active)
 
         States.hexagons[old[0]][old[1]].who_engaged = None
-        if States.queue.current[0].character in States.double_hex_units:
+        if States.queue.current[0].character in Settings.double_hex_units:
             States.hexagons[old[0]][old[1] + 1].who_engaged = None
 
         States.hexagons[new[0]][new[1]].who_engaged = States.queue.current[0]
-        if States.queue.current[0].character in States.double_hex_units:
+        if States.queue.current[0].character in Settings.double_hex_units:
             States.hexagons[new[0]][new[1] + 1].who_engaged = States.queue.current[0]
 
-        States.queue.current[0].hex = [new[0], new[1]]
+        States.queue.current[0].hex.clear()
+        States.queue.current[0].hex.append([new[0], new[1]])
+        if States.queue.current[0].character in Settings.double_hex_units:
+            States.queue.current[0].hex.append([new[0], new[1] + 1])
 
     @staticmethod
     def draw_hexagons(screen):

@@ -9,8 +9,8 @@ class InfoUpdater:
 
     @staticmethod
     def generate_move_order(left_team, right_team):
-        left = sorted(left_team, key=lambda x: (x.speed, x.hex[0], x.hex[1]), reverse=True)
-        right = sorted(right_team, key=lambda x: (x.speed, x.hex[0], x.hex[1]), reverse=True)
+        left = sorted(left_team, key=lambda x: (x.speed, x.hex[0][0], x.hex[0][1]), reverse=True)
+        right = sorted(right_team, key=lambda x: (x.speed, x.hex[0][0], x.hex[0][1]), reverse=True)
 
         move_order = []
         while left and right:
@@ -37,7 +37,7 @@ class InfoUpdater:
 
     @staticmethod
     def update_active_position():
-        States.row_active, States.col_active = States.queue.current[0].hex[0], States.queue.current[0].hex[1]
+        States.unit_active = States.queue.current[0]
 
     @staticmethod
     def update_active_speed():
