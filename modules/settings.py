@@ -32,7 +32,7 @@ class Settings:
     avatar_height = 64
 
     # special units
-    double_hex_units = ["bdrgn"]
+    double_hex_units = ["bdrgn", "hydra"]
 
 
 class States:

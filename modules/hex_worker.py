@@ -284,6 +284,7 @@ class HexWorker:
                     (States.point_r, States.point_c + 1) not in States.double_reachable_points and (States.point_r, States.point_c + 1) not in States.reachable_points or \
                     States.hexagons[States.point_r][States.point_c + 1].who_engaged is not None and id(States.hexagons[States.point_r][States.point_c + 1].who_engaged) != id(States.queue.current[0]):
                 States.point_c -= 1
+            # if
 
     # way search
     def update_character_position(self):
@@ -313,7 +314,7 @@ class HexWorker:
                 if 0 <= row < Settings.n_rows and 0 <= col < Settings.n_columns:
                     new_cost = cost_so_far[current] + 1
                     if (neighbor not in cost_so_far or new_cost < cost_so_far[neighbor]) and \
-                            (States.hexagons[row][col].who_engaged is None or States.queue.current[0].is_flyer is True):
+                            (States.hexagons[row][col].who_engaged is None or id(States.hexagons[row][col].who_engaged) == id(States.unit_active) or States.queue.current[0].is_flyer is True):
                         cost_so_far[neighbor] = new_cost
                         priority = new_cost + self.cube_distance(goal, neighbor)
                         frontier.put(neighbor, priority)
