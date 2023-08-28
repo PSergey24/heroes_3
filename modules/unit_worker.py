@@ -40,11 +40,32 @@ class UnitWorker:
         if action.find('attack') != -1:
             States.is_animate = True
             if is_double_hex:
-                # todo
-                # start: row_active, col_active
-                # goal: States.point_r, States.point_c
-                row_active, col_active = self.hex_worker.update_double_hex_attack(row_active, col_active)
-
+                is_left_nb = self.hex_worker.is_neighbors(States.unit_active.hex[0], States.point_attack)
+                is_right_nb = self.hex_worker.is_neighbors(States.unit_active.hex[1], States.point_attack)
+                is_enemy_hex = States.whom_attack.character in Settings.double_hex_units
+                if States.point_attack not in States.unit_active.hex:
+                    if is_left_nb is False and is_right_nb is False:
+                        States.queue.current[0].change_animation('moving', who=States.queue.current[0])
+                        self.hex_worker.update_double_hex_position()
+                        self.hex_worker.update_character_position()
+                    elif is_left_nb is True and is_right_nb is True:
+                        States.queue.current[0].change_animation('moving', who=States.queue.current[0])
+                        self.hex_worker.update_double_hex_position()
+                        self.hex_worker.update_character_position()
+                    elif is_left_nb is True and is_right_nb is False:
+                        if (col_active - States.point_attack[1] == 1) and (row_active == States.point_attack[0]) or is_enemy_hex is True:
+                            States.queue.current[0].change_animation('moving', who=States.queue.current[0])
+                            self.hex_worker.update_double_hex_position()
+                            self.hex_worker.update_character_position()
+                    elif is_left_nb is False and is_right_nb is True:
+                        if (States.point_attack[1] - col_active == 2) and (row_active == States.point_attack[0]) or is_enemy_hex is True or (row_active != States.point_attack[0]):
+                            States.queue.current[0].change_animation('moving', who=States.queue.current[0])
+                            self.hex_worker.update_double_hex_position()
+                            self.hex_worker.update_character_position()
+                elif States.point_attack == States.unit_active.hex[1] and (States.point_attack[1] + 1 < Settings.n_columns and States.hexagons[States.point_attack[0]][States.point_attack[1] + 1].who_engaged is None):
+                    States.queue.current[0].change_animation('moving', who=States.queue.current[0])
+                    self.hex_worker.update_double_hex_position()
+                    self.hex_worker.update_character_position()
             else:
                 if row_active != States.point_attack[0] or col_active != States.point_attack[1]:
                     States.queue.current[0].change_animation('moving', who=States.queue.current[0])

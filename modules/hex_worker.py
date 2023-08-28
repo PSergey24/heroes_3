@@ -280,33 +280,10 @@ class HexWorker:
     @staticmethod
     def update_double_hex_position():
         if States.point_c > 0:
-            if States.point_c + 1 >= Settings.n_columns or (States.point_r, States.point_c + 1) not in States.double_reachable_points and (States.point_r, States.point_c + 1) not in States.reachable_points or States.hexagons[States.point_r][States.point_c + 1].who_engaged is not None and id(States.hexagons[States.point_r][States.point_c + 1].who_engaged) != id(States.queue.current[0]):
+            if States.point_c + 1 >= Settings.n_columns or \
+                    (States.point_r, States.point_c + 1) not in States.double_reachable_points and (States.point_r, States.point_c + 1) not in States.reachable_points or \
+                    States.hexagons[States.point_r][States.point_c + 1].who_engaged is not None and id(States.hexagons[States.point_r][States.point_c + 1].who_engaged) != id(States.queue.current[0]):
                 States.point_c -= 1
-
-    # todo
-    def update_double_hex_attack(self, row_active, col_active):
-        if col_active + 2 < Settings.n_columns and (States.hexagons[row_active][col_active + 2].who_engaged is not None and States.hexagons[row_active][col_active - 1].who_engaged is None and id(States.whom_attack) != id(States.hexagons[row_active][col_active + 2].who_engaged)):
-            col_active = States.point_attack[1]
-        elif States.point_attack[1] + 1 >= Settings.n_columns and (States.point_attack[1] - col_active == 1):
-            # справа на границе
-            States.point_attack[1] = col_active
-        elif States.point_attack[1] + 1 >= Settings.n_columns:
-            # справа на границе
-            States.point_c = States.point_attack[1] - 1
-        elif States.hexagons[row_active][col_active - 1].who_engaged is not None and States.hexagons[States.point_attack[0]][States.point_attack[1] + 1].who_engaged is not None:
-            col_active = States.point_attack[1]
-        elif States.hexagons[States.point_attack[0]][States.point_attack[1] + 1].who_engaged is not None:
-            States.point_c = States.point_attack[1] - 1
-            # States.point_attack[1] -= 1
-        return row_active, col_active
-
-    def is_nb(self, x, y):
-        current = self.offset2cube(x, y)
-        who_attack = self.offset2cube(States.whom_attack.hex[0][0], States.whom_attack.hex[0][1])
-        for i in range(6):
-            if self.cube_neighbor(current, i) == who_attack:
-                return True
-        return False
 
     # way search
     def update_character_position(self):
@@ -429,6 +406,14 @@ class HexWorker:
         States.queue.current[0].hex.append([new[0], new[1]])
         if States.queue.current[0].character in Settings.double_hex_units:
             States.queue.current[0].hex.append([new[0], new[1] + 1])
+
+    def is_neighbors(self, a, b):
+        a = self.offset2cube(a[0], a[1])
+        b = self.offset2cube(b[0], b[1])
+        for i in range(6):
+            if self.cube_neighbor(a, i) == b:
+                return True
+        return False
 
     @staticmethod
     def draw_hexagons(screen):
