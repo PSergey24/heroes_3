@@ -452,3 +452,107 @@ class Hydra(Unit):
 
         self.update_hex(i, j)
         self.change_animation('standing')
+
+
+class RGrif(Unit):
+
+    def __init__(self, i, j, count, team):
+        super().__init__(i, j, count, team)
+
+        self.character = 'rgrif'
+        self.avatar = 'CPrLBlk.bmp'
+        self.attack = 9
+        self.defense = 9
+        self.damage = [3, 6]
+        self.health = 25
+        self.speed = 9
+
+        self.cur_health = self.health
+        self.is_flyer = True
+
+        self.moving = ["11", "12", "11", "10"]
+        self.mouse_over = ["01", "04", "05", "06", "06", "05", "04", "01"]
+        self.standing = ["01", "02", "03", "03", "03", "02", "01", "01"]
+        self.getting_hit = ["01", "41", "42", "43", "44", "45", "01"]
+        self.defend = ["01", "17", "18", "19", "19", "18", "17", "01"]
+        self.death = ["01", "46", "47", "48", "49", "50", "51", "52", "53"]
+        self.dead = "53"
+        self.attack_up = ["01", "20", "21", "22", "23", "24", "25", "26", "01"]
+        self.attack_straight = ["01", "27", "28", "29", "30", "31", "32", "33", "01"]
+        self.attack_down = ["01", "34", "35", "36", "37", "38", "39", "40", "01"]
+
+        self.img_size_x = 216
+        self.img_size_y = self.img_size_x / 1.125
+
+        self.update_hex(i, j)
+        self.change_animation('standing')
+
+
+class Skele(Unit):
+
+    def __init__(self, i, j, count, team):
+        super().__init__(i, j, count, team)
+
+        self.character = 'skele'
+        self.avatar = 'CPrLBlk.bmp'
+        self.attack = 5
+        self.defense = 4
+        self.damage = [1, 3]
+        self.health = 6
+        self.speed = 4
+
+        self.cur_health = self.health
+
+        self.moving = ["39", "40", "41", "42", "43", "44", "45", "46"]
+        self.mouse_over = ["29", "30", "31", "32", "32", "32", "32", "32", "31", "30", "29"]
+        self.standing = ["57", "33", "34", "35", "36", "35", "34", "33"]
+        self.getting_hit = ["49", "50", "51", "52", "53", "54"]
+        self.defend = ["25", "26", "27", "28", "28", "28", "28", "28", "27", "26", "25"]
+        self.death = ["19", "20", "21", "22", "23", "24"]
+        self.dead = "24"
+        self.attack_up = ["01", "02", "09", "10", "11", "12", "13", "08"]
+        self.attack_straight = ["01", "02", "03", "04", "05", "06", "07", "08"]
+        self.attack_down = ["01", "02", "14", "15", "16", "17", "18", "08"]
+
+        self.img_size_x = 144
+        self.img_size_y = self.img_size_x / 1.125
+
+        self.update_hex(i, j)
+        self.change_animation('standing')
+
+
+class Cmcor(Unit):
+
+    def __init__(self, i, j, count, team):
+        super().__init__(i, j, count, team)
+
+        self.character = 'cmcor'
+        self.avatar = 'CPrLBlk.bmp'
+        self.attack = 16
+        self.defense = 14
+        self.damage = [14, 20]
+        self.health = 80
+        self.speed = 11
+
+        self.cur_health = self.health
+        self.is_flyer = True
+
+        self.moving = ["58", "59", "60", "61", "62", "63"]
+        self.mouse_over = ["47", "48", "49", "50", "50", "49", "48", "47"]
+        self.standing = ["76", "51", "52", "53", "54", "53", "52", "51"]
+        self.getting_hit = ["67", "68", "69", "70", "71", "72"]
+        self.defend = ["43", "44", "45", "46", "46", "46", "46", "46", "45", "44", "43"]
+        self.death = ["67", "68", "37", "38", "39", "40", "41", "42"]
+        self.dead = "42"
+        self.attack_up = ["01", "02", "09", "10", "11", "12", "13", "08"]
+        self.attack_straight = ["01", "02", "03", "04", "05", "06", "07", "08"]
+        self.attack_down = ["01", "02", "14", "15", "16", "17", "18", "08"]
+        self.dhex_attack_up = ["19", "20", "27", "28", "29", "30", "31", "26"]
+        self.dhex_attack_straight = ["19", "20", "21", "22", "23", "24", "25", "26"]
+        self.dhex_attack_down = ["19", "20", "32", "33", "34", "35", "36", "26"]
+
+        self.img_size_x = 216
+        self.img_size_y = self.img_size_x / 1.125
+
+        self.update_hex(i, j)
+        self.change_animation('standing')

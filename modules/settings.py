@@ -32,7 +32,16 @@ class Settings:
     avatar_height = 64
 
     # special units
-    double_hex_units = ["bdrgn", "hydra"]
+    double_hex_units = ["bdrgn", "hydra", "rgrif", "cmcor"]
+    factions = {"Dungeon": ["bdrgn", "cmcor"],
+                "Conflux": [],
+                "Fortress": ["hydra"],
+                "Stronghold": [],
+                "Necropolis": ["lich", "skele"],
+                "Inferno": [],
+                "Tower": ["mage"],
+                "Rampart": ["elf"],
+                "Castle": ["angel", "rgrif"]}
 
 
 class States:
