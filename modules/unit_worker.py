@@ -25,7 +25,7 @@ class UnitWorker:
     def update_units(self, action):
         States.step += 1
         States.queue.current[0].btn_defense, States.queue.current[0].btn_wait = True, True
-        is_double_hex = States.queue.current[0].character in Settings.double_hex_units
+        is_double = States.queue.current[0].character in Settings.double_hex_units
 
         row_active, col_active = States.unit_active.hex[0][0], States.unit_active.hex[0][1]
         print(f"action: {action}")
@@ -33,43 +33,56 @@ class UnitWorker:
         if action == 'moving':
             States.is_animate = True
             States.queue.current[0].change_animation('moving', who=States.queue.current[0])
-            if is_double_hex:
+            if is_double:
                 self.hex_worker.update_double_hex_position()
-            self.hex_worker.update_character_position()
+            self.hex_worker.update_character_position(States.point_r, States.point_c)
 
         if action.find('attack') != -1:
             States.is_animate = True
-            if is_double_hex:
-                is_left_nb = self.hex_worker.is_neighbors(States.unit_active.hex[0], States.point_attack)
-                is_right_nb = self.hex_worker.is_neighbors(States.unit_active.hex[1], States.point_attack)
-                is_enemy_hex = States.whom_attack.character in Settings.double_hex_units
-                if States.point_attack not in States.unit_active.hex:
-                    if is_left_nb is False and is_right_nb is False:
-                        States.queue.current[0].change_animation('moving', who=States.queue.current[0])
-                        self.hex_worker.update_double_hex_position()
-                        self.hex_worker.update_character_position()
-                    elif is_left_nb is True and is_right_nb is True:
-                        States.queue.current[0].change_animation('moving', who=States.queue.current[0])
-                        self.hex_worker.update_double_hex_position()
-                        self.hex_worker.update_character_position()
-                    elif is_left_nb is True and is_right_nb is False:
-                        if (col_active - States.point_attack[1] == 1) and (row_active == States.point_attack[0]) or is_enemy_hex is True:
-                            States.queue.current[0].change_animation('moving', who=States.queue.current[0])
-                            self.hex_worker.update_double_hex_position()
-                            self.hex_worker.update_character_position()
-                    elif is_left_nb is False and is_right_nb is True:
-                        if (States.point_attack[1] - col_active == 2) and (row_active == States.point_attack[0]) or is_enemy_hex is True or (row_active != States.point_attack[0]):
-                            States.queue.current[0].change_animation('moving', who=States.queue.current[0])
-                            self.hex_worker.update_double_hex_position()
-                            self.hex_worker.update_character_position()
-                elif States.point_attack == States.unit_active.hex[1] and (States.point_attack[1] + 1 < Settings.n_columns and States.hexagons[States.point_attack[0]][States.point_attack[1] + 1].who_engaged is None):
+            enemy_is_double = States.whom_attack.character in Settings.double_hex_units
+
+            if is_double:
+                if self.enemy_is_nb():
+                    if enemy_is_double:
+                        is_left_attack = self.hex_worker.is_neighbors(States.whom_attack.hex[0], States.point_attack)
+                        is_right_attack = self.hex_worker.is_neighbors(States.whom_attack.hex[1], States.point_attack)
+                        if (States.direction_attack in [5, 0, 1] and (States.hexagons[States.point_attack[0]][States.point_attack[1] - 1].who_engaged is None or id(States.hexagons[States.point_attack[0]][States.point_attack[1] - 1].who_engaged) == id(States.queue.current[0])) and is_right_attack is False and is_left_attack is True and States.point_attack[1] - 1 >= 0) or \
+                                (States.direction_attack in [4, 3, 2] and States.point_attack[1] + 1 < Settings.n_columns and (States.hexagons[States.point_attack[0]][States.point_attack[1] + 1].who_engaged is not None and id(States.hexagons[States.point_attack[0]][States.point_attack[1] + 1].who_engaged) != id(States.queue.current[0])) and is_left_attack is False and is_right_attack is True) or \
+                                (States.point_attack[1] + 1 == Settings.n_columns) or \
+                                (is_left_attack and is_right_attack and States.direction_attack in [1, 2] and States.hexagons[States.point_attack[0]][States.point_attack[1] - 1].who_engaged is None and States.point_attack[1] - 1 >= 0) or \
+                                (is_left_attack and is_right_attack and States.direction_attack in [4, 5] and States.point_attack[1] + 1 < Settings.n_columns and (States.hexagons[States.point_attack[0]][States.point_attack[1] + 1].who_engaged is not None and id(States.hexagons[States.point_attack[0]][States.point_attack[1] + 1].who_engaged) != id(States.queue.current[0]))):
+                            States.point_attack[1] -= 1
+                    else:
+                        is_left_nb = self.hex_worker.is_neighbors(States.unit_active.hex[0], States.point_attack)
+                        is_right_nb = self.hex_worker.is_neighbors(States.unit_active.hex[1], States.point_attack)
+                        if is_left_nb and is_right_nb and States.direction_attack == 4 and States.point_attack[1] + 1 < Settings.n_columns and States.hexagons[States.point_attack[0]][States.point_attack[1] + 1].who_engaged is None:
+                            States.point_attack[1] += 1
+                        if is_left_nb and is_right_nb and States.direction_attack == 1 and States.hexagons[States.point_attack[0]][States.point_attack[1] - 1].who_engaged is None and States.point_attack[1] - 1 >= 0:
+                            States.point_attack[1] -= 1
+                else:
+                    if enemy_is_double:
+                        is_left_attack = self.hex_worker.is_neighbors(States.whom_attack.hex[0], States.point_attack)
+                        is_right_attack = self.hex_worker.is_neighbors(States.whom_attack.hex[1], States.point_attack)
+                        # enemy is not nb, two hex:
+                        # left side, right side and center-bottom need correct to left:
+                        if (States.direction_attack in [5, 0, 1] and (States.hexagons[States.point_attack[0]][States.point_attack[1] - 1].who_engaged is None or id(States.hexagons[States.point_attack[0]][States.point_attack[1] - 1].who_engaged) == id(States.queue.current[0])) and is_right_attack is False and is_left_attack is True and States.point_attack[1] - 1 >= 0) or \
+                                (States.direction_attack in [4, 3, 2] and States.point_attack[1] + 1 < Settings.n_columns and (States.hexagons[States.point_attack[0]][States.point_attack[1] + 1].who_engaged is not None and id(States.hexagons[States.point_attack[0]][States.point_attack[1] + 1].who_engaged) != id(States.queue.current[0])) and is_left_attack is False and is_right_attack is True) or \
+                                (States.point_attack[1] + 1 == Settings.n_columns) or \
+                                (is_left_attack and is_right_attack and States.direction_attack in [1, 2] and States.hexagons[States.point_attack[0]][States.point_attack[1] - 1].who_engaged is None and States.point_attack[1] - 1 >= 0) or \
+                                (is_left_attack and is_right_attack and States.direction_attack in [4, 5] and States.point_attack[1] + 1 < Settings.n_columns and (States.hexagons[States.point_attack[0]][States.point_attack[1] + 1].who_engaged is not None and id(States.hexagons[States.point_attack[0]][States.point_attack[1] + 1].who_engaged) != id(States.queue.current[0]))):
+                            States.point_attack[1] -= 1
+                    else:
+                        # enemy is not nb, one hex: need correct only left side attack
+                        if States.direction_attack in [5, 0, 1] and States.hexagons[States.point_attack[0]][States.point_attack[1] - 1].who_engaged is None and States.point_attack[1] - 1 >= 0:
+                            States.point_attack[1] -= 1
+
+                if row_active != States.point_attack[0] or col_active != States.point_attack[1]:
                     States.queue.current[0].change_animation('moving', who=States.queue.current[0])
-                    self.hex_worker.update_double_hex_position()
-                    self.hex_worker.update_character_position()
+                    self.hex_worker.update_character_position(States.point_attack[0], States.point_attack[1])
             else:
                 if row_active != States.point_attack[0] or col_active != States.point_attack[1]:
                     States.queue.current[0].change_animation('moving', who=States.queue.current[0])
-                    self.hex_worker.update_character_position()
+                    self.hex_worker.update_character_position(States.point_r, States.point_c)
 
             States.queue.current[0].change_animation(action, who=States.queue.current[0])
 
@@ -136,6 +149,13 @@ class UnitWorker:
         else:
             defender.change_animation('getting_hit', who=defender)
         return defender
+
+    def enemy_is_nb(self):
+        for point in States.whom_attack.hex:
+            if self.hex_worker.is_neighbors(States.unit_active.hex[0], point) or \
+                    self.hex_worker.is_neighbors(States.unit_active.hex[1], point):
+                return True
+        return False
 
     def draw_units(self, screen):
         for item in States.queue.dead:

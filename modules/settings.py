@@ -62,6 +62,7 @@ class States:
     double_reachable_points = None
     whom_attack = None
     point_attack = None
+    direction_attack = None
 
     # shooter btn info:
     btn_shooter = False

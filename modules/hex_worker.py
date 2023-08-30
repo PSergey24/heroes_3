@@ -52,7 +52,7 @@ class HexWorker:
         is_flyer = States.queue.current[0].is_flyer
         is_double = States.queue.current[0].character in Settings.double_hex_units
 
-        States.cursor_direction = None
+        States.cursor_direction, States.direction_attack = None, None
         States.point_attack, States.whom_attack = None, None
         States.cursor = pygame.image.load(os.path.join(f"data/rcom/clean/Crcom000.png"))
 
@@ -117,26 +117,32 @@ class HexWorker:
                     if (0 <= degrees < 45 or 315 <= degrees < 360) and i == 0:
                         States.whom_attack = States.hexagons[nb_r][nb_c].who_engaged
                         States.cursor_direction = False
+                        States.direction_attack = 0
                         States.cursor = pygame.image.load(os.path.join(f"data/rcom/clean/Crcom017.png"))
                     elif 45 <= degrees < 90 and i == 5:
                         States.whom_attack = States.hexagons[nb_r][nb_c].who_engaged
                         States.cursor_direction = False
+                        States.direction_attack = 5
                         States.cursor = pygame.image.load(os.path.join(f"data/rcom/clean/Crcom018.png"))
                     elif 90 <= degrees < 135 and i == 4:
                         States.whom_attack = States.hexagons[nb_r][nb_c].who_engaged
                         States.cursor_direction = True
+                        States.direction_attack = 4
                         States.cursor = pygame.image.load(os.path.join(f"data/rcom/clean/Crcom020.png"))
                     elif 135 <= degrees < 225 and i == 3:
                         States.whom_attack = States.hexagons[nb_r][nb_c].who_engaged
                         States.cursor_direction = True
+                        States.direction_attack = 3
                         States.cursor = pygame.image.load(os.path.join(f"data/rcom/clean/Crcom021.png"))
                     elif 225 <= degrees < 270 and i == 2:
                         States.whom_attack = States.hexagons[nb_r][nb_c].who_engaged
                         States.cursor_direction = True
+                        States.direction_attack = 2
                         States.cursor = pygame.image.load(os.path.join(f"data/rcom/clean/Crcom022.png"))
                     elif 270 <= degrees < 315 and i == 1:
                         States.whom_attack = States.hexagons[nb_r][nb_c].who_engaged
                         States.cursor_direction = False
+                        States.direction_attack = 1
                         States.cursor = pygame.image.load(os.path.join(f"data/rcom/clean/Crcom016.png"))
 
     def update_hexagons(self):
@@ -284,19 +290,20 @@ class HexWorker:
                     (States.point_r, States.point_c + 1) not in States.double_reachable_points and (States.point_r, States.point_c + 1) not in States.reachable_points or \
                     States.hexagons[States.point_r][States.point_c + 1].who_engaged is not None and id(States.hexagons[States.point_r][States.point_c + 1].who_engaged) != id(States.queue.current[0]):
                 States.point_c -= 1
-            # if
 
     # way search
-    def update_character_position(self):
+    def update_character_position(self, goal_row, goal_col):
         row_active, col_active = States.unit_active.hex[0][0], States.unit_active.hex[0][1]
 
         start = self.offset2cube(row_active, col_active)
-        goal = self.offset2cube(States.point_r, States.point_c)
+        goal = self.offset2cube(goal_row, goal_col)
 
         way = self.way_search(start, goal)
+        # here need to correct movement for double hex units near border
+
         self.generate_steps(way)
 
-        self.update_engaged_points(row_active, col_active)
+        self.update_engaged_points(goal_row, goal_col, row_active, col_active)
 
     def way_search(self, start, goal):
         frontier = queue.PriorityQueue()
@@ -392,8 +399,8 @@ class HexWorker:
         return move_order, x, y
 
     @staticmethod
-    def update_engaged_points(row_active, col_active):
-        new, old = (States.point_r, States.point_c), (row_active, col_active)
+    def update_engaged_points(goal_row, goal_col, row_active, col_active):
+        new, old = (goal_row, goal_col), (row_active, col_active)
 
         States.hexagons[old[0]][old[1]].who_engaged = None
         if States.queue.current[0].character in Settings.double_hex_units:
