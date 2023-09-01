@@ -33,6 +33,7 @@ class Settings:
 
     # special units
     double_hex_units = ["bdrgn", "hydra", "rgrif", "cmcor"]
+    without_answer = ["hydra"]
     factions = {"Dungeon": ["bdrgn", "cmcor"],
                 "Conflux": [],
                 "Fortress": ["hydra"],
@@ -41,7 +42,7 @@ class Settings:
                 "Inferno": [],
                 "Tower": ["mage"],
                 "Rampart": ["elf"],
-                "Castle": ["angel", "rgrif"]}
+                "Castle": ["angel", "rgrif", "hcbow"]}
 
 
 class States:

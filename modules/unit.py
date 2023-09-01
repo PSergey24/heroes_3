@@ -556,3 +556,40 @@ class Cmcor(Unit):
 
         self.update_hex(i, j)
         self.change_animation('standing')
+
+
+class Hcbow(Unit):
+
+    def __init__(self, i, j, count, team):
+        super().__init__(i, j, count, team)
+
+        self.character = 'hcbow'
+        self.avatar = 'CPrLBlk.bmp'
+        self.attack = 6
+        self.defense = 3
+        self.damage = [2, 3]
+        self.health = 10
+        self.speed = 6
+
+        self.cur_health = self.health
+        self.is_shooter = True
+
+        self.moving = ["55", "56", "57", "58", "59", "60", "61", "62"]
+        self.mouse_over = ["73", "74", "75", "76", "76", "76", "75", "74", "73"]
+        self.standing = ["00", "49", "50", "51", "52", "51", "50", "49"]
+        self.getting_hit = ["65", "66", "67", "68", "69", "70"]
+        self.defend = ["43", "44", "45", "46", "46", "46", "46", "45", "44", "43"]
+        self.death = ["37", "38", "39", "40", "41", "42"]
+        self.dead = "42"
+        self.attack_up = ["25", "26", "27", "28", "29", "30"]
+        self.attack_straight = ["19", "20", "21", "22", "23", "24"]
+        self.attack_down = ["31", "32", "33", "34", "35", "36"]
+        self.shoot_up = ["07", "08", "09", "10", "10", "10", "11", "12"]
+        self.shoot_straight = ["01", "02", "03", "04", "04", "04", "05", "06"]
+        self.shoot_down = ["13", "14", "15", "16", "16", "16", "17", "18"]
+
+        self.img_size_x = 144
+        self.img_size_y = self.img_size_x / 1.125
+
+        self.update_hex(i, j)
+        self.change_animation('standing')

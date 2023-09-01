@@ -85,28 +85,43 @@ class UnitWorker:
                     self.hex_worker.update_character_position(States.point_r, States.point_c)
 
             States.queue.current[0].change_animation(action, who=States.queue.current[0])
+            self.getting_hit(States.queue.current[0], States.whom_attack)
 
-            damage = self.damage_counter(States.queue.current[0], States.whom_attack)
-            States.whom_attack = self.health_updater(States.whom_attack, damage)
-            States.whom_attack = self.animation_updater(States.whom_attack)
-
-            if States.whom_attack.is_answer > 0 and States.whom_attack.count > 0:
+            if States.whom_attack.is_answer > 0 and States.whom_attack.count > 0 and \
+                    States.queue.current[0].character not in Settings.without_answer:
                 States.whom_attack.change_animation('attack_straight', who=States.whom_attack)
-
-                damage = self.damage_counter(States.whom_attack, States.queue.current[0])
-                States.queue.current[0] = self.health_updater(States.queue.current[0], damage)
-                States.queue.current[0] = self.animation_updater(States.queue.current[0])
+                self.getting_hit(States.whom_attack, States.queue.current[0], is_answer=True)
                 States.whom_attack.is_answer -= 1
 
         if action.find('shoot') != -1:
             States.is_animate = True
             States.queue.current[0].change_animation(action, who=States.queue.current[0])
-
-            damage = self.damage_counter(States.queue.current[0], States.whom_attack)
-            States.whom_attack = self.health_updater(States.whom_attack, damage)
-            States.whom_attack = self.animation_updater(States.whom_attack)
+            self.getting_hit(States.queue.current[0], States.whom_attack)
 
         States.queue.current.append(States.queue.current.pop(0))
+
+    def getting_hit(self, attacker, defender, is_answer=False):
+        defenders = self.get_defenders(attacker, defender, is_answer)
+
+        for defender in defenders:
+            damage = self.damage_counter(attacker, defender)
+            defender = self.health_updater(defender, damage)
+            self.animation_updater(defender)
+
+    def get_defenders(self, attacker, defender, is_answer):
+        mass_attack = ["hydra"]
+
+        defenders = []
+        if is_answer:
+            defenders.append(defender)
+            return defenders
+
+        if attacker.character in mass_attack:
+            for hexagon in attacker.hex:
+                defenders.extend(self.hex_worker.get_neighbors(hexagon[0], hexagon[1]))
+
+        defenders = list(set(defenders))
+        return defenders
 
     def damage_counter(self, attacker, defender):
         k = self.get_damage_k(attacker, defender)
@@ -148,7 +163,6 @@ class UnitWorker:
                 States.step -= 1
         else:
             defender.change_animation('getting_hit', who=defender)
-        return defender
 
     def enemy_is_nb(self):
         for point in States.whom_attack.hex:

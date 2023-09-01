@@ -102,6 +102,19 @@ class HexWorker:
                     return True
         return False
 
+    def get_neighbors(self, row, col):
+        neighbors = []
+
+        x, y, z = self.offset2cube(row, col)
+        for i in range(6):
+            nb_x, nb_y, nb_z = self.cube_neighbor((x, y, z), i)
+            nb_r, nb_c = self.cube2offset(nb_x, nb_y, nb_z)
+            if 0 <= nb_c < Settings.n_columns and 0 <= nb_r < Settings.n_rows and \
+                    States.hexagons[nb_r][nb_c].who_engaged is not None and \
+                    id(States.hexagons[nb_r][nb_c].who_engaged) != id(States.hexagons[row][col].who_engaged):
+                neighbors.append(States.hexagons[nb_r][nb_c].who_engaged)
+        return neighbors
+
     def update_cursor_by_degree(self, r_over, c_over, row_active, col_active):
         x = States.hexagons[r_over][c_over].corner[0] + Settings.r
         y = States.hexagons[r_over][c_over].corner[1] + Settings.R
