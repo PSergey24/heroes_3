@@ -120,7 +120,9 @@ class UnitWorker:
             for hexagon in attacker.hex:
                 defenders.extend(self.hex_worker.get_neighbors(hexagon[0], hexagon[1]))
 
-        defenders = list(set(defenders))
+            defenders = list(set(defenders))
+            return defenders
+        defenders.append(defender)
         return defenders
 
     def damage_counter(self, attacker, defender):
