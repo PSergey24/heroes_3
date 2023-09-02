@@ -117,7 +117,10 @@ class Unit:
     def draw_character(self, screen):
         animation = self.list_animations
         if self.is_active:
-            animation = States.animations[0]
+            for i, unit in enumerate(States.animations):
+                if id(unit.who) == id(self):
+                    animation = States.animations[i]
+                    break
 
         self.img = animation.animation[self.animation_count]
         self.animation_count += 1
@@ -126,9 +129,24 @@ class Unit:
             self.animation_count = 0
             self.reset_direction()
 
-            if animation.name not in ['standing', 'moving']:
+            if animation.name not in ['standing', 'moving', 'getting_hit', 'death']:
                 self.is_active, States.is_animate = False, False
                 States.animations.pop(0)
+
+            elif animation.name in ['getting_hit', 'death']:
+                is_smb_else, current_ind = False, 0
+                for i, item in enumerate(States.animations):
+                    if item.name not in ['getting_hit', 'death']:
+                        break
+                    else:
+                        if id(item.who) != id(animation.who):
+                            is_smb_else = True
+                        else:
+                            current_ind = i
+
+                self.is_active = False
+                States.is_animate = is_smb_else
+                States.animations.pop(current_ind)
 
             if animation.name == 'death':
                 States.queue.drop_unit_by_id(id(animation.who))

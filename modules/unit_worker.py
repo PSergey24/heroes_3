@@ -53,11 +53,7 @@ class UnitWorker:
                                 (is_left_attack and is_right_attack and States.direction_attack in [4, 5] and States.point_attack[1] + 1 < Settings.n_columns and (States.hexagons[States.point_attack[0]][States.point_attack[1] + 1].who_engaged is not None and id(States.hexagons[States.point_attack[0]][States.point_attack[1] + 1].who_engaged) != id(States.queue.current[0]))):
                             States.point_attack[1] -= 1
                     else:
-                        is_left_nb = self.hex_worker.is_neighbors(States.unit_active.hex[0], States.point_attack)
-                        is_right_nb = self.hex_worker.is_neighbors(States.unit_active.hex[1], States.point_attack)
-                        if is_left_nb and is_right_nb and States.direction_attack == 4 and States.point_attack[1] + 1 < Settings.n_columns and States.hexagons[States.point_attack[0]][States.point_attack[1] + 1].who_engaged is None:
-                            States.point_attack[1] += 1
-                        if is_left_nb and is_right_nb and States.direction_attack == 1 and States.hexagons[States.point_attack[0]][States.point_attack[1] - 1].who_engaged is None and States.point_attack[1] - 1 >= 0:
+                        if States.direction_attack in [5, 0, 1] and States.point_attack[1] - 1 >= 0:
                             States.point_attack[1] -= 1
                 else:
                     if enemy_is_double:
@@ -118,12 +114,18 @@ class UnitWorker:
 
         if attacker.character in mass_attack:
             for hexagon in attacker.hex:
-                defenders.extend(self.hex_worker.get_neighbors(hexagon[0], hexagon[1]))
+                neighbors = self.hex_worker.get_neighbors(hexagon[0], hexagon[1])
+                defenders.extend(neighbors)
 
             defenders = list(set(defenders))
+            defenders = self.drop_own_team(attacker, defenders)
             return defenders
         defenders.append(defender)
         return defenders
+
+    @staticmethod
+    def drop_own_team(attacker, neighbors):
+        return [nb for nb in neighbors if nb.team != attacker.team]
 
     def damage_counter(self, attacker, defender):
         k = self.get_damage_k(attacker, defender)
@@ -180,16 +182,18 @@ class UnitWorker:
                 unit = pygame.transform.scale(unit, (item.img_size_x, item.img_size_y))
                 screen.blit(unit, (item.x - item.img_size_x / 4, item.y - item.img_size_y * (1 / 2)))
 
-        id_ = None
+        ids_ = []
         if len(States.animations) > 0:
-            id_ = id(States.animations[0].who)
-            if States.animations[0].who.is_active is False:
-                States.animations[0].who.is_active = True
-                States.animations[0].who.animation_count = 0
-            States.animations[0].who.draw(screen)
+            last_idx = self.get_active_animations()
+            for i in range(last_idx - 1, -1, -1):
+                ids_.append(id(States.animations[i].who))
+                if States.animations[i].who.is_active is False:
+                    States.animations[i].who.is_active = True
+                    States.animations[i].who.animation_count = 0
+                States.animations[i].who.draw(screen)
 
         for item in States.queue.current:
-            if id_ != id(item):
+            if id(item) not in ids_:
                 item.draw(screen)
 
     @staticmethod
@@ -198,3 +202,16 @@ class UnitWorker:
             if id(item) == id(animation.who):
                 return True
         return False
+
+    @staticmethod
+    def get_active_animations():
+        last_idx = 0
+        for animation in States.animations:
+            if animation.name in ['getting_hit', 'death']:
+                last_idx += 1
+            else:
+                break
+        if last_idx == 0:
+            last_idx += 1
+        return last_idx
+
