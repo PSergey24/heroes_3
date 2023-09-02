@@ -87,7 +87,7 @@ class BlockUpdater:
         box = self.create_div(left, 0, Settings.avatar_width, 80, color, parent=States.top_center)
 
         img = ImgAvatar(0, 0, height=Settings.avatar_height, width=Settings.avatar_width, parent=box,
-                        name=item.character, way=f"data/move_order/{item.avatar}")
+                        name=item.character, way=f"data/avatars/{item.character}.bmp")
         box.update_children(img)
 
         bg = self.create_div(25, Settings.avatar_height, Settings.avatar_width, 16, color, parent=box)
@@ -104,7 +104,7 @@ class BlockUpdater:
         box = self.create_div(left, 0, Settings.avatar_width, 80, color, parent=States.top_center)
 
         img = ImgAvatar(0, 0, height=Settings.avatar_height, width=Settings.avatar_width, parent=box,
-                        name='round', way=f"data/move_order/CPrLBlk.bmp")
+                        name='round', way=f"data/avatars/CPrLBlk.bmp")
         box.update_children(img)
 
         bg = self.create_div(25, Settings.avatar_height, Settings.avatar_width, 16, color, parent=box)

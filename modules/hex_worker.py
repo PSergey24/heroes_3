@@ -307,14 +307,13 @@ class HexWorker:
     # way search
     def update_character_position(self, goal_row, goal_col):
         row_active, col_active = States.unit_active.hex[0][0], States.unit_active.hex[0][1]
-
-        start = self.offset2cube(row_active, col_active)
-        goal = self.offset2cube(goal_row, goal_col)
+        start, goal = self.offset2cube(row_active, col_active), self.offset2cube(goal_row, goal_col)
 
         way = self.way_search(start, goal)
         # here need to correct movement for double hex units near border
 
-        self.generate_steps(way)
+        if States.queue.current[0].is_jumper is False:
+            self.generate_steps(way)
 
         self.update_engaged_points(goal_row, goal_col, row_active, col_active)
 
@@ -334,7 +333,7 @@ class HexWorker:
                 if 0 <= row < Settings.n_rows and 0 <= col < Settings.n_columns:
                     new_cost = cost_so_far[current] + 1
                     if (neighbor not in cost_so_far or new_cost < cost_so_far[neighbor]) and \
-                            (States.hexagons[row][col].who_engaged is None or id(States.hexagons[row][col].who_engaged) == id(States.unit_active) or States.queue.current[0].is_flyer is True):
+                            (States.hexagons[row][col].who_engaged is None or id(States.hexagons[row][col].who_engaged) == id(States.unit_active) or States.queue.current[0].is_flyer is True or States.queue.current[0].is_jumper is True):
                         cost_so_far[neighbor] = new_cost
                         priority = new_cost + self.cube_distance(goal, neighbor)
                         frontier.put(neighbor, priority)

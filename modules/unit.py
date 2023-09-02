@@ -5,6 +5,7 @@ import math
 
 from modules.settings import Settings, States
 from modules.block_updater import BlockUpdater
+from modules.hex_worker import HexWorker
 
 
 class Unit:
@@ -27,6 +28,7 @@ class Unit:
 
         self.is_shooter = False
         self.is_flyer = False
+        self.is_jumper = False
         self.is_answer = 1
 
         # btn
@@ -36,6 +38,8 @@ class Unit:
         # type of animations
         self.path = []
         self.moving = None
+        self.start_moving = None
+        self.stop_moving = None
         self.mouse_over = None
         self.standing = None
         self.getting_hit = None
@@ -50,7 +54,6 @@ class Unit:
         self.shoot_down = None
 
         # animations
-        self.avatar = None
         self.direction = None
         self.img = None
         self.list_animations = None
@@ -63,8 +66,11 @@ class Unit:
 
         self.img_size_x = None
         self.img_size_y = None
+        self.img_shift_x = 0
+        self.img_shift_y = 0
 
         self.block_updater = BlockUpdater()
+        self.hex_worker = HexWorker()
         self.reset_direction()
 
     def update_hex(self, i, j):
@@ -156,7 +162,12 @@ class Unit:
                     States.hexagons[animation.who.hex[1][0]][animation.who.hex[1][1]].who_engaged = None
                 self.block_updater.update_avatars()
 
-        screen.blit(self.img, (self.x - self.img_size_x / 4, self.y - self.img_size_y * (1 / 2)))
+            if animation.name == 'start_moving':
+                goal_row, goal_col = States.queue.current[len(States.queue.current)-1].hex[0][0], States.queue.current[len(States.queue.current)-1].hex[0][1]
+                States.queue.current[len(States.queue.current)-1].x = States.hexagons[goal_row][goal_col].corner[0]
+                States.queue.current[len(States.queue.current)-1].y = States.hexagons[goal_row][goal_col].corner[1]
+
+        screen.blit(self.img, (self.x - self.img_size_x / 4 + self.img_shift_x, self.y - self.img_size_y * (1 / 2) + self.img_shift_y))
 
     def draw_character_count(self, screen):
         txt = Settings.FONT.render(str(self.count), True, (255, 255, 255))
@@ -196,7 +207,17 @@ class Unit:
         self.x = x2
         self.y = y2
 
-    def change_animation(self, animation_name, who=None):
+    def create_animation(self, animation_name, goal_row=None, goal_col=None):
+        if animation_name == "moving":
+            self.create_moving(goal_row, goal_col)
+        else:
+            self.select_animation(animation_name)
+
+    def create_moving(self, goal_row, goal_col):
+        self.select_animation('moving')
+        self.hex_worker.update_character_position(goal_row, goal_col)
+
+    def select_animation(self, animation_name):
         self.animation_count = 0
         speed, images = self.choose_animation_info(animation_name)
 
@@ -208,43 +229,47 @@ class Unit:
                 unit = pygame.transform.flip(unit, self.direction, False)
                 animation_img.append(unit)
 
-        self.update_states(animation_name, animation_img, who)
+        self.update_states(animation_name, animation_img)
 
     def choose_animation_info(self, animation):
         if animation == 'standing':
             self.reset_direction()
             self.is_active = False
-            return 10, self.standing
+            return 6, self.standing
 
         States.is_animate = True
         self.update_direction(animation)
         if animation == 'death':
-            return 6, self.death
+            return 4, self.death
         if animation == 'moving':
-            return 6, self.moving
+            return 4, self.moving
+        if animation == 'start_moving':
+            return 4, self.start_moving
+        if animation == 'stop_moving':
+            return 4, self.stop_moving
         if animation == 'attack_straight':
-            return 6, self.attack_straight
+            return 4, self.attack_straight
         if animation == 'attack_down':
-            return 6, self.attack_down
+            return 4, self.attack_down
         if animation == 'attack_up':
-            return 6, self.attack_up
+            return 4, self.attack_up
         if animation == 'shoot_straight':
-            return 6, self.shoot_straight
+            return 4, self.shoot_straight
         if animation == 'shoot_down':
-            return 6, self.shoot_down
+            return 4, self.shoot_down
         if animation == 'shoot_up':
-            return 6, self.shoot_up
+            return 4, self.shoot_up
 
         if animation == 'getting_hit':
-            return 6, self.getting_hit
+            return 4, self.getting_hit
 
-    def update_states(self, animation_name, animation_img, who):
+    def update_states(self, animation_name, animation_img):
         if animation_name != 'standing':
             if len(States.animations) == 0:
                 self.is_active = True
-            States.animations.append(Animation(animation_name, animation_img, who))
+            States.animations.append(Animation(animation_name, animation_img, self))
         else:
-            self.list_animations = Animation(animation_name, animation_img, who)
+            self.list_animations = Animation(animation_name, animation_img, self)
 
 
 class Animation:
@@ -261,7 +286,6 @@ class Angel(Unit):
         super().__init__(i, j, count, team)
 
         self.character = 'angel'
-        self.avatar = 'CPrL012C.bmp'
         self.attack = 20
         self.defense = 20
         self.damage = [50, 50]
@@ -286,7 +310,7 @@ class Angel(Unit):
         self.img_size_y = self.img_size_x / 1.125
 
         self.update_hex(i, j)
-        self.change_animation('standing')
+        self.create_animation('standing')
 
 
 class Elf(Unit):
@@ -295,7 +319,6 @@ class Elf(Unit):
         super().__init__(i, j, count, team)
 
         self.character = 'elf'
-        self.avatar = 'CPrL018R.bmp'
         self.attack = 9
         self.defense = 5
         self.damage = [3, 5]
@@ -323,7 +346,7 @@ class Elf(Unit):
         self.img_size_y = self.img_size_x / 1.125
 
         self.update_hex(i, j)
-        self.change_animation('standing')
+        self.create_animation('standing')
 
 
 class Lich(Unit):
@@ -332,7 +355,6 @@ class Lich(Unit):
         super().__init__(i, j, count, team)
 
         self.character = 'lich'
-        self.avatar = 'CPrL064N.bmp'
         self.attack = 13
         self.defense = 10
         self.damage = [11, 13]
@@ -360,7 +382,7 @@ class Lich(Unit):
         self.img_size_y = self.img_size_x / 1.125
 
         self.update_hex(i, j)
-        self.change_animation('standing')
+        self.create_animation('standing')
 
 
 class Mage(Unit):
@@ -369,7 +391,6 @@ class Mage(Unit):
         super().__init__(i, j, count, team)
 
         self.character = 'mage'
-        self.avatar = 'CPrL034T.bmp'
         self.attack = 11
         self.defense = 18
         self.damage = [7, 9]
@@ -397,7 +418,7 @@ class Mage(Unit):
         self.img_size_y = self.img_size_x / 1.125
 
         self.update_hex(i, j)
-        self.change_animation('standing')
+        self.create_animation('standing')
 
 
 class BDragon(Unit):
@@ -406,7 +427,6 @@ class BDragon(Unit):
         super().__init__(i, j, count, team)
 
         self.character = 'bdrgn'
-        self.avatar = 'CPrLBlk.bmp'
         self.attack = 25
         self.defense = 25
         self.damage = [40, 50]
@@ -434,7 +454,7 @@ class BDragon(Unit):
         self.img_size_y = self.img_size_x / 1.125
 
         self.update_hex(i, j)
-        self.change_animation('standing')
+        self.create_animation('standing')
 
 
 class Hydra(Unit):
@@ -443,7 +463,6 @@ class Hydra(Unit):
         super().__init__(i, j, count, team)
 
         self.character = 'hydra'
-        self.avatar = 'CPrLBlk.bmp'
         self.attack = 16
         self.defense = 18
         self.damage = [25, 45]
@@ -469,9 +488,10 @@ class Hydra(Unit):
 
         self.img_size_x = 144
         self.img_size_y = self.img_size_x / 1.125
+        self.img_shift_x = 30
 
         self.update_hex(i, j)
-        self.change_animation('standing')
+        self.create_animation('standing')
 
 
 class RGrif(Unit):
@@ -480,7 +500,6 @@ class RGrif(Unit):
         super().__init__(i, j, count, team)
 
         self.character = 'rgrif'
-        self.avatar = 'CPrLBlk.bmp'
         self.attack = 9
         self.defense = 9
         self.damage = [3, 6]
@@ -505,7 +524,7 @@ class RGrif(Unit):
         self.img_size_y = self.img_size_x / 1.125
 
         self.update_hex(i, j)
-        self.change_animation('standing')
+        self.create_animation('standing')
 
 
 class Skele(Unit):
@@ -514,7 +533,6 @@ class Skele(Unit):
         super().__init__(i, j, count, team)
 
         self.character = 'skele'
-        self.avatar = 'CPrLBlk.bmp'
         self.attack = 5
         self.defense = 4
         self.damage = [1, 3]
@@ -538,7 +556,7 @@ class Skele(Unit):
         self.img_size_y = self.img_size_x / 1.125
 
         self.update_hex(i, j)
-        self.change_animation('standing')
+        self.create_animation('standing')
 
 
 class Cmcor(Unit):
@@ -547,7 +565,6 @@ class Cmcor(Unit):
         super().__init__(i, j, count, team)
 
         self.character = 'cmcor'
-        self.avatar = 'CPrLBlk.bmp'
         self.attack = 16
         self.defense = 14
         self.damage = [14, 20]
@@ -575,7 +592,7 @@ class Cmcor(Unit):
         self.img_size_y = self.img_size_x / 1.125
 
         self.update_hex(i, j)
-        self.change_animation('standing')
+        self.create_animation('standing')
 
 
 class Hcbow(Unit):
@@ -584,7 +601,6 @@ class Hcbow(Unit):
         super().__init__(i, j, count, team)
 
         self.character = 'hcbow'
-        self.avatar = 'CPrLBlk.bmp'
         self.attack = 6
         self.defense = 3
         self.damage = [2, 3]
@@ -612,7 +628,7 @@ class Hcbow(Unit):
         self.img_size_y = self.img_size_x / 1.125
 
         self.update_hex(i, j)
-        self.change_animation('standing')
+        self.create_animation('standing')
 
 
 class Cyclp(Unit):
@@ -621,7 +637,6 @@ class Cyclp(Unit):
         super().__init__(i, j, count, team)
 
         self.character = 'cyclp'
-        self.avatar = 'CPrLBlk.bmp'
         self.attack = 15
         self.defense = 12
         self.damage = [16, 20]
@@ -648,9 +663,10 @@ class Cyclp(Unit):
 
         self.img_size_x = 216
         self.img_size_y = self.img_size_x / 1.125
+        self.img_shift_x = -25
 
         self.update_hex(i, j)
-        self.change_animation('standing')
+        self.create_animation('standing')
 
 
 class Efree(Unit):
@@ -659,7 +675,6 @@ class Efree(Unit):
         super().__init__(i, j, count, team)
 
         self.character = 'efree'
-        self.avatar = 'CPrLBlk.bmp'
         self.attack = 16
         self.defense = 12
         self.damage = [16, 24]
@@ -686,4 +701,47 @@ class Efree(Unit):
         self.img_size_y = self.img_size_x / 1.125
 
         self.update_hex(i, j)
-        self.change_animation('standing')
+        self.create_animation('standing')
+
+
+class Adevl(Unit):
+
+    def __init__(self, i, j, count, team):
+        super().__init__(i, j, count, team)
+
+        self.character = 'adevl'
+        self.attack = 26
+        self.defense = 28
+        self.damage = [30, 40]
+        self.health = 200
+        self.speed = 17
+        self.ai = 7115
+
+        self.cur_health = self.health
+        self.is_jumper = True
+
+        self.moving = ["54"]
+        self.mouse_over = ["29", "30", "31", "32", "33", "32", "31", "32", "33", "32", "31", "30", "29"]
+        self.standing = ["54", "34", "35", "36", "37", "36", "35", "34"]
+        self.getting_hit = ["46", "47", "48", "49", "50", "51"]
+        self.defend = ["25", "26", "27", "28", "28", "28", "28", "28", "27", "26", "25"]
+        self.death = ["17", "18", "19", "20", "21", "22", "23", "24"]
+        self.dead = "24"
+        self.attack_up = ["01", "02", "03", "04", "09", "10", "11", "12"]
+        self.attack_straight = ["01", "02", "03", "04", "05", "06", "07", "08"]
+        self.attack_down = ["01", "02", "03", "04", "13", "14", "15", "16"]
+        self.start_moving = ["38", "39", "40", "41", "42", "43", "44", "45", "59", "60", "61", "62", "63", "64"]
+        self.stop_moving = ["65", "66", "67", "68", "69", "70", "71", "72", "73", "74"]
+
+        self.img_size_x = 216
+        self.img_size_y = self.img_size_x / 1.125
+        self.img_shift_x = -20
+        self.img_shift_y = -10
+
+        self.update_hex(i, j)
+        self.create_animation('standing')
+
+    def create_moving(self, goal_row, goal_col):
+        self.select_animation('start_moving')
+        self.hex_worker.update_character_position(goal_row, goal_col)
+        self.select_animation('stop_moving')

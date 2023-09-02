@@ -32,10 +32,10 @@ class UnitWorker:
 
         if action == 'moving':
             States.is_animate = True
-            States.queue.current[0].change_animation('moving', who=States.queue.current[0])
+
             if is_double:
                 self.hex_worker.update_double_hex_position()
-            self.hex_worker.update_character_position(States.point_r, States.point_c)
+            States.queue.current[0].create_animation('moving', States.point_r, States.point_c)
 
         if action.find('attack') != -1:
             States.is_animate = True
@@ -73,25 +73,23 @@ class UnitWorker:
                             States.point_attack[1] -= 1
 
                 if row_active != States.point_attack[0] or col_active != States.point_attack[1]:
-                    States.queue.current[0].change_animation('moving', who=States.queue.current[0])
-                    self.hex_worker.update_character_position(States.point_attack[0], States.point_attack[1])
+                    States.queue.current[0].create_animation('moving', States.point_attack[0], States.point_attack[1])
             else:
                 if row_active != States.point_attack[0] or col_active != States.point_attack[1]:
-                    States.queue.current[0].change_animation('moving', who=States.queue.current[0])
-                    self.hex_worker.update_character_position(States.point_r, States.point_c)
+                    States.queue.current[0].create_animation('moving', States.point_r, States.point_c)
 
-            States.queue.current[0].change_animation(action, who=States.queue.current[0])
+            States.queue.current[0].create_animation(action)
             self.getting_hit(States.queue.current[0], States.whom_attack)
 
             if States.whom_attack.is_answer > 0 and States.whom_attack.count > 0 and \
                     States.queue.current[0].character not in Settings.without_answer:
-                States.whom_attack.change_animation('attack_straight', who=States.whom_attack)
+                States.whom_attack.create_animation('attack_straight')
                 self.getting_hit(States.whom_attack, States.queue.current[0], is_answer=True)
                 States.whom_attack.is_answer -= 1
 
         if action.find('shoot') != -1:
             States.is_animate = True
-            States.queue.current[0].change_animation(action, who=States.queue.current[0])
+            States.queue.current[0].create_animation(action)
             self.getting_hit(States.queue.current[0], States.whom_attack)
 
         States.queue.current.append(States.queue.current.pop(0))
@@ -162,11 +160,11 @@ class UnitWorker:
     @staticmethod
     def animation_updater(defender):
         if defender.count < 1:
-            defender.change_animation('death', who=defender)
+            defender.create_animation('death')
             if defender.btn_defense is True:
                 States.step -= 1
         else:
-            defender.change_animation('getting_hit', who=defender)
+            defender.create_animation('getting_hit')
 
     def enemy_is_nb(self):
         for point in States.whom_attack.hex:

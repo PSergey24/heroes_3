@@ -37,9 +37,9 @@ class Settings:
     factions = {"Dungeon": ["bdrgn", "cmcor"],
                 "Conflux": [],
                 "Fortress": ["hydra"],
-                "Stronghold": [],
+                "Stronghold": ["cyclp"],
                 "Necropolis": ["lich", "skele"],
-                "Inferno": [],
+                "Inferno": ["adevl", "efree"],
                 "Tower": ["mage"],
                 "Rampart": ["elf"],
                 "Castle": ["angel", "rgrif", "hcbow"]}
