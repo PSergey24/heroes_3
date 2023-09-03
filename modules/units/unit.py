@@ -1,18 +1,20 @@
-from .castle import Angel, RGrif, Hcbow
+from .castle import Angel, RGrif, Crusd, Hcbow
 from .rampart import Elf
-from .tower import Mage, GremM
+from .tower import Genie, Mage, GremM
 from .inferno import Adevl, Efree
-from .necropolis import Lich, Skele
+from .necropolis import PLich, Lich, Skele
 from .stronghold import Cyclp
 from .fortress import Hydra
-# from .conflux import
-from .dungeon import BDragon, Cmcor
+from .conflux import Psyel, Storm
+from .dungeon import BDragon, Cmcor, Minok
 
 
 def unit(name, i, j, count, team):
     # castle
     if name == 'angel':
         return Angel(i, j, count, team)
+    if name == "crusd":
+        return Crusd(i, j, count, team)
     if name == 'rgrif':
         return RGrif(i, j, count, team)
     if name == 'hcbow':
@@ -23,6 +25,8 @@ def unit(name, i, j, count, team):
         return Elf(i, j, count, team)
 
     # tower
+    if name == 'genie':
+        return Genie(i, j, count, team)
     if name == 'mage':
         return Mage(i, j, count, team)
     if name == 'gremm':
@@ -35,6 +39,8 @@ def unit(name, i, j, count, team):
         return Efree(i, j, count, team)
 
     # necropolis
+    if name == 'plich':
+        return PLich(i, j, count, team)
     if name == 'lich':
         return Lich(i, j, count, team)
     if name == 'skele':
@@ -49,9 +55,15 @@ def unit(name, i, j, count, team):
         return Hydra(i, j, count, team)
 
     # conflux
+    if name == 'psyel':
+        return Psyel(i, j, count, team)
+    if name == 'storm':
+        return Storm(i, j, count, team)
 
     # dungeon
     if name == 'bdrgn':
         return BDragon(i, j, count, team)
     if name == 'cmcor':
         return Cmcor(i, j, count, team)
+    if name == 'minok':
+        return Minok(i, j, count, team)

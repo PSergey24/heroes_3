@@ -178,7 +178,7 @@ class UnitWorker:
             if self.is_animate(item) is False:
                 unit = pygame.image.load(os.path.join(f"data/units/{item.character}/dead/c{item.character}{item.dead}.png"))
                 unit = pygame.transform.scale(unit, (item.img_size_x, item.img_size_y))
-                screen.blit(unit, (item.x - item.img_size_x / 4, item.y - item.img_size_y * (1 / 2)))
+                screen.blit(unit, (item.x - item.img_size_x / 4 + item.img_shift_x, item.y - item.img_size_y * (1 / 2) + item.img_shift_y))
 
         ids_ = []
         if len(States.animations) > 0:

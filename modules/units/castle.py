@@ -12,6 +12,7 @@ class Angel(Units):
         self.damage = [50, 50]
         self.health = 200
         self.speed = 12
+        self.ai = 5019
 
         self.cur_health = self.health
         self.is_flyer = True
@@ -34,6 +35,39 @@ class Angel(Units):
         self.create_animation('standing')
 
 
+class Crusd(Units):
+
+    def __init__(self, i, j, count, team):
+        super().__init__(count, team)
+
+        self.character = 'crusd'
+        self.attack = 12
+        self.defense = 12
+        self.damage = [7, 10]
+        self.health = 35
+        self.speed = 6
+        self.ai = 588
+
+        self.cur_health = self.health
+
+        self.moving = ["36", "37", "38", "39", "40", "41", "42", "43"]
+        self.mouse_over = ["26", "27", "28", "29", "29", "28", "27", "26"]
+        self.standing = ["54", "30", "31", "32", "33", "32", "31", "30"]
+        self.getting_hit = ["46", "47", "48", "49", "50", "51"]
+        self.defend = ["22", "23", "24", "25", "25", "25", "25", "25", "24", "23", "22"]
+        self.death = ["16", "17", "18", "19", "20", "21"]
+        self.dead = "21"
+        self.attack_up = ["01", "02", "08", "09", "10", "11", "07"]
+        self.attack_straight = ["01", "02", "03", "04", "05", "06", "07"]
+        self.attack_down = ["01", "02", "12", "13", "14", "15", "07"]
+
+        self.img_size_x = 144
+        self.img_size_y = self.img_size_x / 1.125
+
+        self.update_hex(i, j)
+        self.create_animation('standing')
+
+
 class RGrif(Units):
 
     def __init__(self, i, j, count, team):
@@ -45,6 +79,7 @@ class RGrif(Units):
         self.damage = [3, 6]
         self.health = 25
         self.speed = 9
+        self.ai = 488
 
         self.cur_health = self.health
         self.is_flyer = True
@@ -78,6 +113,7 @@ class Hcbow(Units):
         self.damage = [2, 3]
         self.health = 10
         self.speed = 6
+        self.ai = 184
 
         self.cur_health = self.health
         self.is_shooter = True

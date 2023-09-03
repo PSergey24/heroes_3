@@ -12,6 +12,7 @@ class BDragon(Units):
         self.damage = [40, 50]
         self.health = 300
         self.speed = 15
+        self.ai = 8721
 
         self.cur_health = self.health
         self.is_flyer = True
@@ -48,6 +49,7 @@ class Cmcor(Units):
         self.damage = [14, 20]
         self.health = 80
         self.speed = 11
+        self.ai = 1589
 
         self.cur_health = self.health
         self.is_flyer = True
@@ -68,6 +70,41 @@ class Cmcor(Units):
 
         self.img_size_x = 216
         self.img_size_y = self.img_size_x / 1.125
+
+        self.update_hex(i, j)
+        self.create_animation('standing')
+
+
+class Minok(Units):
+
+    def __init__(self, i, j, count, team):
+        super().__init__(count, team)
+
+        self.character = 'minok'
+        self.attack = 15
+        self.defense = 15
+        self.damage = [12, 20]
+        self.health = 50
+        self.speed = 8
+        self.ai = 1068
+
+        self.cur_health = self.health
+
+        self.moving = ["09", "10", "11", "12", "13", "14", "15"]
+        self.mouse_over = ["59", "05", "06", "07", "08", "59"]
+        self.standing = ["59", "02", "03", "04", "04", "03", "02", "59"]
+        self.getting_hit = ["01", "41", "42", "43", "44", "45", "46"]
+        self.defend = ["01", "18", "19", "19", "20", "20", "21", "01"]
+        self.death = ["01", "47", "48", "49", "50", "51", "52"]
+        self.dead = "52"
+        self.attack_up = ["01", "22", "23", "24", "25", "26", "27", "01"]
+        self.attack_straight = ["01", "28", "29", "30", "31", "32", "33", "01"]
+        self.attack_down = ["01", "34", "35", "36", "37", "38", "39", "40"]
+
+        self.img_size_x = 216
+        self.img_size_y = self.img_size_x / 1.125
+        self.img_shift_x = -20
+        self.img_shift_y = -5
 
         self.update_hex(i, j)
         self.create_animation('standing')

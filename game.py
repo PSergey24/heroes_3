@@ -17,8 +17,8 @@ class Game:
         self.bg = pygame.image.load(os.path.join("data/bg", "CmBkDrDd.bmp"))
         self.bg = pygame.transform.scale(self.bg, (Settings.width, Settings.height))
 
-        self.left_team = [unit('angel', 8, 8, 3, 1)]
-        self.right_team = [unit('adevl', 7, 8, 3, 2), unit('hydra', 9, 8, 3, 2)]
+        self.left_team = [unit('plich', 8, 8, 3, 1)]
+        self.right_team = [unit('storm', 7, 8, 3, 2), unit('genie', 9, 8, 3, 2)]
 
         self.hex_worker = HexWorker()
         self.unit_worker = UnitWorker()

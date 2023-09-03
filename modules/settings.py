@@ -34,15 +34,15 @@ class Settings:
     # special units
     double_hex_units = ["bdrgn", "hydra", "rgrif", "cmcor"]
     without_answer = ["hydra"]
-    factions = {"Dungeon": ["bdrgn", "cmcor"],
-                "Conflux": [],
+    factions = {"Dungeon": ["bdrgn", "cmcor", "minok"],
+                "Conflux": ["psyel", "storm"],
                 "Fortress": ["hydra"],
                 "Stronghold": ["cyclp"],
-                "Necropolis": ["lich", "skele"],
+                "Necropolis": ["plich", "lich", "skele"],
                 "Inferno": ["adevl", "efree"],
-                "Tower": ["mage", "gremm"],
+                "Tower": ["genie", "mage", "gremm"],
                 "Rampart": ["elf"],
-                "Castle": ["angel", "rgrif", "hcbow"]}
+                "Castle": ["angel", "crusd", "rgrif", "hcbow"]}
 
 
 class States:

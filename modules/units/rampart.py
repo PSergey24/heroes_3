@@ -12,6 +12,7 @@ class Elf(Units):
         self.damage = [3, 5]
         self.health = 15
         self.speed = 6
+        self.ai = 234
 
         self.cur_health = self.health
         self.is_shooter = True

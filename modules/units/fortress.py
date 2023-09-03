@@ -12,6 +12,7 @@ class Hydra(Units):
         self.damage = [25, 45]
         self.health = 175
         self.speed = 5
+        self.ai = 4120
 
         self.cur_health = self.health
 
