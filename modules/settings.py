@@ -40,7 +40,7 @@ class Settings:
                 "Stronghold": ["cyclp"],
                 "Necropolis": ["lich", "skele"],
                 "Inferno": ["adevl", "efree"],
-                "Tower": ["mage"],
+                "Tower": ["mage", "gremm"],
                 "Rampart": ["elf"],
                 "Castle": ["angel", "rgrif", "hcbow"]}
 
@@ -86,7 +86,3 @@ class States:
     right = None
     top_center = None
     bottom_center = None
-
-
-
-
