@@ -108,3 +108,80 @@ class Minok(Units):
 
         self.update_hex(i, j)
         self.create_animation('standing')
+
+
+class Harph(Units):
+
+    def __init__(self, i, j, count, team):
+        super().__init__(count, team)
+
+        self.character = 'harph'
+        self.attack = 6
+        self.defense = 6
+        self.damage = [1, 4]
+        self.health = 14
+        self.speed = 9
+        self.ai = 238
+
+        self.cur_health = self.health
+        self.is_flyer = True
+
+        self.moving = ["54", "55", "56", "57", "58", "59", "60"]
+        self.mouse_over = ["42", "43", "44", "45", "46", "45", "46", "45", "44", "43", "42"]
+        self.standing = ["47", "48", "49", "50", "49", "48", "47"]
+        self.getting_hit = ["66", "68", "67", "65", "64", "21"]
+        self.defend = ["35", "36", "37", "38", "39", "40", "41", "21"]
+        self.death = ["28", "29", "30", "31", "32", "33", "34"]
+        self.dead = "34"
+        self.attack_up = ["21", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21"]
+        self.attack_straight = ["21", "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "21"]
+        self.attack_down = ["21", "22", "23", "24", "26", "27", "26", "25", "24", "22"]
+        self.start_moving = ["51", "52", "53"]
+        self.stop_moving = ["61", "62", "63"]
+
+        self.img_size_x = 216
+        self.img_size_y = self.img_size_x / 1.125
+        self.img_shift_x = -20
+        self.img_shift_y = -5
+
+        self.update_hex(i, j)
+        self.create_animation('standing')
+
+
+class Harpy(Units):
+
+    def __init__(self, i, j, count, team):
+        super().__init__(count, team)
+
+        self.character = 'harpy'
+        self.attack = 6
+        self.defense = 5
+        self.damage = [1, 4]
+        self.health = 14
+        self.speed = 6
+        self.ai = 154
+
+        self.cur_health = self.health
+        self.is_flyer = True
+
+        self.moving = ["54", "55", "56", "57", "58", "59", "60"]
+        self.mouse_over = ["42", "43", "44", "45", "46", "45", "46", "45", "44", "43", "42"]
+        self.standing = ["47", "48", "49", "50", "49", "48", "47"]
+        self.getting_hit = ["66", "68", "67", "65", "64", "21"]
+        self.defend = ["35", "36", "37", "38", "39", "40", "41", "21"]
+        self.death = ["28", "29", "30", "31", "32", "33", "34"]
+        self.dead = "34"
+        self.attack_up = ["21", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21"]
+        self.attack_straight = ["21", "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "21"]
+        self.attack_down = ["21", "22", "23", "24", "26", "27", "26", "25", "24", "22"]
+        self.start_moving = ["21", "51", "52", "53"]
+        self.stop_moving = ["54", "61", "62", "63", "21"]
+
+        self.img_size_x = 216
+        self.img_size_y = self.img_size_x / 1.125
+        self.img_shift_x = -20
+        self.img_shift_y = -5
+
+        self.update_hex(i, j)
+        self.create_animation('standing')
+

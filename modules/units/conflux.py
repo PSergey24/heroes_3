@@ -36,6 +36,49 @@ class Psyel(Units):
         self.create_animation('standing')
 
 
+class Nrg(Units):
+
+    def __init__(self, i, j, count, team):
+        super().__init__(count, team)
+
+        self.character = 'nrg'
+        self.attack = 12
+        self.defense = 8
+        self.damage = [4, 6]
+        self.health = 35
+        self.speed = 8
+        self.ai = 470
+
+        self.cur_health = self.health
+        self.is_jumper = True
+
+        self.moving = ["56", "57", "58", "59", "60", "61", "62"]
+        self.mouse_over = ["41", "42", "43", "44", "45", "46"]
+        self.standing = ["80", "47", "48", "49", "50", "51", "52"]
+        self.getting_hit = ["65", "66", "67", "68", "69", "70"]
+        self.defend = ["34", "35", "36", "37", "38", "39", "40", "37", "36", "35", "34"]
+        self.death = ["25", "26", "27", "28", "29", "30", "31", "32", "33"]
+        self.dead = "33"
+        self.attack_up = ["09", "10", "11", "12", "13", "14", "15", "16"]
+        self.attack_straight = ["01", "02", "03", "04", "05", "06", "07", "08"]
+        self.attack_down = ["17", "18", "19", "20", "21", "22", "23", "24"]
+        self.start_moving = ["53", "54", "55"]
+        self.stop_moving = ["62", "61", "60", "59", "58", "57", "56", "63", "64"]
+
+        self.img_size_x = 216
+        self.img_size_y = self.img_size_x / 1.125
+        self.img_shift_x = -20
+        self.img_shift_y = -5
+
+        self.update_hex(i, j)
+        self.create_animation('standing')
+
+    def create_moving(self, goal_row, goal_col):
+        self.select_animation('start_moving')
+        self.hex_worker.update_character_position(goal_row, goal_col)
+        self.select_animation('stop_moving')
+
+
 class Storm(Units):
 
     def __init__(self, i, j, count, team):

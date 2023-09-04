@@ -34,8 +34,8 @@ class Settings:
     # special units
     double_hex_units = ["bdrgn", "hydra", "rgrif", "cmcor"]
     without_answer = ["hydra"]
-    factions = {"Dungeon": ["bdrgn", "cmcor", "minok"],
-                "Conflux": ["psyel", "storm"],
+    factions = {"Dungeon": ["bdrgn", "cmcor", "minok", "harph", "harpy"],
+                "Conflux": ["psyel", "nrg", "storm"],
                 "Fortress": ["hydra"],
                 "Stronghold": ["cyclp"],
                 "Necropolis": ["plich", "lich", "skele"],

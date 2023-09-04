@@ -5,8 +5,8 @@ from .inferno import Adevl, Efree
 from .necropolis import PLich, Lich, Skele
 from .stronghold import Cyclp
 from .fortress import Hydra
-from .conflux import Psyel, Storm
-from .dungeon import BDragon, Cmcor, Minok
+from .conflux import Psyel, Nrg, Storm
+from .dungeon import BDragon, Cmcor, Minok, Harph, Harpy
 
 
 def unit(name, i, j, count, team):
@@ -57,6 +57,8 @@ def unit(name, i, j, count, team):
     # conflux
     if name == 'psyel':
         return Psyel(i, j, count, team)
+    if name == 'nrg':
+        return Nrg(i, j, count, team)
     if name == 'storm':
         return Storm(i, j, count, team)
 
@@ -67,3 +69,7 @@ def unit(name, i, j, count, team):
         return Cmcor(i, j, count, team)
     if name == 'minok':
         return Minok(i, j, count, team)
+    if name == 'harph':
+        return Harph(i, j, count, team)
+    if name == 'harpy':
+        return Harpy(i, j, count, team)
