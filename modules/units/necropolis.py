@@ -77,6 +77,41 @@ class Lich(Units):
         self.create_animation('standing')
 
 
+class Wskel(Units):
+
+    def __init__(self, i, j, count, team):
+        super().__init__(count, team)
+
+        self.character = 'wskel'
+        self.attack = 6
+        self.defense = 6
+        self.damage = [1, 3]
+        self.health = 6
+        self.speed = 5
+        self.ai = 85
+
+        self.cur_health = self.health
+
+        self.moving = ["39", "40", "41", "42", "43", "44", "45", "46"]
+        self.mouse_over = ["29", "30", "31", "32", "32", "32", "32", "32", "31", "30", "29"]
+        self.standing = ["57", "33", "34", "35", "36", "35", "34", "33"]
+        self.getting_hit = ["49", "50", "51", "52", "53", "54"]
+        self.defend = ["25", "26", "27", "28", "28", "28", "28", "28", "27", "26", "25"]
+        self.death = ["19", "20", "21", "22", "23", "24"]
+        self.dead = "24"
+        self.attack_up = ["01", "02", "09", "10", "11", "12", "13", "08"]
+        self.attack_straight = ["01", "02", "03", "04", "05", "06", "07", "08"]
+        self.attack_down = ["01", "02", "14", "15", "16", "17", "18", "08"]
+
+        self.img_size_x = 216
+        self.img_size_y = self.img_size_x / 1.125
+        self.img_shift_x = -20
+        self.img_shift_y = -10
+
+        self.update_hex(i, j)
+        self.create_animation('standing')
+
+
 class Skele(Units):
 
     def __init__(self, i, j, count, team):

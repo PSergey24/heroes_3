@@ -176,7 +176,7 @@ class UnitWorker:
     def draw_units(self, screen):
         for item in States.queue.dead:
             if self.is_animate(item) is False:
-                unit = pygame.image.load(os.path.join(f"data/units/{item.character}/dead/c{item.character}{item.dead}.png"))
+                unit = pygame.image.load(os.path.join(f"data/units/{item.character}/clean/c{item.character}{item.dead}.png"))
                 unit = pygame.transform.scale(unit, (item.img_size_x, item.img_size_y))
                 screen.blit(unit, (item.x - item.img_size_x / 4 + item.img_shift_x, item.y - item.img_size_y * (1 / 2) + item.img_shift_y))
 

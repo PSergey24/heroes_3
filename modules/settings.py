@@ -37,12 +37,14 @@ class Settings:
     factions = {"Dungeon": ["bdrgn", "cmcor", "minok", "harph", "harpy"],
                 "Conflux": ["psyel", "nrg", "storm"],
                 "Fortress": ["hydra"],
-                "Stronghold": ["cyclp"],
-                "Necropolis": ["plich", "lich", "skele"],
-                "Inferno": ["adevl", "efree"],
+                "Stronghold": ["cyclp", "ogmag"],
+                "Necropolis": ["plich", "lich", "wskel", "skele"],
+                "Inferno": ["adevl", "efree", "famil"],
                 "Tower": ["genie", "mage", "gremm"],
-                "Rampart": ["elf"],
-                "Castle": ["angel", "crusd", "rgrif", "hcbow"]}
+                "Rampart": ["btree", "tree", "elf"],
+                "Castle": ["angel", "crusd", "rgrif", "hcbow"],
+                "Berth": ["nixwarr", "nix"],
+                "Neutral": []}
 
 
 class States:

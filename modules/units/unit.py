@@ -1,12 +1,13 @@
 from .castle import Angel, RGrif, Crusd, Hcbow
-from .rampart import Elf
+from .rampart import Btree, Tree, Elf
 from .tower import Genie, Mage, GremM
-from .inferno import Adevl, Efree
-from .necropolis import PLich, Lich, Skele
-from .stronghold import Cyclp
+from .inferno import Adevl, Efree, Famil
+from .necropolis import PLich, Lich, Wskel, Skele
+from .stronghold import Cyclp, Ogmag
 from .fortress import Hydra
 from .conflux import Psyel, Nrg, Storm
 from .dungeon import BDragon, Cmcor, Minok, Harph, Harpy
+from .berth import Nixwarr, Nix
 
 
 def unit(name, i, j, count, team):
@@ -21,6 +22,10 @@ def unit(name, i, j, count, team):
         return Hcbow(i, j, count, team)
 
     # rampart
+    if name == 'btree':
+        return Btree(i, j, count, team)
+    if name == 'tree':
+        return Tree(i, j, count, team)
     if name == 'elf':
         return Elf(i, j, count, team)
 
@@ -37,18 +42,24 @@ def unit(name, i, j, count, team):
         return Adevl(i, j, count, team)
     if name == 'efree':
         return Efree(i, j, count, team)
+    if name == 'famil':
+        return Famil(i, j, count, team)
 
     # necropolis
     if name == 'plich':
         return PLich(i, j, count, team)
     if name == 'lich':
         return Lich(i, j, count, team)
+    if name == 'wskel':
+        return Wskel(i, j, count, team)
     if name == 'skele':
         return Skele(i, j, count, team)
 
     # stronghold
     if name == 'cyclp':
         return Cyclp(i, j, count, team)
+    if name == 'ogmag':
+        return Ogmag(i, j, count, team)
 
     # fortress
     if name == 'hydra':
@@ -73,3 +84,9 @@ def unit(name, i, j, count, team):
         return Harph(i, j, count, team)
     if name == 'harpy':
         return Harpy(i, j, count, team)
+
+    # berth
+    if name == 'nixwarr':
+        return Nixwarr(i, j, count, team)
+    if name == 'nix':
+        return Nix(i, j, count, team)

@@ -225,7 +225,7 @@ class Units:
         animation_img = []
         for x in images:
             for j in range(speed):
-                unit = pygame.image.load(os.path.join(f"data/units/{self.character}/{animation_name}/c{self.character}{x}.png"))
+                unit = pygame.image.load(os.path.join(f"data/units/{self.character}/clean/c{self.character}{x}.png"))
                 unit = pygame.transform.scale(unit, (self.img_size_x, self.img_size_y))
                 unit = pygame.transform.flip(unit, self.direction, False)
                 animation_img.append(unit)

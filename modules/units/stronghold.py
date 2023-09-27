@@ -37,3 +37,38 @@ class Cyclp(Units):
 
         self.update_hex(i, j)
         self.create_animation('standing')
+
+
+class Ogmag(Units):
+
+    def __init__(self, i, j, count, team):
+        super().__init__(count, team)
+
+        self.character = 'ogmag'
+        self.attack = 13
+        self.defense = 7
+        self.damage = [6, 12]
+        self.health = 60
+        self.speed = 5
+        self.ai = 672
+
+        self.cur_health = self.health
+
+        self.moving = ["10", "11", "12", "13", "14", "15", "16", "17", "18"]
+        self.mouse_over = ["01", "05", "06", "07", "08", "08", "07", "06", "05"]
+        self.standing = ["01", "02", "03", "04", "04", "03", "02", "01"]
+        self.getting_hit = ["01", "44", "45", "46", "47", "48", "49"]
+        self.defend = ["01", "22", "23", "24", "24", "25", "25", "23", "22"]
+        self.death = ["01", "50", "51", "52", "53", "54", "55", "56"]
+        self.dead = "56"
+        self.attack_up = ["01", "26", "27", "28", "29", "30", "31"]
+        self.attack_straight = ["01", "32", "33", "34", "35", "36", "37"]
+        self.attack_down = ["01", "38", "39", "40", "41", "42", "43"]
+
+        self.img_size_x = 216
+        self.img_size_y = self.img_size_x / 1.125
+        self.img_shift_x = -20
+        self.img_shift_y = -10
+
+        self.update_hex(i, j)
+        self.create_animation('standing')

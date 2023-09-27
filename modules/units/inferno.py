@@ -77,3 +77,38 @@ class Efree(Units):
 
         self.update_hex(i, j)
         self.create_animation('standing')
+
+
+class Famil(Units):
+
+    def __init__(self, i, j, count, team):
+        super().__init__(count, team)
+
+        self.character = 'famil'
+        self.attack = 4
+        self.defense = 4
+        self.damage = [1, 2]
+        self.health = 4
+        self.speed = 7
+        self.ai = 60
+
+        self.cur_health = self.health
+
+        self.moving = ["10", "11", "12", "13", "14", "15"]
+        self.mouse_over = ["01", "05", "06", "07", "08", "07", "06", "05"]
+        self.standing = ["01", "02", "03", "04", "04", "03", "02", "01"]
+        self.getting_hit = ["01", "43", "44", "45", "46", "47", "48"]
+        self.defend = ["01", "20", "21", "21", "22", "23", "24"]
+        self.death = ["01", "49", "50", "51", "52", "53", "54", "55", "56"]
+        self.dead = "56"
+        self.attack_up = ["01", "25", "26", "27", "28", "29", "30"]
+        self.attack_straight = ["01", "31", "32", "33", "34", "35", "36"]
+        self.attack_down = ["01", "37", "38", "39", "40", "41", "42"]
+
+        self.img_size_x = 216
+        self.img_size_y = self.img_size_x / 1.125
+        self.img_shift_x = -20
+        self.img_shift_y = -10
+
+        self.update_hex(i, j)
+        self.create_animation('standing')
