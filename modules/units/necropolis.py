@@ -1,6 +1,42 @@
 from .units import Units
 
 
+class Ndrgn(Units):
+
+    def __init__(self, i, j, count, team):
+        super().__init__(count, team)
+
+        self.character = 'ndrgn'
+        self.attack = 17
+        self.defense = 15
+        self.damage = [25, 50]
+        self.health = 150
+        self.speed = 9
+        self.ai = 3388
+
+        self.cur_health = self.health
+        self.is_flyer = True
+
+        self.moving = ["43", "44", "45", "46", "47", "48"]
+        self.mouse_over = ["31", "32", "33", "34", "35"]
+        self.standing = ["61", "36", "37", "38", "39", "38", "37", "36"]
+        self.getting_hit = ["52", "53", "54", "55", "56", "57"]
+        self.defend = ["27", "28", "29", "30", "30", "30", "30", "30", "29", "28", "27"]
+        self.death = ["19", "20", "21", "22", "23", "24", "25", "26"]
+        self.dead = "26"
+        self.attack_up = ["01", "08", "09", "10", "11", "12", "07"]
+        self.attack_straight = ["01", "02", "03", "04", "05", "06", "07"]
+        self.attack_down = ["13", "14", "15", "16", "17", "18", "07"]
+
+        self.img_size_x = 216
+        self.img_size_y = self.img_size_x / 1.125
+        self.img_shift_x = 0
+        self.img_shift_y = -20
+
+        self.update_hex(i, j)
+        self.create_animation('standing')
+
+
 class PLich(Units):
 
     def __init__(self, i, j, count, team):
@@ -72,6 +108,42 @@ class Lich(Units):
 
         self.img_size_x = 120
         self.img_size_y = self.img_size_x / 1.125
+
+        self.update_hex(i, j)
+        self.create_animation('standing')
+
+
+class Nosfe(Units):
+
+    def __init__(self, i, j, count, team):
+        super().__init__(count, team)
+
+        self.character = 'nosfe'
+        self.attack = 10
+        self.defense = 10
+        self.damage = [5, 8]
+        self.health = 40
+        self.speed = 9
+        self.ai = 783
+
+        self.cur_health = self.health
+        self.is_flyer = True
+
+        self.moving = ["14", "15", "14", "16", "17", "16"]
+        self.mouse_over = ["01", "05", "06", "07", "08", "08", "08", "07", "06", "05"]
+        self.standing = ["01", "02", "03", "04", "04", "03", "02", "01"]
+        self.getting_hit = ["01", "44", "45", "46", "47", "48", "49"]
+        self.defend = ["01", "22", "23", "24", "25", "25", "24", "23", "22"]
+        self.death = ["01", "50", "51", "52", "53", "54", "55", "56"]
+        self.dead = "56"
+        self.attack_up = ["01", "26", "27", "28", "29", "30", "31"]
+        self.attack_straight = ["01", "32", "33", "34", "35", "36", "37"]
+        self.attack_down = ["01", "38", "39", "40", "41", "42", "43"]
+
+        self.img_size_x = 215
+        self.img_size_y = self.img_size_x / 1.125
+        self.img_shift_x = -25
+        self.img_shift_y = 0
 
         self.update_hex(i, j)
         self.create_animation('standing')

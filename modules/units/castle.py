@@ -1,6 +1,42 @@
 from .units import Units
 
 
+class Rangl(Units):
+
+    def __init__(self, i, j, count, team):
+        super().__init__(count, team)
+
+        self.character = 'rangl'
+        self.attack = 30
+        self.defense = 30
+        self.damage = [50, 50]
+        self.health = 250
+        self.speed = 18
+        self.ai = 8776
+
+        self.cur_health = self.health
+        self.is_flyer = True
+
+        self.moving = ["41", "42", "43", "44", "45", "46", "47"]
+        self.mouse_over = ["35", "36", "37", "38", "37", "36", "35"]
+        self.standing = ["00", "51", "52", "53", "54", "53", "52", "51"]
+        self.getting_hit = ["19", "20", "21", "22", "23", "24"]
+        self.defend = ["31", "32", "33", "34", "34", "34", "34", "33", "32", "31"]
+        self.death = ["19", "20", "25", "26", "27", "28", "29", "30"]
+        self.dead = "30"
+        self.attack_up = ["07", "08", "09", "10", "11", "12"]
+        self.attack_straight = ["01", "02", "03", "04", "05", "06"]
+        self.attack_down = ["13", "14", "15", "16", "17", "18"]
+
+        self.img_size_x = 216
+        self.img_size_y = self.img_size_x / 1.125
+        self.img_shift_x = -15
+        self.img_shift_y = -10
+
+        self.update_hex(i, j)
+        self.create_animation('standing')
+
+
 class Angel(Units):
 
     def __init__(self, i, j, count, team):
@@ -134,6 +170,41 @@ class Hcbow(Units):
 
         self.img_size_x = 144
         self.img_size_y = self.img_size_x / 1.125
+
+        self.update_hex(i, j)
+        self.create_animation('standing')
+
+
+class Halbd(Units):
+
+    def __init__(self, i, j, count, team):
+        super().__init__(count, team)
+
+        self.character = 'halbd'
+        self.attack = 6
+        self.defense = 5
+        self.damage = [2, 3]
+        self.health = 10
+        self.speed = 5
+        self.ai = 115
+
+        self.cur_health = self.health
+
+        self.moving = ["003", "004", "005", "006", "007", "008", "009", "010"]
+        self.mouse_over = ["056", "057", "058", "059", "059", "059", "059", "058", "057", "056"]
+        self.standing = ["079", "078", "077", "076", "075", "076", "077", "078", "079"]
+        self.getting_hit = ["044", "045", "046", "047", "048", "049"]
+        self.defend = ["051", "052", "053", "054", "054", "054", "054", "053", "052"]
+        self.death = ["061", "062", "063", "064", "065", "066", "067"]
+        self.dead = "067"
+        self.attack_up = ["091", "092", "093", "094", "095", "096", "097", "098"]
+        self.attack_straight = ["082", "083", "084", "085", "086", "087", "088", "089"]
+        self.attack_down = ["100", "101", "102", "103", "104", "105", "106", "107"]
+
+        self.img_size_x = 216
+        self.img_size_y = self.img_size_x / 1.125
+        self.img_shift_x = -20
+        self.img_shift_y = -10
 
         self.update_hex(i, j)
         self.create_animation('standing')

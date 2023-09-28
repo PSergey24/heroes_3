@@ -32,17 +32,17 @@ class Settings:
     avatar_height = 64
 
     # special units
-    double_hex_units = ["bdrgn", "hydra", "rgrif", "cmcor"]
+    double_hex_units = ["bdrgn", "hydra", "rgrif", "cmcor", "roc", "ndrgn", "basil", "cerbu", "apegs", "fbird", "naga"]
     without_answer = ["hydra"]
     factions = {"Dungeon": ["bdrgn", "cmcor", "minok", "harph", "harpy"],
-                "Conflux": ["psyel", "nrg", "storm"],
-                "Fortress": ["hydra"],
-                "Stronghold": ["cyclp", "ogmag"],
-                "Necropolis": ["plich", "lich", "wskel", "skele"],
-                "Inferno": ["adevl", "efree", "famil"],
-                "Tower": ["genie", "mage", "gremm"],
-                "Rampart": ["btree", "tree", "elf"],
-                "Castle": ["angel", "crusd", "rgrif", "hcbow"],
+                "Conflux": ["fbird", "magel", "psyel", "eelem", "nrg", "storm", "sprit"],
+                "Fortress": ["hydra", "basil", "gnolm"],
+                "Stronghold": ["cyclp", "roc", "ogmag", "gobli"],
+                "Necropolis": ["ndrgn", "plich", "lich", "nosfe", "wskel", "skele"],
+                "Inferno": ["adevl", "efree", "cerbu", "famil"],
+                "Tower": ["ltita", "naga", "genie", "mage", "igole", "gremm"],
+                "Rampart": ["btree", "tree", "apegs", "elf"],
+                "Castle": ["rangl", "angel", "crusd", "rgrif", "hcbow", "halbd"],
                 "Berth": ["nixwarr", "nix"],
                 "Neutral": []}
 

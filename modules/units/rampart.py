@@ -71,6 +71,42 @@ class Tree(Units):
         self.create_animation('standing')
 
 
+class Apegs(Units):
+
+    def __init__(self, i, j, count, team):
+        super().__init__(count, team)
+
+        self.character = 'apegs'
+        self.attack = 9
+        self.defense = 10
+        self.damage = [5, 9]
+        self.health = 30
+        self.speed = 12
+        self.ai = 532
+
+        self.cur_health = self.health
+        self.is_flyer = True
+
+        self.moving = ["39", "40", "41", "42", "43", "44"]
+        self.mouse_over = ["29", "30", "31", "32", "32", "32", "31", "30", "29"]
+        self.standing = ["56", "33", "34", "35", "36", "35", "34", "33"]
+        self.getting_hit = ["47", "48", "49", "50", "51", "52"]
+        self.defend = ["25", "26", "27", "28", "28", "28", "28", "28", "27", "26", "25"]
+        self.death = ["47", "48", "19", "20", "21", "22", "23", "24"]
+        self.dead = "24"
+        self.attack_up = ["01", "02", "03", "09", "10", "11", "12", "13"]
+        self.attack_straight = ["01", "02", "03", "04", "05", "06", "07", "08"]
+        self.attack_down = ["01", "02", "03", "14", "15", "16", "17", "18"]
+
+        self.img_size_x = 216
+        self.img_size_y = self.img_size_x / 1.125
+        self.img_shift_x = 0
+        self.img_shift_y = -5
+
+        self.update_hex(i, j)
+        self.create_animation('standing')
+
+
 class Elf(Units):
 
     def __init__(self, i, j, count, team):
