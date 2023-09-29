@@ -71,6 +71,116 @@ class Angel(Units):
         self.create_animation('standing')
 
 
+class Champ(Units):
+
+    def __init__(self, i, j, count, team):
+        super().__init__(count, team)
+
+        self.character = 'champ'
+        self.attack = 16
+        self.defense = 16
+        self.damage = [20, 25]
+        self.health = 100
+        self.speed = 9
+        self.ai = 2100
+
+        self.cur_health = self.health
+
+        self.moving = ["52", "53", "54", "55", "56", "57", "58", "59"]
+        self.mouse_over = ["40", "41", "42", "43", "44"]
+        self.standing = ["45", "46", "47", "48"]
+        self.getting_hit = ["67", "70", "69", "68", "67", "66", "65", "64"]
+        self.defend = ["34", "35", "36", "37", "38", "39"]
+        self.death = ["26", "27", "28", "29", "30", "31", "32", "33"]
+        self.dead = "33"
+        self.attack_up = ["01", "11", "12", "13", "14", "15", "16", "17", "18", "19"]
+        self.attack_straight = ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10"]
+        self.attack_down = ["20", "21", "23", "25", "24", "23", "22", "21", "20"]
+
+        self.img_size_x = 216
+        self.img_size_y = self.img_size_x / 1.125
+        self.img_shift_x = 0
+        self.img_shift_y = -5
+
+        self.update_hex(i, j)
+        self.create_animation('standing')
+
+
+class Cavlr(Units):
+
+    def __init__(self, i, j, count, team):
+        super().__init__(count, team)
+
+        self.character = 'cavlr'
+        self.attack = 15
+        self.defense = 15
+        self.damage = [15, 25]
+        self.health = 100
+        self.speed = 7
+        self.ai = 1946
+
+        self.cur_health = self.health
+
+        self.moving = ["52", "53", "54", "55", "56", "57", "58", "59"]
+        self.mouse_over = ["40", "41", "42", "43", "44"]
+        self.standing = ["45", "46", "47", "48"]
+        self.getting_hit = ["67", "70", "69", "68", "67", "66", "65", "64"]
+        self.defend = ["34", "35", "36", "37", "38", "39"]
+        self.death = ["26", "27", "28", "29", "30", "31", "32", "33"]
+        self.dead = "33"
+        self.attack_up = ["01", "11", "12", "13", "14", "15", "16", "17", "18", "19"]
+        self.attack_straight = ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10"]
+        self.attack_down = ["20", "21", "23", "25", "24", "23", "22", "21", "20"]
+
+        self.img_size_x = 216
+        self.img_size_y = self.img_size_x / 1.125
+        self.img_shift_x = 0
+        self.img_shift_y = -5
+
+        self.update_hex(i, j)
+        self.create_animation('standing')
+
+
+class Monkk(Units):
+
+    def __init__(self, i, j, count, team):
+        super().__init__(count, team)
+
+        self.character = 'monkk'
+        self.attack = 12
+        self.defense = 7
+        self.damage = [10, 12]
+        self.health = 30
+        self.speed = 5
+        self.arrows = 0 #todo
+        self.ai = 582
+
+        self.cur_health = self.health
+        self.is_shooter = True
+
+        self.moving = ["09", "10", "11", "12", "13", "14"]
+        self.mouse_over = ["01", "04", "05", "06", "07", "07", "06", "05", "04", "01"]
+        self.standing = ["01", "02", "03", "03", "02", "01"]
+        self.getting_hit = ["01", "41", "42", "43", "44", "45", "46", "01"]
+        self.defend = ["01", "16", "17", "18", "19", "20", "01"]
+        self.death = ["01", "41", "42", "43", "44", "47", "48", "49", "50", "51", "52"]
+        self.dead = "52"
+        self.attack_up = ["01", "21", "22", "23", "24", "25", "26", "27", "01"]
+        self.attack_straight = ["01", "28", "29", "30", "31", "32", "33", "01"]
+        self.attack_down = ["01", "34", "35", "36", "37", "38", "39", "40", "01"]
+        self.shoot_up = ["01", "01", "21", "22", "23", "24", "25", "26", "27", "01"]
+        self.shoot_straight = ["01", "01", "01", "28", "29", "30", "31", "32", "33", "01"]
+        self.shoot_down = ["01", "34", "35", "36", "37", "38", "39", "40", "01"]
+
+        self.img_size_x = 216
+        self.img_size_y = self.img_size_x / 1.125
+        self.img_shift_x = -25
+        self.img_shift_y = -5
+
+        self.update_hex(i, j)
+        self.create_animation('standing')
+
+
 class Crusd(Units):
 
     def __init__(self, i, j, count, team):

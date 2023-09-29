@@ -79,6 +79,76 @@ class Efree(Units):
         self.create_animation('standing')
 
 
+class Pfien(Units):
+
+    def __init__(self, i, j, count, team):
+        super().__init__(count, team)
+
+        self.character = 'pfien'
+        self.attack = 13
+        self.defense = 13
+        self.damage = [13, 17]
+        self.health = 45
+        self.speed = 6
+        self.ai = 765
+
+        self.cur_health = self.health
+
+        self.moving = ["40", "41", "42", "43", "44", "45", "46", "47"]
+        self.mouse_over = ["30", "31", "32", "33", "32", "33", "32", "33", "32", "31", "30"]
+        self.standing = ["58", "34", "35", "36", "37", "36", "35", "34"]
+        self.getting_hit = ["50", "51", "52", "53", "54", "55"]
+        self.defend = ["26", "27", "28", "29", "29", "29", "29", "29", "28", "27", "26"]
+        self.death = ["21", "22", "23", "24", "25"]
+        self.dead = "25"
+        self.attack_up = ["01", "02", "09", "10", "11", "12", "13", "14"]
+        self.attack_straight = ["01", "02", "03", "04", "05", "06", "07", "08"]
+        self.attack_down = ["01", "02", "15", "16", "17", "18", "19", "20"]
+
+        self.img_size_x = 216
+        self.img_size_y = self.img_size_x / 1.125
+        self.img_shift_x = -25
+        self.img_shift_y = 0
+
+        self.update_hex(i, j)
+        self.create_animation('standing')
+
+
+class Ohdem(Units):
+
+    def __init__(self, i, j, count, team):
+        super().__init__(count, team)
+
+        self.character = 'ohdem'
+        self.attack = 10
+        self.defense = 10
+        self.damage = [7, 9]
+        self.health = 35
+        self.speed = 5
+        self.ai = 445
+
+        self.cur_health = self.health
+
+        self.moving = ["11", "12", "13", "14", "15", "16", "17", "18"]
+        self.mouse_over = ["01", "05", "06", "07", "08", "08", "07", "06", "05", "01"]
+        self.standing = ["01", "02", "03", "04", "04", "03", "02", "01"]
+        self.getting_hit = ["01", "43", "44", "45", "46", "47", "48"]
+        self.defend = ["01", "21", "22", "23", "24", "24", "24", "23", "22", "21"]
+        self.death = ["01", "49", "50", "51", "52", "53", "54", "55", "56"]
+        self.dead = "56"
+        self.attack_up = ["01", "25", "26", "27", "28", "29", "30"]
+        self.attack_straight = ["01", "31", "32", "33", "34", "35", "36"]
+        self.attack_down = ["01", "37", "38", "39", "40", "41", "42"]
+
+        self.img_size_x = 216
+        self.img_size_y = self.img_size_x / 1.125
+        self.img_shift_x = -25
+        self.img_shift_y = -5
+
+        self.update_hex(i, j)
+        self.create_animation('standing')
+
+
 class Cerbu(Units):
 
     def __init__(self, i, j, count, team):
@@ -109,6 +179,46 @@ class Cerbu(Units):
         self.img_size_y = self.img_size_x / 1.125
         self.img_shift_x = 0
         self.img_shift_y = 0
+
+        self.update_hex(i, j)
+        self.create_animation('standing')
+
+
+class Gog(Units):
+
+    def __init__(self, i, j, count, team):
+        super().__init__(count, team)
+
+        self.character = 'gog'
+        self.attack = 6
+        self.defense = 4
+        self.damage = [2, 4]
+        self.health = 13
+        self.speed = 4
+        self.arrows = 12
+        self.ai = 159
+
+        self.cur_health = self.health
+        self.is_shooter = True
+
+        self.moving = ["11", "12", "13", "14", "15", "16", "17", "18"]
+        self.mouse_over = ["05", "06", "07", "08", "09", "08", "07", "06", "05"]
+        self.standing = ["01", "02", "03", "04", "03", "02"]
+        self.getting_hit = ["01", "53", "54", "55", "56", "57", "58"]
+        self.defend = ["01", "21", "22", "23", "24", "25", "26"]
+        self.death = ["01", "59", "60", "61", "62", "63", "64", "63", "64"]
+        self.dead = "64"
+        self.attack_up = ["01", "38", "39", "30", "27", "28", "29", "34"]
+        self.attack_straight = ["01", "38", "39", "40", "35", "36", "37", "44"]
+        self.attack_down = ["01", "38", "39", "40", "48", "45", "46", "47", "52"]
+        self.shoot_up = ["01", "38", "39", "30", "31", "32", "33", "34"]
+        self.shoot_straight = ["01", "38", "39", "40", "41", "42", "43", "44"]
+        self.shoot_down = ["01", "38", "39", "40", "48", "49", "50", "51", "52"]
+
+        self.img_size_x = 216
+        self.img_size_y = self.img_size_x / 1.125
+        self.img_shift_x = -25
+        self.img_shift_y = -5
 
         self.update_hex(i, j)
         self.create_animation('standing')

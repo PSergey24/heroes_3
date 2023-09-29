@@ -149,6 +149,77 @@ class Nosfe(Units):
         self.create_animation('standing')
 
 
+class Wrait(Units):
+
+    def __init__(self, i, j, count, team):
+        super().__init__(count, team)
+
+        self.character = 'wrait'
+        self.attack = 7
+        self.defense = 7
+        self.damage = [3, 5]
+        self.health = 18
+        self.speed = 7
+        self.ai = 315
+
+        self.cur_health = self.health
+        self.is_flyer = True
+
+        self.moving = ["41", "42", "43", "44", "45", "46", "47", "48"]
+        self.mouse_over = ["32", "33", "34", "35", "35", "35", "35", "34", "33", "32"]
+        self.standing = ["57", "36", "37", "38", "39", "38", "37", "36"]
+        self.getting_hit = ["49", "50", "51", "52", "53", "54"]
+        self.defend = ["28", "29", "30", "31", "31", "31", "31", "30", "29", "28"]
+        self.death = ["49", "50", "22", "23", "24", "25", "26", "27"]
+        self.dead = "27"
+        self.attack_up = ["08", "09", "10", "11", "12", "13", "14"]
+        self.attack_straight = ["01", "02", "03", "04", "05", "06", "07"]
+        self.attack_down = ["15", "16", "17", "18", "19", "20", "21"]
+
+        self.img_size_x = 216
+        self.img_size_y = self.img_size_x / 1.125
+        self.img_shift_x = -25
+        self.img_shift_y = -5
+
+        self.update_hex(i, j)
+        self.create_animation('standing')
+
+
+class Zombi(Units):
+
+    def __init__(self, i, j, count, team):
+        super().__init__(count, team)
+
+        self.character = 'zombi'
+        self.attack = 5
+        self.defense = 5
+        self.damage = [2, 3]
+        self.health = 15
+        self.speed = 3
+        self.ai = 98
+
+        self.cur_health = self.health
+
+        self.moving = ["10", "11", "12", "13", "14", "15", "16", "17", "18", "19"]
+        self.mouse_over = ["01", "05", "06", "07", "08", "08", "07", "06", "05"]
+        self.standing = ["01", "02", "03", "04", "04", "03", "02", "01"]
+        self.getting_hit = ["01", "47", "48", "49", "50", "51", "52"]
+        self.defend = ["01", "23", "24", "25", "26", "27", "28"]
+        self.death = ["01", "53", "54", "55", "56", "57", "58", "59", "60"]
+        self.dead = "60"
+        self.attack_up = ["01", "29", "30", "31", "32", "33", "34"]
+        self.attack_straight = ["01", "35", "36", "37", "38", "39", "40"]
+        self.attack_down = ["01", "41", "42", "43", "44", "45", "46"]
+
+        self.img_size_x = 216
+        self.img_size_y = self.img_size_x / 1.125
+        self.img_shift_x = -25
+        self.img_shift_y = -5
+
+        self.update_hex(i, j)
+        self.create_animation('standing')
+
+
 class Wskel(Units):
 
     def __init__(self, i, j, count, team):

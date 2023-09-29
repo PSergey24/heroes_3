@@ -110,6 +110,86 @@ class Minok(Units):
         self.create_animation('standing')
 
 
+class Meduq(Units):
+
+    def __init__(self, i, j, count, team):
+        super().__init__(count, team)
+
+        self.character = 'meduq'
+        self.attack = 10
+        self.defense = 10
+        self.damage = [6, 8]
+        self.health = 30
+        self.speed = 6
+        self.arrows = 0 #todo: x2 not grade
+        self.ai = 577
+
+        self.cur_health = self.health
+        self.is_shooter = True
+
+        self.moving = ["57", "58", "59", "60", "61", "62", "63", "64"]
+        self.mouse_over = ["47", "48", "49", "50", "50", "50", "50", "49", "48", "47"]
+        self.standing = ["00", "51", "52", "53", "54", "53", "52", "51"]
+        self.getting_hit = ["67", "68", "69", "70", "71", "72"]
+        self.defend = ["43", "44", "45", "46", "46", "46", "46", "45", "44", "43"]
+        self.death = ["67", "68", "37", "38", "39", "40", "41", "42"]
+        self.dead = "42"
+        self.attack_up = ["25", "26", "27", "28", "28", "28", "28", "28", "29", "30"]
+        self.attack_straight = ["19", "20", "21", "22", "22", "22", "22", "22", "23", "24"]
+        self.attack_down = ["31", "32", "33", "33", "34", "34", "34", "34", "34", "35", "36"]
+        self.shoot_up = ["07", "08", "09", "10", "10", "10", "10", "10", "11", "12"]
+        self.shoot_straight = ["01", "02", "03", "04", "04", "04", "04", "04", "05", "06"]
+        self.shoot_down = ["13", "14", "15", "16", "16", "16", "16", "16", "17", "18"]
+
+        self.img_size_x = 216
+        self.img_size_y = self.img_size_x / 1.125
+        self.img_shift_x = 10
+        self.img_shift_y = -5
+
+        self.update_hex(i, j)
+        self.create_animation('standing')
+
+
+class Eveye(Units):
+
+    def __init__(self, i, j, count, team):
+        super().__init__(count, team)
+
+        self.character = 'eveye'
+        self.attack = 10
+        self.defense = 8
+        self.damage = [3, 5]
+        self.health = 22
+        self.speed = 7
+        self.arrows = 24
+        self.ai = 367
+
+        self.cur_health = self.health
+        self.is_shooter = True
+
+        self.moving = ["31", "38", "39", "40", "41", "42", "43", "44", "45", "46", "47"]
+        self.mouse_over = ["28", "29", "30"]
+        self.standing = ["31", "32", "33", "34", "33", "32", "31"]
+        self.getting_hit = ["51", "52", "53", "54", "55", "56"]
+        self.defend = ["24", "25", "26", "27", "27", "27", "27", "27", "26", "25", "24"]
+        self.death = ["19", "20", "21", "22", "23"]
+        self.dead = "23"
+        self.attack_up = ["07", "08", "09", "10", "11", "12", "08"]
+        self.attack_straight = ["01", "02", "03", "04", "05", "06", "02"]
+        self.attack_down = ["13", "14", "15", "16", "17", "18", "14"]
+        self.shoot_up = ["71", "72", "72", "72", "72", "73", "74", "75"]
+        self.shoot_straight = ["66", "67", "68", "68", "68", "69", "70"]
+        self.shoot_down = ["76", "77", "78", "78", "78", "79", "80"]
+
+        self.img_size_x = 216
+        self.img_size_y = self.img_size_x / 1.125
+        self.img_shift_x = -25
+        self.img_shift_y = -5
+
+        self.update_hex(i, j)
+        self.create_animation('standing')
+
+
 class Harph(Units):
 
     def __init__(self, i, j, count, team):

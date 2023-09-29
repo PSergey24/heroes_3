@@ -1,6 +1,41 @@
 from .units import Units
 
 
+class Abehe(Units):
+
+    def __init__(self, i, j, count, team):
+        super().__init__(count, team)
+
+        self.character = 'abehe'
+        self.attack = 19
+        self.defense = 19
+        self.damage = [30, 50]
+        self.health = 300
+        self.speed = 9
+        self.ai = 6168
+
+        self.cur_health = self.health
+
+        self.moving = ["10", "11", "12", "13", "14", "15", "16", "17", "18"]
+        self.mouse_over = ["01", "05", "06", "07", "08", "08", "08", "07", "06", "05"]
+        self.standing = ["01", "02", "03", "04", "04", "03", "02", "01"]
+        self.getting_hit = ["01", "43", "44", "45", "46", "47", "48"]
+        self.defend = ["01", "22", "23", "24", "24", "23", "22"]
+        self.death = ["01", "49", "50", "51", "52", "53", "54", "55"]
+        self.dead = "55"
+        self.attack_up = ["01", "25", "26", "27", "28", "29", "30"]
+        self.attack_straight = ["01", "31", "32", "33", "34", "35", "36"]
+        self.attack_down = ["01", "37", "38", "39", "40", "41", "42"]
+
+        self.img_size_x = 216
+        self.img_size_y = self.img_size_x / 1.125
+        self.img_shift_x = 10
+        self.img_shift_y = -10
+
+        self.update_hex(i, j)
+        self.create_animation('standing')
+
+
 class Cyclp(Units):
 
     def __init__(self, i, j, count, team):

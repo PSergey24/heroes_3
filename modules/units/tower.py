@@ -178,6 +178,42 @@ class Igole(Units):
         self.create_animation('standing')
 
 
+class Gargo(Units):
+
+    def __init__(self, i, j, count, team):
+        super().__init__(count, team)
+
+        self.character = 'gargo'
+        self.attack = 6
+        self.defense = 6
+        self.damage = [2, 3]
+        self.health = 16
+        self.speed = 6
+        self.ai = 165
+
+        self.cur_health = self.health
+        self.is_flyer = True
+
+        self.moving = ["41", "42", "43", "44", "45", "46"]
+        self.mouse_over = ["31", "32", "33", "34", "34", "34", "33", "32", "31"]
+        self.standing = ["57", "35", "36", "37", "38", "37", "36", "35"]
+        self.getting_hit = ["49", "50", "51", "52", "53", "54"]
+        self.defend = ["27", "28", "29", "30", "30", "30", "30", "30", "29", "28", "27"]
+        self.death = ["49", "50", "51", "52", "53", "19", "20", "21", "22", "22", "22", "22", "22", "23", "24", "25", "26"]
+        self.dead = "26"
+        self.attack_up = ["01", "02", "09", "10", "11", "12", "13", "08"]
+        self.attack_straight = ["01", "02", "03", "04", "05", "06", "07", "08"]
+        self.attack_down = ["01", "02", "14", "15", "16", "17", "18", "08"]
+
+        self.img_size_x = 216
+        self.img_size_y = self.img_size_x / 1.125
+        self.img_shift_x = -25
+        self.img_shift_y = 0
+
+        self.update_hex(i, j)
+        self.create_animation('standing')
+
+
 class GremM(Units):
 
     def __init__(self, i, j, count, team):

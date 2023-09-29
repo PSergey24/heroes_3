@@ -1,12 +1,12 @@
-from .castle import Rangl, Angel, RGrif, Crusd, Hcbow, Halbd
-from .rampart import Btree, Tree, Apegs, Elf
-from .tower import Ltita, Naga, Genie, Mage, Igole, GremM
-from .inferno import Adevl, Efree, Cerbu, Famil
-from .necropolis import Ndrgn, PLich, Lich, Nosfe, Wskel, Skele
-from .stronghold import Cyclp, Roc, Ogmag, Gobli
-from .fortress import Hydra, Basil, Gnolm
+from .castle import Rangl, Angel, Champ, Cavlr, Monkk, RGrif, Crusd, Hcbow, Halbd
+from .rampart import Gdrag, Wunic, Btree, Tree, Apegs, Elf, Ecent
+from .tower import Ltita, Naga, Genie, Mage, Igole, Gargo, GremM
+from .inferno import Adevl, Efree, Pfien, Ohdem, Cerbu, Gog, Famil
+from .necropolis import Ndrgn, PLich, Lich, Nosfe, Wrait, Zombi, Wskel, Skele
+from .stronghold import Abehe, Cyclp, Roc, Ogmag, Gobli
+from .fortress import Hydra, Wyver, Cgorg, Basil, Pliza, Gnolm
 from .conflux import Fbird, Magel, Psyel, Eelem, Nrg, Storm, Sprit
-from .dungeon import BDragon, Cmcor, Minok, Harph, Harpy
+from .dungeon import BDragon, Cmcor, Minok, Meduq, Eveye, Harph, Harpy
 from .berth import Nixwarr, Nix
 
 
@@ -16,6 +16,12 @@ def unit(name, i, j, count, team):
         return Rangl(i, j, count, team)
     if name == 'angel':
         return Angel(i, j, count, team)
+    if name == 'champ':
+        return Champ(i, j, count, team)
+    if name == 'cavlr':
+        return Cavlr(i, j, count, team)
+    if name == "monkk":
+        return Monkk(i, j, count, team)
     if name == "crusd":
         return Crusd(i, j, count, team)
     if name == 'rgrif':
@@ -26,6 +32,10 @@ def unit(name, i, j, count, team):
         return Halbd(i, j, count, team)
 
     # rampart
+    if name == 'gdrag':
+        return Gdrag(i, j, count, team)
+    if name == 'wunic':
+        return Wunic(i, j, count, team)
     if name == 'btree':
         return Btree(i, j, count, team)
     if name == 'tree':
@@ -34,6 +44,8 @@ def unit(name, i, j, count, team):
         return Apegs(i, j, count, team)
     if name == 'elf':
         return Elf(i, j, count, team)
+    if name == 'ecent':
+        return Ecent(i, j, count, team)
 
     # tower
     if name == 'ltita':
@@ -46,6 +58,8 @@ def unit(name, i, j, count, team):
         return Mage(i, j, count, team)
     if name == 'igole':
         return Igole(i, j, count, team)
+    if name == 'gargo':
+        return Gargo(i, j, count, team)
     if name == 'gremm':
         return GremM(i, j, count, team)
 
@@ -54,8 +68,14 @@ def unit(name, i, j, count, team):
         return Adevl(i, j, count, team)
     if name == 'efree':
         return Efree(i, j, count, team)
+    if name == 'pfien':
+        return Pfien(i, j, count, team)
+    if name == 'ohdem':
+        return Ohdem(i, j, count, team)
     if name == 'cerbu':
         return Cerbu(i, j, count, team)
+    if name == 'gog':
+        return Gog(i, j, count, team)
     if name == 'famil':
         return Famil(i, j, count, team)
 
@@ -68,12 +88,18 @@ def unit(name, i, j, count, team):
         return Lich(i, j, count, team)
     if name == 'nosfe':
         return Nosfe(i, j, count, team)
+    if name == 'wrait':
+        return Wrait(i, j, count, team)
+    if name == 'zombi':
+        return Zombi(i, j, count, team)
     if name == 'wskel':
         return Wskel(i, j, count, team)
     if name == 'skele':
         return Skele(i, j, count, team)
 
     # stronghold
+    if name == 'abehe':
+        return Abehe(i, j, count, team)
     if name == 'cyclp':
         return Cyclp(i, j, count, team)
     if name == 'roc':
@@ -86,8 +112,14 @@ def unit(name, i, j, count, team):
     # fortress
     if name == 'hydra':
         return Hydra(i, j, count, team)
+    if name == 'wyver':
+        return Wyver(i, j, count, team)
+    if name == 'cgorg':
+        return Cgorg(i, j, count, team)
     if name == 'basil':
         return Basil(i, j, count, team)
+    if name == 'pliza':
+        return Pliza(i, j, count, team)
     if name == 'gnolm':
         return Gnolm(i, j, count, team)
 
@@ -114,6 +146,10 @@ def unit(name, i, j, count, team):
         return Cmcor(i, j, count, team)
     if name == 'minok':
         return Minok(i, j, count, team)
+    if name == 'meduq':
+        return Meduq(i, j, count, team)
+    if name == 'eveye':
+        return Eveye(i, j, count, team)
     if name == 'harph':
         return Harph(i, j, count, team)
     if name == 'harpy':
