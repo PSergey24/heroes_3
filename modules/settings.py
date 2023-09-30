@@ -32,19 +32,20 @@ class Settings:
     avatar_height = 64
 
     # special units
-    double_hex_units = ["bdrgn", "hydra", "rgrif", "cmcor", "roc", "ndrgn", "basil", "cerbu", "apegs", "fbird", "naga",
-                        "meduq", "gdrag", "wunic", "ecent", "cavlr", "champ", "abehe", "cgorg", "wyver"]
-    without_answer = ["hydra"]
-    factions = {"Dungeon": ["bdrgn", "cmcor", "minok", "meduq", "eveye", "harph", "harpy"],
-                "Conflux": ["fbird", "magel", "psyel", "eelem", "nrg", "storm", "sprit"],
-                "Fortress": ["hydra", "wyver", "cgorg", "basil", "pliza", "gnolm"],
-                "Stronghold": ["abehe", "cyclp", "roc", "ogmag", "gobli"],
-                "Necropolis": ["ndrgn", "plich", "lich", "nosfe", "wrait", "zombi", "wskel", "skele"],
-                "Inferno": ["adevl", "efree", "pfien", "ohdem", "cerbu", "gog", "famil"],
-                "Tower": ["ltita", "naga", "genie", "mage", "igole", "gargo", "gremm"],
-                "Rampart": ["gdrag", "wunic", "btree", "tree", "apegs", "elf", "ecent"],
-                "Castle": ["rangl", "angel", "champ", "cavlr", "monkk", "crusd", "rgrif", "hcbow", "halbd"],
-                "Berth": ["nixwarr", "nix"],
+    double_hex_units = ["bdrgn", "rdrgn", "chydr", "hydra", "rgrif", "griff", "cmcor", "tbird", "roc", "ndrgn", "basil", "cerbu", "apegs", "pegas", "phx", "fbird", "nagag", "naga",
+                        "meduq", "medus", "ddrag", "gdrag", "wunic", "unico", "ecent", "centr", "cavlr", "champ", "abehe", "ybehe", "cgorg", "wyvmn", "wyver", "assidup", "assid",
+                        "blord", "bknig", "icee", "uwlfr", "haspid", "serpent"]
+    without_answer = ["chydr", "hydra", "corsair"]
+    factions = {"Dungeon": ["bdrgn", "rdrgn", "cmcor", "minok", "meduq", "medus", "eveye", "harph", "harpy", "itrog"],
+                "Conflux": ["phx", "fbird", "magel", "psyel", "eelem", "ston", "nrg", "icee", "storm", "sprit"],
+                "Fortress": ["chydr", "hydra", "wyvmn", "wyver", "cgorg", "basil", "drfly", "aliza", "pliza", "gnolm", "gnoll"],
+                "Stronghold": ["abehe", "ybehe", "cyclr", "cyclp", "tbird", "roc", "ogmag", "orc", "uwlfr", "hgobl", "gobli"],
+                "Necropolis": ["ndrgn", "blord", "bknig", "plich", "lich", "nosfe", "vamp", "wrait", "wight", "zombi", "wskel", "skele"],
+                "Inferno": ["adevl", "devil", "efree", "pfoe", "pfien", "thdem", "ohdem", "cerbu", "gog", "famil"],
+                "Tower": ["gtita", "ltita", "nagag", "naga", "genie", "mage", "igole", "ogarg", "gargo", "gremm", "grema"],
+                "Rampart": ["ddrag", "gdrag", "wunic", "unico", "btree", "tree", "apegs", "pegas", "grelf", "elf", "bdwar", "dwarf", "ecent", "centr"],
+                "Castle": ["rangl", "angel", "champ", "cavlr", "monkk", "crusd", "sword", "rgrif", "griff", "hcbow", "halbd", "pkman"],
+                "Berth": ["haspid", "serpent", "nixwarr", "nix", "sorcss", "priest", "assidup", "assid", "pr3up", "corsair", "pirate", "swash", "seadog", "oceanid", "nimph"],
                 "Neutral": []}
 
 

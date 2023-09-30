@@ -214,6 +214,41 @@ class Crusd(Units):
         self.create_animation('standing')
 
 
+class Sword(Units):
+
+    def __init__(self, i, j, count, team):
+        super().__init__(count, team)
+
+        self.character = 'sword'
+        self.attack = 10
+        self.defense = 12
+        self.damage = [6, 9]
+        self.health = 35
+        self.speed = 5
+        self.ai = 445
+
+        self.cur_health = self.health
+
+        self.moving = ["36", "37", "38", "39", "40", "41", "42", "43"]
+        self.mouse_over = ["26", "27", "28", "29", "29", "28", "27", "26"]
+        self.standing = ["54", "30", "31", "32", "33", "32", "31", "30"]
+        self.getting_hit = ["46", "47", "48", "49", "50", "51"]
+        self.defend = ["22", "23", "24", "25", "25", "25", "25", "25", "24", "23", "22"]
+        self.death = ["16", "17", "18", "19", "20", "21"]
+        self.dead = "21"
+        self.attack_up = ["01", "02", "08", "09", "10", "11", "07"]
+        self.attack_straight = ["01", "02", "03", "04", "05", "06", "07"]
+        self.attack_down = ["01", "02", "12", "13", "14", "15", "07"]
+
+        self.img_size_x = 216
+        self.img_size_y = self.img_size_x / 1.125
+        self.img_shift_x = -20
+        self.img_shift_y = -5
+
+        self.update_hex(i, j)
+        self.create_animation('standing')
+
+
 class RGrif(Units):
 
     def __init__(self, i, j, count, team):
@@ -226,6 +261,40 @@ class RGrif(Units):
         self.health = 25
         self.speed = 9
         self.ai = 488
+
+        self.cur_health = self.health
+        self.is_flyer = True
+
+        self.moving = ["11", "12", "11", "10"]
+        self.mouse_over = ["01", "04", "05", "06", "06", "05", "04", "01"]
+        self.standing = ["01", "02", "03", "03", "03", "02", "01", "01"]
+        self.getting_hit = ["01", "41", "42", "43", "44", "45", "01"]
+        self.defend = ["01", "17", "18", "19", "19", "18", "17", "01"]
+        self.death = ["01", "46", "47", "48", "49", "50", "51", "52", "53"]
+        self.dead = "53"
+        self.attack_up = ["01", "20", "21", "22", "23", "24", "25", "26", "01"]
+        self.attack_straight = ["01", "27", "28", "29", "30", "31", "32", "33", "01"]
+        self.attack_down = ["01", "34", "35", "36", "37", "38", "39", "40", "01"]
+
+        self.img_size_x = 216
+        self.img_size_y = self.img_size_x / 1.125
+
+        self.update_hex(i, j)
+        self.create_animation('standing')
+
+
+class Griff(Units):
+
+    def __init__(self, i, j, count, team):
+        super().__init__(count, team)
+
+        self.character = 'griff'
+        self.attack = 8
+        self.defense = 8
+        self.damage = [3, 6]
+        self.health = 25
+        self.speed = 6
+        self.ai = 351
 
         self.cur_health = self.health
         self.is_flyer = True
@@ -310,6 +379,41 @@ class Halbd(Units):
         self.attack_up = ["091", "092", "093", "094", "095", "096", "097", "098"]
         self.attack_straight = ["082", "083", "084", "085", "086", "087", "088", "089"]
         self.attack_down = ["100", "101", "102", "103", "104", "105", "106", "107"]
+
+        self.img_size_x = 216
+        self.img_size_y = self.img_size_x / 1.125
+        self.img_shift_x = -20
+        self.img_shift_y = -10
+
+        self.update_hex(i, j)
+        self.create_animation('standing')
+
+
+class Pkman(Units):
+
+    def __init__(self, i, j, count, team):
+        super().__init__(count, team)
+
+        self.character = 'pkman'
+        self.attack = 4
+        self.defense = 5
+        self.damage = [1, 3]
+        self.health = 10
+        self.speed = 4
+        self.ai = 80
+
+        self.cur_health = self.health
+
+        self.moving = ["03", "04", "05", "06", "07", "08", "09", "10"]
+        self.mouse_over = ["56", "57", "58", "59", "59", "59", "59", "58", "57", "56"]
+        self.standing = ["79", "78", "77", "76", "75", "76", "77", "78", "79"]
+        self.getting_hit = ["44", "45", "46", "47", "48", "49"]
+        self.defend = ["51", "52", "53", "54", "54", "54", "54", "53", "52"]
+        self.death = ["61", "62", "63", "64", "65", "66", "67"]
+        self.dead = "67"
+        self.attack_up = ["26", "27", "28", "29", "30", "31", "32", "33"]
+        self.attack_straight = ["17", "18", "19", "20", "21", "22", "23", "24"]
+        self.attack_down = ["35", "36", "37", "38", "39", "40", "41", "42"]
 
         self.img_size_x = 216
         self.img_size_y = self.img_size_x / 1.125

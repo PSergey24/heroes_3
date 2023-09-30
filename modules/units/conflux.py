@@ -1,6 +1,42 @@
 from .units import Units
 
 
+class Phx(Units):
+
+    def __init__(self, i, j, count, team):
+        super().__init__(count, team)
+
+        self.character = 'phx'
+        self.attack = 21
+        self.defense = 18
+        self.damage = [30, 40]
+        self.health = 200
+        self.speed = 21
+        self.ai = 6721
+
+        self.cur_health = self.health
+        self.is_flyer = True
+
+        self.moving = ["51", "52", "53", "54", "55", "56"]
+        self.mouse_over = ["36", "37", "38", "39", "40", "39", "38", "37", "36"]
+        self.standing = ["66", "41", "42", "43", "44", "45", "46", "47"]
+        self.getting_hit = ["57", "58", "59", "60", "61", "62"]
+        self.defend = ["31", "32", "33", "34", "35", "34", "33", "32", "31"]
+        self.death = ["24", "25", "26", "27", "28", "29", "30"]
+        self.dead = "30"
+        self.attack_up = ["01", "09", "10", "11", "12", "13", "12", "13", "12", "13", "14", "15"]
+        self.attack_straight = ["01", "02", "03", "04", "05", "06", "05", "06", "05", "06", "07", "08"]
+        self.attack_down = ["16", "17", "18", "19", "20", "21", "20", "21", "20", "21", "22", "23"]
+
+        self.img_size_x = 288
+        self.img_size_y = self.img_size_x / 1.125
+        self.img_shift_x = -35
+        self.img_shift_y = -20
+
+        self.update_hex(i, j)
+        self.create_animation('standing')
+
+
 class Fbird(Units):
 
     def __init__(self, i, j, count, team):
@@ -107,6 +143,41 @@ class Psyel(Units):
         self.create_animation('standing')
 
 
+class Ston(Units):
+
+    def __init__(self, i, j, count, team):
+        super().__init__(count, team)
+
+        self.character = 'ston'
+        self.attack = 11
+        self.defense = 11
+        self.damage = [6, 10]
+        self.health = 40
+        self.speed = 6
+        self.ai = 490
+
+        self.cur_health = self.health
+
+        self.moving = ["45", "46", "47", "48", "49", "50", "51", "52"]
+        self.mouse_over = ["30", "31", "32", "33", "34", "35", "36", "37", "38"]
+        self.standing = ["71", "39", "40", "41", "42", "41", "40", "39"]
+        self.getting_hit = ["55", "56", "57", "58", "59", "60"]
+        self.defend = ["24", "25", "26", "27", "28", "29", "28", "27", "26", "25", "24"]
+        self.death = ["18", "19", "20", "21", "22", "23"]
+        self.dead = "23"
+        self.attack_up = ["01", "08", "09", "10", "11", "12", "07"]
+        self.attack_straight = ["01", "02", "03", "04", "05", "06", "07"]
+        self.attack_down = ["01", "13", "14", "15", "16", "17", "07"]
+
+        self.img_size_x = 216
+        self.img_size_y = self.img_size_x / 1.125
+        self.img_shift_x = -20
+        self.img_shift_y = -10
+
+        self.update_hex(i, j)
+        self.create_animation('standing')
+
+
 class Eelem(Units):
 
     def __init__(self, i, j, count, team):
@@ -183,6 +254,44 @@ class Nrg(Units):
         self.select_animation('start_moving')
         self.hex_worker.update_character_position(goal_row, goal_col)
         self.select_animation('stop_moving')
+
+
+class Icee(Units):
+
+    def __init__(self, i, j, count, team):
+        super().__init__(count, team)
+
+        self.character = 'icee'
+        self.attack = 8
+        self.defense = 10
+        self.damage = [3, 7]
+        self.health = 30
+        self.speed = 6
+        self.arrows = 0  # todo:
+        self.ai = 280
+
+        self.cur_health = self.health
+        self.is_shooter = True
+
+        self.moving = ["53", "54", "55", "56", "57", "58", "59"]
+        self.mouse_over = ["43", "44", "45", "46", "45", "44", "43"]
+        self.standing = ["77", "47", "48", "49", "50", "49", "48", "47"]
+        self.getting_hit = ["63", "64", "65", "66", "67", "68"]
+        self.defend = ["38", "39", "40", "41", "42", "42", "42", "41", "40", "39", "38"]
+        self.death = ["28", "29", "30", "31", "32", "33", "33", "33", "34", "35", "36", "37"]
+        self.dead = "37"
+        self.attack_up = ["19", "20", "21", "22", "23", "24", "25", "26", "27"]
+        self.attack_straight = ["19", "20", "21", "22", "23", "24", "25", "26", "27"]
+        self.attack_down = ["19", "20", "21", "22", "23", "24", "25", "26", "27"]
+        self.shoot_up = ["01", "09", "10", "11", "12", "13", "07", "08"]
+        self.shoot_straight = ["01", "02", "03", "04", "05", "06", "07", "08"]
+        self.shoot_down = ["01", "14", "15", "16", "17", "18", "07", "08"]
+
+        self.img_size_x = 196
+        self.img_size_y = self.img_size_x / 1.125
+
+        self.update_hex(i, j)
+        self.create_animation('standing')
 
 
 class Storm(Units):
