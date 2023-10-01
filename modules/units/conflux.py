@@ -256,6 +256,41 @@ class Nrg(Units):
         self.select_animation('stop_moving')
 
 
+class Felem(Units):
+
+    def __init__(self, i, j, count, team):
+        super().__init__(count, team)
+
+        self.character = 'felem'
+        self.attack = 10
+        self.defense = 8
+        self.damage = [4, 6]
+        self.health = 35
+        self.speed = 6
+        self.ai = 345
+
+        self.cur_health = self.health
+
+        self.moving = ["44", "45", "46", "47", "48", "49"]
+        self.mouse_over = ["31", "32", "33", "34", "33", "32", "31"]
+        self.standing = ["35", "36", "37", "38", "39", "40"]
+        self.getting_hit = ["54", "55", "56", "57", "58", "59"]
+        self.defend = ["26", "27", "28", "29", "30", "29", "30", "29", "30", "29", "28", "27", "26"]
+        self.death = ["54", "55", "19", "20", "21", "22", "23", "24", "25"]
+        self.dead = "25"
+        self.attack_up = ["07", "08", "09", "10", "11", "12", "11", "12", "11", "12", "11", "10", "09", "08", "07"]
+        self.attack_straight = ["01", "02", "03", "04", "05", "06", "05", "06", "05", "06", "05", "04", "03", "02", "01"]
+        self.attack_down = ["13", "14", "15", "16", "17", "18", "17", "18", "17", "18", "17", "16", "15", "14", "13"]
+
+        self.img_size_x = 216
+        self.img_size_y = self.img_size_x / 1.125
+        self.img_shift_x = -20
+        self.img_shift_y = -5
+
+        self.update_hex(i, j)
+        self.create_animation('standing')
+
+
 class Icee(Units):
 
     def __init__(self, i, j, count, team):
@@ -294,6 +329,41 @@ class Icee(Units):
         self.create_animation('standing')
 
 
+class Welem(Units):
+
+    def __init__(self, i, j, count, team):
+        super().__init__(count, team)
+
+        self.character = 'welem'
+        self.attack = 8
+        self.defense = 10
+        self.damage = [3, 7]
+        self.health = 30
+        self.speed = 5
+        self.ai = 315
+
+        self.cur_health = self.health
+
+        self.moving = ["40", "41", "42", "43", "44", "45", "46", "47"]
+        self.mouse_over = ["30", "31", "32", "33", "32", "31", "30"]
+        self.standing = ["59", "34", "35", "36", "37", "36", "35", "34"]
+        self.getting_hit = ["50", "51", "52", "53", "54", "55"]
+        self.defend = ["24", "25", "26", "27", "28", "29", "27", "28", "29", "27", "28", "29", "26", "25", "24"]
+        self.death = ["16", "17", "18", "19", "20", "21", "22", "23"]
+        self.dead = "23"
+        self.attack_up = ["01", "02", "03", "04", "05", "06", "10", "11"]
+        self.attack_straight = ["01", "02", "03", "04", "05", "07", "08", "09"]
+        self.attack_down = ["01", "02", "03", "04", "12", "13", "14", "15"]
+
+        self.img_size_x = 216
+        self.img_size_y = self.img_size_x / 1.125
+        self.img_shift_x = 0
+        self.img_shift_y = -10
+
+        self.update_hex(i, j)
+        self.create_animation('standing')
+
+
 class Storm(Units):
 
     def __init__(self, i, j, count, team):
@@ -305,6 +375,7 @@ class Storm(Units):
         self.damage = [2, 8]
         self.health = 25
         self.speed = 8
+        self.arrows = 0 #todo
         self.ai = 486
 
         self.cur_health = self.health
@@ -332,6 +403,40 @@ class Storm(Units):
         self.create_animation('standing')
 
 
+class Aelem(Units):
+
+    def __init__(self, i, j, count, team):
+        super().__init__(count, team)
+
+        self.character = 'aelem'
+        self.attack = 9
+        self.defense = 9
+        self.damage = [2, 8]
+        self.health = 25
+        self.speed = 7
+        self.ai = 356
+
+        self.cur_health = self.health
+
+        self.moving = ["13", "14", "15", "16"]
+        self.mouse_over = ["01", "07", "08", "09", "10", "11"]
+        self.standing = ["01", "02", "03", "04", "05", "06"]
+        self.getting_hit = ["01", "44", "45", "46", "47", "48", "49"]
+        self.defend = ["01", "20", "21", "22", "23", "24", "25", "23", "22", "21", "20"]
+        self.death = ["01", "50", "51", "52", "53", "54", "55", "56", "57", "58"]
+        self.dead = "58"
+        self.attack_up = ["01", "26", "27", "28", "29", "30", "31"]
+        self.attack_straight = ["01", "32", "33", "34", "35", "36", "37"]
+        self.attack_down = ["01", "38", "39", "40", "41", "42", "43"]
+
+        self.img_size_x = 216
+        self.img_size_y = self.img_size_x / 1.125
+        self.img_shift_x = -15
+
+        self.update_hex(i, j)
+        self.create_animation('standing')
+
+
 class Sprit(Units):
 
     def __init__(self, i, j, count, team):
@@ -350,6 +455,42 @@ class Sprit(Units):
 
         self.moving = ["48", "49", "50", "51", "52", "53"]
         self.mouse_over = ["35", "36", "37", "38", "38", "38", "39", "40"]
+        self.standing = ["67", "41", "42", "43", "44", "43", "42", "41"]
+        self.getting_hit = ["57", "58", "59", "60", "61", "62", "63", "64"]
+        self.defend = ["31", "32", "33", "34", "34", "34", "33", "32", "31"]
+        self.death = ["25", "26", "27", "28", "29", "30"]
+        self.dead = "30"
+        self.attack_up = ["09", "10", "11", "12", "13", "12", "13", "14", "15", "16"]
+        self.attack_straight = ["01", "02", "03", "04", "05", "04", "05", "06", "07", "08"]
+        self.attack_down = ["17", "18", "19", "20", "21", "20", "21", "22", "23", "24"]
+
+        self.img_size_x = 216
+        self.img_size_y = self.img_size_x / 1.125
+        self.img_shift_x = -25
+        self.img_shift_y = -10
+
+        self.update_hex(i, j)
+        self.create_animation('standing')
+
+
+class Pixie(Units):
+
+    def __init__(self, i, j, count, team):
+        super().__init__(count, team)
+
+        self.character = 'pixie'
+        self.attack = 2
+        self.defense = 2
+        self.damage = [1, 2]
+        self.health = 3
+        self.speed = 7
+        self.ai = 55
+
+        self.cur_health = self.health
+        self.is_flyer = True
+
+        self.moving = ["48", "49", "50", "51", "52", "53"]
+        self.mouse_over = ["35", "36", "36", "37", "38", "38", "38", "39", "40"]
         self.standing = ["67", "41", "42", "43", "44", "43", "42", "41"]
         self.getting_hit = ["57", "58", "59", "60", "61", "62", "63", "64"]
         self.defend = ["31", "32", "33", "34", "34", "34", "33", "32", "31"]

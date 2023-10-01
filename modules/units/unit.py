@@ -1,13 +1,14 @@
-from .castle import Rangl, Angel, Champ, Cavlr, Monkk, RGrif, Griff, Crusd, Sword, Hcbow, Halbd, Pkman
+from .castle import Rangl, Angel, Champ, Cavlr, Zealt, Monkk, RGrif, Griff, Crusd, Sword, Hcbow, Lcbow, Halbd, Pkman
 from .rampart import Ddrag, Gdrag, Wunic, Unico, Btree, Tree, Apegs, Pegas, Grelf, Elf, Bdwar, Dwarf, Ecent, Centr
-from .tower import Gtita, Ltita, Nagag, Naga, Genie, Mage, Igole, Ogarg, Gargo, GremM, Grema
-from .inferno import Adevl, Devil, Efree, Pfoe, Pfien, Thdem, Ohdem, Cerbu, Gog, Famil
-from .necropolis import Ndrgn, Blord, Bknig, PLich, Lich, Nosfe, Vamp, Wrait, Wight, Zombi, Wskel, Skele
-from .stronghold import Abehe, Ybehe, Cyclr, Cyclp, Tbird, Roc, Ogmag, Orc, Uwlfr, Hgobl, Gobli
-from .fortress import Chydr, Hydra, Wyvmn, Wyver, Cgorg, Basil, Drfly, Aliza, Pliza, Gnolm, Gnoll
-from .conflux import Phx, Fbird, Magel, Psyel, Eelem, Ston, Nrg, Icee, Storm, Sprit
-from .dungeon import BDragon, Rdrgn, Cmcor, Minok, Meduq, Medus, Eveye, Harph, Harpy, Itrog
+from .tower import Gtita, Ltita, Nagag, Naga, Sulta, Genie, Amage, Mage, Igole, Sgole, Ogarg, Gargo, GremM, Grema
+from .inferno import Adevl, Devil, Efres, Efree, Pfoe, Pfien, Thdem, Ohdem, Cerbu, Hhoun, Magog, Gog, Famil, Imp
+from .necropolis import Hdrgn, Ndrgn, Blord, Bknig, PLich, Lich, Nosfe, Vamp, Wrait, Wight, Zomlo, Zombi, Wskel, Skele
+from .stronghold import Abehe, Ybehe, Cyclr, Cyclp, Tbird, Roc, Ogmag, Ogre, Orcch, Orc, Uwlfr, Bwlfr, Hgobl, Gobli
+from .fortress import Chydr, Hydra, Wyvmn, Wyver, Bgorg, Cgorg, Gbasi, Basil, Drfir, Drfly, Aliza, Pliza, Gnolm, Gnoll
+from .conflux import Phx, Fbird, Magel, Psyel, Eelem, Ston, Nrg, Felem, Icee, Welem, Storm, Aelem, Sprit, Pixie
+from .dungeon import BDragon, Rdrgn, Cmcor, Mcore, Minok, Minot, Meduq, Medus, Eveye, Behol, Harph, Harpy, Itrog, Trogl
 from .berth import Haspid, Serpent, Nixwarr, Nix, Sorcss, Priest, Assidup, Assid, Pr3up, Corsair, Pirate, Swash, Seadog, Oceanid, Nimph
+from .neutral import Adrgn
 
 
 def unit(name, i, j, count, team):
@@ -20,6 +21,8 @@ def unit(name, i, j, count, team):
         return Champ(i, j, count, team)
     if name == 'cavlr':
         return Cavlr(i, j, count, team)
+    if name == "zealt":
+        return Zealt(i, j, count, team)
     if name == "monkk":
         return Monkk(i, j, count, team)
     if name == "crusd":
@@ -32,6 +35,8 @@ def unit(name, i, j, count, team):
         return Griff(i, j, count, team)
     if name == 'hcbow':
         return Hcbow(i, j, count, team)
+    if name == 'lcbow':
+        return Lcbow(i, j, count, team)
     if name == 'halbd':
         return Halbd(i, j, count, team)
     if name == 'pkman':
@@ -76,12 +81,18 @@ def unit(name, i, j, count, team):
         return Nagag(i, j, count, team)
     if name == 'naga':
         return Naga(i, j, count, team)
+    if name == 'sulta':
+        return Sulta(i, j, count, team)
     if name == 'genie':
         return Genie(i, j, count, team)
+    if name == 'amage':
+        return Amage(i, j, count, team)
     if name == 'mage':
         return Mage(i, j, count, team)
     if name == 'igole':
         return Igole(i, j, count, team)
+    if name == 'sgole':
+        return Sgole(i, j, count, team)
     if name == 'ogarg':
         return Ogarg(i, j, count, team)
     if name == 'gargo':
@@ -96,6 +107,8 @@ def unit(name, i, j, count, team):
         return Adevl(i, j, count, team)
     if name == 'devil':
         return Devil(i, j, count, team)
+    if name == 'efres':
+        return Efres(i, j, count, team)
     if name == 'efree':
         return Efree(i, j, count, team)
     if name == 'pfoe':
@@ -108,12 +121,20 @@ def unit(name, i, j, count, team):
         return Ohdem(i, j, count, team)
     if name == 'cerbu':
         return Cerbu(i, j, count, team)
+    if name == 'hhoun':
+        return Hhoun(i, j, count, team)
+    if name == 'magog':
+        return Magog(i, j, count, team)
     if name == 'gog':
         return Gog(i, j, count, team)
     if name == 'famil':
         return Famil(i, j, count, team)
+    if name == 'imp':
+        return Imp(i, j, count, team)
 
     # necropolis
+    if name == 'hdrgn':
+        return Hdrgn(i, j, count, team)
     if name == 'ndrgn':
         return Ndrgn(i, j, count, team)
     if name == 'blord':
@@ -132,6 +153,8 @@ def unit(name, i, j, count, team):
         return Wrait(i, j, count, team)
     if name == 'wight':
         return Wight(i, j, count, team)
+    if name == 'zomlo':
+        return Zomlo(i, j, count, team)
     if name == 'zombi':
         return Zombi(i, j, count, team)
     if name == 'wskel':
@@ -154,10 +177,16 @@ def unit(name, i, j, count, team):
         return Roc(i, j, count, team)
     if name == 'ogmag':
         return Ogmag(i, j, count, team)
+    if name == 'ogre':
+        return Ogre(i, j, count, team)
+    if name == 'orcch':
+        return Orcch(i, j, count, team)
     if name == 'orc':
         return Orc(i, j, count, team)
     if name == 'uwlfr':
         return Uwlfr(i, j, count, team)
+    if name == 'bwlfr':
+        return Bwlfr(i, j, count, team)
     if name == 'hgobl':
         return Hgobl(i, j, count, team)
     if name == 'gobli':
@@ -172,10 +201,16 @@ def unit(name, i, j, count, team):
         return Wyvmn(i, j, count, team)
     if name == 'wyver':
         return Wyver(i, j, count, team)
+    if name == 'bgorg':
+        return Bgorg(i, j, count, team)
     if name == 'cgorg':
         return Cgorg(i, j, count, team)
+    if name == 'gbasi':
+        return Gbasi(i, j, count, team)
     if name == 'basil':
         return Basil(i, j, count, team)
+    if name == 'drfir':
+        return Drfir(i, j, count, team)
     if name == 'drfly':
         return Drfly(i, j, count, team)
     if name == 'aliza':
@@ -202,12 +237,20 @@ def unit(name, i, j, count, team):
         return Ston(i, j, count, team)
     if name == 'nrg':
         return Nrg(i, j, count, team)
+    if name == 'felem':
+        return Felem(i, j, count, team)
     if name == 'icee':
         return Icee(i, j, count, team)
+    if name == 'welem':
+        return Welem(i, j, count, team)
     if name == 'storm':
         return Storm(i, j, count, team)
+    if name == 'aelem':
+        return Aelem(i, j, count, team)
     if name == 'sprit':
         return Sprit(i, j, count, team)
+    if name == 'pixie':
+        return Pixie(i, j, count, team)
 
     # dungeon
     if name == 'bdrgn':
@@ -216,20 +259,28 @@ def unit(name, i, j, count, team):
         return Rdrgn(i, j, count, team)
     if name == 'cmcor':
         return Cmcor(i, j, count, team)
+    if name == 'mcore':
+        return Mcore(i, j, count, team)
     if name == 'minok':
         return Minok(i, j, count, team)
+    if name == 'minot':
+        return Minot(i, j, count, team)
     if name == 'meduq':
         return Meduq(i, j, count, team)
     if name == 'medus':
         return Medus(i, j, count, team)
     if name == 'eveye':
         return Eveye(i, j, count, team)
+    if name == 'behol':
+        return Behol(i, j, count, team)
     if name == 'harph':
         return Harph(i, j, count, team)
     if name == 'harpy':
         return Harpy(i, j, count, team)
     if name == 'itrog':
         return Itrog(i, j, count, team)
+    if name == 'trogl':
+        return Trogl(i, j, count, team)
 
     # berth
     if name == 'haspid':
@@ -262,3 +313,7 @@ def unit(name, i, j, count, team):
         return Oceanid(i, j, count, team)
     if name == 'nimph':
         return Nimph(i, j, count, team)
+
+    # neutral
+    if name == 'adrgn':
+        return Adrgn(i, j, count, team)

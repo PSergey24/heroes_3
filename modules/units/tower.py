@@ -146,6 +146,41 @@ class Naga(Units):
         self.create_animation('standing')
 
 
+class Sulta(Units):
+
+    def __init__(self, i, j, count, team):
+        super().__init__(count, team)
+
+        self.character = 'sulta'
+        self.attack = 12
+        self.defense = 12
+        self.damage = [13, 16]
+        self.health = 40
+        self.speed = 11
+        self.ai = 942
+
+        self.cur_health = self.health
+        self.is_flyer = True
+
+        self.moving = ["15", "16", "17", "18"]
+        self.mouse_over = ["08", "09", "10", "11", "12", "13"]
+        self.standing = ["01", "02", "03", "04", "05", "06", "07"]
+        self.getting_hit = ["01", "46", "47", "48", "49", "50", "51"]
+        self.defend = ["01", "22", "23", "24", "25", "26", "27"]
+        self.death = ["01", "52", "53", "54", "55", "56", "57", "58"]
+        self.dead = "58"
+        self.attack_up = ["01", "28", "29", "30", "31", "32", "33"]
+        self.attack_straight = ["01", "34", "35", "36", "37", "38", "39"]
+        self.attack_down = ["01", "40", "41", "42", "43", "44", "45"]
+
+        self.img_size_x = 216
+        self.img_size_y = self.img_size_x / 1.125
+        self.img_shift_x = -25
+
+        self.update_hex(i, j)
+        self.create_animation('standing')
+
+
 class Genie(Units):
 
     def __init__(self, i, j, count, team):
@@ -181,6 +216,46 @@ class Genie(Units):
         self.create_animation('standing')
 
 
+class Amage(Units):
+
+    def __init__(self, i, j, count, team):
+        super().__init__(count, team)
+
+        self.character = 'amage'
+        self.attack = 12
+        self.defense = 9
+        self.damage = [7, 9]
+        self.health = 30
+        self.speed = 7
+        self.arrows = 0 #todo
+        self.ai = 680
+
+        self.cur_health = self.health
+        self.is_shooter = True
+
+        self.moving = ["56", "57", "58", "59", "60", "61", "62", "63"]
+        self.mouse_over = ["46", "47", "48", "49", "49", "49", "49", "49", "48", "47", "46"]
+        self.standing = ["74", "50", "51", "52", "53", "52", "51", "50"]
+        self.getting_hit = ["66", "67", "68", "69", "70", "71"]
+        self.defend = ["42", "43", "44", "45", "45", "45", "45", "45", "44", "43", "42"]
+        self.death = ["34", "35", "36", "37", "38", "39", "40", "41"]
+        self.dead = "41"
+        self.attack_up = ["16", "17", "18", "19", "26", "27", "28", "29", "24", "25"]
+        self.attack_straight = ["16", "17", "18", "19", "20", "21", "22", "23", "24", "25"]
+        self.attack_down = ["16", "17", "18", "19", "30", "31", "32", "33", "24", "25"]
+        self.shoot_up = ["06", "07", "08", "09", "10", "10", "10", "10", "10", "09", "08", "07", "06"]
+        self.shoot_straight = ["01", "02", "03", "04", "05", "05", "05", "05", "05", "04", "03", "02", "01"]
+        self.shoot_down = ["11", "12", "13", "14", "15", "15", "15", "15", "15", "14", "13", "12", "11"]
+
+        self.img_size_x = 216
+        self.img_size_y = self.img_size_x / 1.125
+        self.img_shift_x = -25
+        self.img_shift_y = -5
+
+        self.update_hex(i, j)
+        self.create_animation('standing')
+
+
 class Mage(Units):
 
     def __init__(self, i, j, count, team):
@@ -188,10 +263,11 @@ class Mage(Units):
 
         self.character = 'mage'
         self.attack = 11
-        self.defense = 18
+        self.defense = 8
         self.damage = [7, 9]
         self.health = 25
         self.speed = 5
+        self.arrows = 0  # todo
         self.ai = 570
 
         self.cur_health = self.health
@@ -230,6 +306,41 @@ class Igole(Units):
         self.health = 35
         self.speed = 5
         self.ai = 412
+
+        self.cur_health = self.health
+
+        self.moving = ["10", "11", "12", "13", "14", "15", "16", "17", "18"]
+        self.mouse_over = ["01", "05", "06", "07", "08"]
+        self.standing = ["01", "02", "03", "04", "04", "03", "02", "01"]
+        self.getting_hit = ["01", "46", "47", "48", "49", "50", "51"]
+        self.defend = ["01", "22", "23", "24", "24", "25", "26", "27"]
+        self.death = ["01", "52", "53", "54", "55", "56", "57", "58", "59"]
+        self.dead = "59"
+        self.attack_up = ["01", "28", "29", "30", "31", "32", "33"]
+        self.attack_straight = ["01", "34", "35", "36", "37", "38", "39"]
+        self.attack_down = ["01", "40", "41", "42", "43", "44", "45"]
+
+        self.img_size_x = 216
+        self.img_size_y = self.img_size_x / 1.125
+        self.img_shift_x = -25
+        self.img_shift_y = -10
+
+        self.update_hex(i, j)
+        self.create_animation('standing')
+
+
+class Sgole(Units):
+
+    def __init__(self, i, j, count, team):
+        super().__init__(count, team)
+
+        self.character = 'sgole'
+        self.attack = 7
+        self.defense = 10
+        self.damage = [4, 5]
+        self.health = 30
+        self.speed = 3
+        self.ai = 250
 
         self.cur_health = self.health
 
