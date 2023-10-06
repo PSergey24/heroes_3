@@ -15,6 +15,7 @@ class Adrgn(Units):
         self.ai = 78845
 
         self.cur_health = self.health
+        self.is_flyer = True
 
         self.moving = ["13", "14", "15", "16", "15", "14"]
         self.mouse_over = ["01", "05", "06", "07", "08", "07", "06", "05"]

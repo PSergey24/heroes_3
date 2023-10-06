@@ -31,14 +31,13 @@ class InfoUpdater:
         States.round += 1
 
     def update_step_info(self):
-        self.update_active_position()
-        self.update_active_speed()
+        self.update_active_info()
         self.hex_worker.update_reachable_points()
 
     @staticmethod
-    def update_active_position():
+    def update_active_info():
         States.unit_active = States.queue.current[0]
-
-    @staticmethod
-    def update_active_speed():
         States.speed_active = States.queue.current[0].speed
+
+        row_active, col_active = States.unit_active.hex[0][0], States.unit_active.hex[0][1]
+        States.active_is_double = States.hexagons[row_active][col_active].who_engaged.character in Settings.double_hex_units

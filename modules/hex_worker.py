@@ -46,51 +46,192 @@ class HexWorker:
     def update_cursor(self):
         row_active, col_active = States.unit_active.hex[0][0], States.unit_active.hex[0][1]
         r_over, c_over = States.point_r, States.point_c
-        x_over, y_over, z_over = States.point_x, States.point_y, States.point_z
 
-        is_shooter = States.btn_shooter
-        is_flyer = States.queue.current[0].is_flyer
-        is_double = States.queue.current[0].character in Settings.double_hex_units
-
-        States.cursor_direction, States.direction_attack = None, None
-        States.point_attack, States.whom_attack = None, None
+        States.point_attack, States.whom_attack, States.cursor_direction = None, None, None
         States.cursor = pygame.image.load(os.path.join(f"data/rcom/clean/Crcom000.png"))
 
         if 0 <= r_over < Settings.n_rows and 0 <= c_over < Settings.n_columns and States.is_animate is False:
-            over_is_double = States.hexagons[r_over][c_over].who_engaged is not None
+            States.cursor = pygame.image.load(os.path.join(f"data/rcom/clean/Crcom009.png"))
+            if States.queue.current[0].is_flyer:
+                States.cursor = pygame.image.load(os.path.join(f"data/rcom/clean/Crcom012.png"))
 
-            if (r_over, c_over) in States.reachable_points or is_shooter:
-                States.cursor = pygame.image.load(os.path.join(f"data/rcom/clean/Crcom009.png"))
-                if is_flyer:
-                    States.cursor = pygame.image.load(os.path.join(f"data/rcom/clean/Crcom012.png"))
-                if is_shooter:
-                    States.cursor = pygame.image.load(os.path.join(f"data/rcom/clean/Crcom006.png"))
+            dist = self.cube_distance(self.offset2cube(row_active, col_active), [States.point_x, States.point_y, States.point_z])
 
-                if States.hexagons[r_over][c_over].who_engaged is not None:
-                    # is enemy ???
-                    if States.hexagons[r_over][c_over].who_engaged.team != States.unit_active.team:
-                        is_neighbor_enemy = self.enemy_is_neighbor(row_active, col_active)
-                        if is_shooter and is_neighbor_enemy is False:
-                            States.whom_attack = States.hexagons[States.point_r][States.point_c].who_engaged
-                            dist = self.cube_distance(self.offset2cube(row_active, col_active), [x_over, y_over, z_over])
-                            if dist <= 10:
-                                States.penalty_shooter = 1
-                                States.cursor = pygame.image.load(os.path.join(f"data/rcom/clean/Crcom023.png"))
-                            else:
-                                States.penalty_shooter = 0.5
-                                States.cursor = pygame.image.load(os.path.join(f"data/rcom/clean/Crcom026.png"))
-                        else:
-                            States.cursor = pygame.image.load(os.path.join(f"data/rcom/clean/Crcom006.png"))
-                    else:
-                        States.cursor = pygame.image.load(os.path.join(f"data/rcom/clean/Crcom028.png"))
-                        if is_double and col_active + 1 == c_over and row_active == r_over:
-                            States.cursor = pygame.image.load(os.path.join(f"data/rcom/clean/Crcom009.png"))
-                            if is_flyer:
-                                States.cursor = pygame.image.load(os.path.join(f"data/rcom/clean/Crcom012.png"))
-                if is_shooter is False and (over_is_double is False or [r_over, c_over] in States.unit_active.hex):
-                    self.update_cursor_by_degree(r_over, c_over, row_active, col_active)
-            else:
+            if (r_over, c_over) not in States.reachable_points:
                 States.cursor = pygame.image.load(os.path.join(f"data/rcom/clean/Crcom006.png"))
+
+            #todo: connect cursor with action
+            if States.hexagons[r_over][c_over].who_engaged is not None and States.hexagons[r_over][c_over].who_engaged.team == States.unit_active.team:
+                States.cursor = pygame.image.load(os.path.join(f"data/rcom/clean/Crcom028.png"))
+
+            if States.btn_shooter:
+                if States.hexagons[r_over][c_over].who_engaged is not None and States.hexagons[r_over][c_over].who_engaged.team != States.unit_active.team:
+                    is_neighbor_enemy = self.enemy_is_neighbor(row_active, col_active)
+                    if is_neighbor_enemy is False:
+                        States.whom_attack = States.hexagons[r_over][c_over].who_engaged
+                        if dist <= 10:
+                            States.penalty_shooter = 1
+                            States.cursor = pygame.image.load(os.path.join(f"data/rcom/clean/Crcom023.png"))
+                        else:
+                            States.penalty_shooter = 0.5
+                            States.cursor = pygame.image.load(os.path.join(f"data/rcom/clean/Crcom026.png"))
+            elif States.hexagons[r_over][c_over].who_engaged is not None and States.hexagons[r_over][c_over].who_engaged.team != States.unit_active.team:
+                if dist <= States.speed_active:
+                    available_positions = self.get_available_positions()
+                    degree = self.get_degree(r_over, c_over)
+                    direction = self.get_direction_by_degree(degree)
+                    direction = self.update_direction(direction, available_positions)
+                    if direction is not False:
+                        self.update_cursor_by_direction(direction)
+                        States.whom_attack = States.hexagons[r_over][c_over].who_engaged
+                        States.point_attack = self.get_point_attack(direction)
+
+    def get_available_positions(self):
+        if States.active_is_double:
+            return self.get_available_double_positions()
+        else:
+            return self.get_available_single_positions()
+
+    def get_available_single_positions(self):
+        row_active, col_active = States.unit_active.hex[0][0], States.unit_active.hex[0][1]
+        x_over, y_over, z_over = States.point_x, States.point_y, States.point_z
+        positions = {}
+        for i in range(6):
+            nb_x, nb_y, nb_z = self.cube_neighbor((x_over, y_over, z_over), i)
+            nb_r, nb_c = self.cube2offset(nb_x, nb_y, nb_z)
+
+            if 0 <= nb_r < Settings.n_rows and 0 <= nb_c < Settings.n_columns and (States.hexagons[nb_r][nb_c].who_engaged is None or (row_active == nb_r and col_active == nb_c)) and (nb_r, nb_c) in States.reachable_points:
+                positions.update({i: True})
+            else:
+                positions.update({i: False})
+
+        return positions
+
+    def get_available_double_positions(self):
+        row_active, col_active = States.unit_active.hex[0][0], States.unit_active.hex[0][1]
+        positions = {6: False, 7: False}
+        p = {}
+
+        for i in range(6):
+            nb_x, nb_y, nb_z = self.cube_neighbor((States.point_x, States.point_y, States.point_z), i)
+            nb_r, nb_c = self.cube2offset(nb_x, nb_y, nb_z)
+
+            if 0 <= nb_r < Settings.n_rows and 0 <= nb_c < Settings.n_columns and (States.hexagons[nb_r][nb_c].who_engaged is None or [nb_r, nb_c] in States.hexagons[row_active][col_active].who_engaged.hex) and (nb_r, nb_c) in States.reachable_points:
+                p.update({i: True})
+                if (i in [0, 1, 5] and 0 <= nb_c + 1 < Settings.n_columns and (nb_r, nb_c + 1) in States.reachable_points and (States.hexagons[nb_r][nb_c + 1].who_engaged is None or [nb_r, nb_c + 1] in States.hexagons[row_active][col_active].who_engaged.hex)) or (i in [2, 3, 4] and 0 <= nb_c - 1 < Settings.n_columns and (nb_r, nb_c) in States.reachable_points and (States.hexagons[nb_r][nb_c - 1].who_engaged is None or [nb_r, nb_c - 1] in States.hexagons[row_active][col_active].who_engaged.hex)):
+                    positions.update({i: True})
+                else:
+                    positions.update({i: False})
+            else:
+                p.update({i: False})
+                positions.update({i: False})
+
+        if p[1] and p[2]:
+            positions.update({6: True})
+
+        if p[4] and p[5]:
+            positions.update({7: True})
+
+        positions.update({0: positions[0], 1: positions[1], 2: positions[6], 3: positions[2], 4: positions[3],
+                          5: positions[4], 6: positions[7], 7: positions[5]})
+        return positions
+
+    @staticmethod
+    def get_degree(r_over, c_over):
+        center_x = States.hexagons[r_over][c_over].corner[0] + Settings.r
+        center_y = States.hexagons[r_over][c_over].corner[1] + Settings.R
+
+        degrees = ((math.atan2(States.point_over[1] - center_y,
+                               States.point_over[0] - center_x) + 2 * math.pi) * 180 / math.pi) % 360
+        return degrees
+
+    @staticmethod
+    def get_direction_by_degree(degrees):
+        if 0 <= degrees < 45 or 315 <= degrees < 360:
+            return 0
+        elif 45 <= degrees < 75 and States.active_is_double:
+            return 7
+        elif 75 <= degrees < 105 and States.active_is_double:
+            return 6
+        elif (105 <= degrees < 135 and States.active_is_double) or (45 <= degrees < 90 and not States.active_is_double):
+            return 5
+        elif (135 <= degrees < 225 and States.active_is_double) or (90 <= degrees < 135 and not States.active_is_double):
+            return 4
+        elif (225 <= degrees < 255 and States.active_is_double) or (135 <= degrees < 225 and not States.active_is_double):
+            return 3
+        elif (255 <= degrees < 285 and States.active_is_double) or (225 <= degrees < 270 and not States.active_is_double):
+            return 2
+        elif (285 <= degrees < 315 and States.active_is_double) or (270 <= degrees < 315 and not States.active_is_double):
+            return 1
+
+    @staticmethod
+    def update_direction(direction, available_positions):
+        pos_count = len(available_positions)
+
+        i = 0
+        while i < pos_count and not available_positions[direction]:
+            direction = (direction + 1) % pos_count
+            i += 1
+
+        if i == pos_count:
+            return False
+        return direction
+
+    @staticmethod
+    def update_cursor_by_direction(direction):
+        if direction == 0:
+            States.cursor_direction = True
+            States.cursor = pygame.image.load(os.path.join(f"data/rcom/clean/Crcom021.png"))
+        if direction == 1:
+            States.cursor_direction = True
+            States.cursor = pygame.image.load(os.path.join(f"data/rcom/clean/Crcom020.png"))
+        if (direction == 2 and not States.active_is_double) or (direction == 3 and States.active_is_double):
+            States.cursor_direction = False
+            States.cursor = pygame.image.load(os.path.join(f"data/rcom/clean/Crcom018.png"))
+        if (direction == 3 and not States.active_is_double) or (direction == 4 and States.active_is_double):
+            States.cursor_direction = False
+            States.cursor = pygame.image.load(os.path.join(f"data/rcom/clean/Crcom017.png"))
+        if (direction == 4 and not States.active_is_double) or (direction == 5 and States.active_is_double):
+            States.cursor_direction = False
+            States.cursor = pygame.image.load(os.path.join(f"data/rcom/clean/Crcom016.png"))
+        if (direction == 5 and not States.active_is_double) or (direction == 7 and States.active_is_double):
+            States.cursor_direction = True
+            States.cursor = pygame.image.load(os.path.join(f"data/rcom/clean/Crcom022.png"))
+        if direction == 2 and States.active_is_double:
+            States.cursor_direction = True
+            States.cursor = pygame.image.load(os.path.join(f"data/rcom/clean/Crcom019.png"))
+        if direction == 6 and States.active_is_double:
+            States.cursor_direction = False
+            States.cursor = pygame.image.load(os.path.join(f"data/rcom/clean/Crcom015.png"))
+
+    def get_point_attack(self, direction):
+        if States.active_is_double:
+            i = self.get_neighbor_direction(direction)
+            nb_x, nb_y, nb_z = self.cube_neighbor((States.point_x, States.point_y, States.point_z), i)
+            nb_r, nb_c = self.cube2offset(nb_x, nb_y, nb_z)
+            nb_r, nb_c = self.correct_point_attack(direction, nb_r, nb_c)
+        else:
+            nb_x, nb_y, nb_z = self.cube_neighbor((States.point_x, States.point_y, States.point_z), direction)
+            nb_r, nb_c = self.cube2offset(nb_x, nb_y, nb_z)
+        return [nb_r, nb_c]
+
+    @staticmethod
+    def get_neighbor_direction(direction):
+        if direction == 2 or direction == 3:
+            return 2
+        elif direction == 4:
+            return 3
+        elif direction == 5 or direction == 6:
+            return 4
+        elif direction == 7:
+            return 5
+        return direction
+
+    @staticmethod
+    def correct_point_attack(direction, nb_r, nb_c):
+        if direction == 3 or direction == 4 or direction == 5:
+            nb_c -= 1
+        return nb_r, nb_c
 
     def enemy_is_neighbor(self, row_active, col_active):
         x, y, z = self.offset2cube(row_active, col_active)
@@ -114,49 +255,6 @@ class HexWorker:
                     id(States.hexagons[nb_r][nb_c].who_engaged) != id(States.hexagons[row][col].who_engaged):
                 neighbors.append(States.hexagons[nb_r][nb_c].who_engaged)
         return neighbors
-
-    def update_cursor_by_degree(self, r_over, c_over, row_active, col_active):
-        x = States.hexagons[r_over][c_over].corner[0] + Settings.r
-        y = States.hexagons[r_over][c_over].corner[1] + Settings.R
-        degrees = ((math.atan2(States.point_over[1] - y,
-                               States.point_over[0] - x) + 2 * math.pi) * 180 / math.pi) % 360
-        for i in range(6):
-            nb_x, nb_y, nb_z = self.cube_neighbor((States.point_x, States.point_y, States.point_z), i)
-            nb_r, nb_c = self.cube2offset(nb_x, nb_y, nb_z)
-
-            if 0 <= nb_r < Settings.n_rows and 0 <= nb_c < Settings.n_columns:
-                if States.hexagons[nb_r][nb_c].who_engaged is not None and States.hexagons[row_active][col_active].who_engaged.team != States.hexagons[nb_r][nb_c].who_engaged.team:
-                    States.point_attack = [States.point_r, States.point_c]
-                    if (0 <= degrees < 45 or 315 <= degrees < 360) and i == 0:
-                        States.whom_attack = States.hexagons[nb_r][nb_c].who_engaged
-                        States.cursor_direction = False
-                        States.direction_attack = 0
-                        States.cursor = pygame.image.load(os.path.join(f"data/rcom/clean/Crcom017.png"))
-                    elif 45 <= degrees < 90 and i == 5:
-                        States.whom_attack = States.hexagons[nb_r][nb_c].who_engaged
-                        States.cursor_direction = False
-                        States.direction_attack = 5
-                        States.cursor = pygame.image.load(os.path.join(f"data/rcom/clean/Crcom018.png"))
-                    elif 90 <= degrees < 135 and i == 4:
-                        States.whom_attack = States.hexagons[nb_r][nb_c].who_engaged
-                        States.cursor_direction = True
-                        States.direction_attack = 4
-                        States.cursor = pygame.image.load(os.path.join(f"data/rcom/clean/Crcom020.png"))
-                    elif 135 <= degrees < 225 and i == 3:
-                        States.whom_attack = States.hexagons[nb_r][nb_c].who_engaged
-                        States.cursor_direction = True
-                        States.direction_attack = 3
-                        States.cursor = pygame.image.load(os.path.join(f"data/rcom/clean/Crcom021.png"))
-                    elif 225 <= degrees < 270 and i == 2:
-                        States.whom_attack = States.hexagons[nb_r][nb_c].who_engaged
-                        States.cursor_direction = True
-                        States.direction_attack = 2
-                        States.cursor = pygame.image.load(os.path.join(f"data/rcom/clean/Crcom022.png"))
-                    elif 270 <= degrees < 315 and i == 1:
-                        States.whom_attack = States.hexagons[nb_r][nb_c].who_engaged
-                        States.cursor_direction = False
-                        States.direction_attack = 1
-                        States.cursor = pygame.image.load(os.path.join(f"data/rcom/clean/Crcom016.png"))
 
     def update_hexagons(self):
         for r in range(len(States.hexagons)):
@@ -286,13 +384,14 @@ class HexWorker:
                 return 'attack_straight'
 
         if 0 <= States.point_r < Settings.n_rows and 0 <= States.point_c < Settings.n_columns:
-            if States.hexagons[States.point_r][States.point_c].who_engaged is None and \
-                    (States.point_r, States.point_c) in States.reachable_points:
-                return 'moving'
-            if States.queue.current[0].character in Settings.double_hex_units and \
-                    (States.queue.current[0].hex[0][1] + 2 < Settings.n_columns and
-                     States.hexagons[States.point_r][States.point_c + 1].who_engaged is None and
-                     (States.hexagons[States.point_r][States.point_c].who_engaged is None or id(States.hexagons[States.point_r][States.point_c].who_engaged) == id(States.hexagons[States.point_r][States.point_c-1].who_engaged))):
+            is_empty_hex = States.hexagons[States.point_r][States.point_c].who_engaged is None and (States.point_r, States.point_c) in States.reachable_points
+
+            is_double_itself = False
+            if States.active_is_double:
+                is_double_back = (States.unit_active.team == 1 and States.unit_active.hex[0] == [States.point_r, States.point_c] and States.hexagons[States.point_r][States.point_c - 1].who_engaged is None) or (States.unit_active.team == 2 and States.unit_active.hex[1] == [States.point_r, States.point_c] and States.hexagons[States.point_r][States.point_c + 1].who_engaged is None)
+                is_double_itself = (States.hexagons[States.point_r][States.point_c].who_engaged is not None and id(States.hexagons[States.point_r][States.point_c].who_engaged) == id(States.unit_active) and is_double_back)
+
+            if is_empty_hex or is_double_itself:
                 return 'moving'
         return False
 

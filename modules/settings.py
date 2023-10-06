@@ -64,6 +64,7 @@ class States:
 
     # active unit info:
     unit_active = None
+    active_is_double = None
     speed_active = None
     reachable_points = None
     double_reachable_points = None
