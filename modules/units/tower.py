@@ -227,7 +227,7 @@ class Amage(Units):
         self.damage = [7, 9]
         self.health = 30
         self.speed = 7
-        self.arrows = 0 #todo
+        self.arrows = 24
         self.ai = 680
 
         self.cur_health = self.health
@@ -267,7 +267,7 @@ class Mage(Units):
         self.damage = [7, 9]
         self.health = 25
         self.speed = 5
-        self.arrows = 0  # todo
+        self.arrows = 24
         self.ai = 570
 
         self.cur_health = self.health

@@ -228,7 +228,7 @@ class Meduq(Units):
         self.damage = [6, 8]
         self.health = 30
         self.speed = 6
-        self.arrows = 0 #todo: x2 not grade
+        self.arrows = 8
         self.ai = 577
 
         self.cur_health = self.health
@@ -268,7 +268,7 @@ class Medus(Units):
         self.damage = [6, 8]
         self.health = 25
         self.speed = 5
-        self.arrows = 0 #todo:
+        self.arrows = 4
         self.ai = 517
 
         self.cur_health = self.health

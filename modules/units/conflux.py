@@ -302,7 +302,7 @@ class Icee(Units):
         self.damage = [3, 7]
         self.health = 30
         self.speed = 6
-        self.arrows = 0  # todo:
+        self.arrows = 24
         self.ai = 280
 
         self.cur_health = self.health
@@ -375,7 +375,7 @@ class Storm(Units):
         self.damage = [2, 8]
         self.health = 25
         self.speed = 8
-        self.arrows = 0 #todo
+        self.arrows = 24
         self.ai = 486
 
         self.cur_health = self.health

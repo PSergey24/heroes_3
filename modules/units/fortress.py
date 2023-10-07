@@ -371,7 +371,7 @@ class Aliza(Units):
         self.damage = [2, 5]
         self.health = 15
         self.speed = 5
-        self.arrows = 0 #todo:
+        self.arrows = 24
         self.ai = 156
 
         self.cur_health = self.health
@@ -411,7 +411,7 @@ class Pliza(Units):
         self.damage = [2, 3]
         self.health = 14
         self.speed = 4
-        self.arrows = 0 #todo:
+        self.arrows = 12
         self.ai = 126
 
         self.cur_health = self.health

@@ -55,13 +55,24 @@ class HexWorker:
             if States.queue.current[0].is_flyer:
                 States.cursor = pygame.image.load(os.path.join(f"data/rcom/clean/Crcom012.png"))
 
-            dist = self.cube_distance(self.offset2cube(row_active, col_active), [States.point_x, States.point_y, States.point_z])
+            if States.active_is_double:
+                dist_l = self.cube_distance(self.offset2cube(row_active, col_active),
+                                           [States.point_x, States.point_y, States.point_z])
+                dist_r = self.cube_distance(self.offset2cube(States.unit_active.hex[1][0], States.unit_active.hex[1][1]),
+                                            [States.point_x, States.point_y, States.point_z])
+                dist = min(dist_l, dist_r)
+            else:
+                dist = self.cube_distance(self.offset2cube(row_active, col_active), [States.point_x, States.point_y, States.point_z])
 
             if (r_over, c_over) not in States.reachable_points:
                 States.cursor = pygame.image.load(os.path.join(f"data/rcom/clean/Crcom006.png"))
 
-            #todo: connect cursor with action
-            if States.hexagons[r_over][c_over].who_engaged is not None and States.hexagons[r_over][c_over].who_engaged.team == States.unit_active.team:
+            is_double_back = False
+            if States.active_is_double:
+                is_double_back = (States.unit_active.team == 1 and States.unit_active.hex[0] == [States.point_r, States.point_c] and States.point_c - 1 >= 0 and States.hexagons[States.point_r][States.point_c - 1].who_engaged is None) or \
+                                 (States.unit_active.team == 2 and States.unit_active.hex[1] == [States.point_r, States.point_c] and States.point_c + 1 < Settings.n_columns and States.hexagons[States.point_r][States.point_c + 1].who_engaged is None)
+
+            if States.hexagons[r_over][c_over].who_engaged is not None and States.hexagons[r_over][c_over].who_engaged.team == States.unit_active.team and not is_double_back:
                 States.cursor = pygame.image.load(os.path.join(f"data/rcom/clean/Crcom028.png"))
 
             if States.btn_shooter:
@@ -76,7 +87,7 @@ class HexWorker:
                             States.penalty_shooter = 0.5
                             States.cursor = pygame.image.load(os.path.join(f"data/rcom/clean/Crcom026.png"))
             elif States.hexagons[r_over][c_over].who_engaged is not None and States.hexagons[r_over][c_over].who_engaged.team != States.unit_active.team:
-                if dist <= States.speed_active:
+                if dist <= States.speed_active + 1:
                     available_positions = self.get_available_positions()
                     degree = self.get_degree(r_over, c_over)
                     direction = self.get_direction_by_degree(degree)
@@ -388,7 +399,7 @@ class HexWorker:
 
             is_double_itself = False
             if States.active_is_double:
-                is_double_back = (States.unit_active.team == 1 and States.unit_active.hex[0] == [States.point_r, States.point_c] and States.hexagons[States.point_r][States.point_c - 1].who_engaged is None) or (States.unit_active.team == 2 and States.unit_active.hex[1] == [States.point_r, States.point_c] and States.hexagons[States.point_r][States.point_c + 1].who_engaged is None)
+                is_double_back = (States.unit_active.team == 1 and States.unit_active.hex[0] == [States.point_r, States.point_c] and States.point_c - 1 >= 0 and States.hexagons[States.point_r][States.point_c - 1].who_engaged is None) or (States.unit_active.team == 2 and States.unit_active.hex[1] == [States.point_r, States.point_c] and States.point_c + 1 < Settings.n_columns and States.hexagons[States.point_r][States.point_c + 1].who_engaged is None)
                 is_double_itself = (States.hexagons[States.point_r][States.point_c].who_engaged is not None and id(States.hexagons[States.point_r][States.point_c].who_engaged) == id(States.unit_active) and is_double_back)
 
             if is_empty_hex or is_double_itself:

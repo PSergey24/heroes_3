@@ -302,7 +302,7 @@ class Grelf(Units):
         self.damage = [3, 5]
         self.health = 15
         self.speed = 7
-        self.arrows = 0  # todo:
+        self.arrows = 48
         self.ai = 331
 
         self.cur_health = self.health
@@ -342,7 +342,7 @@ class Elf(Units):
         self.damage = [3, 5]
         self.health = 15
         self.speed = 6
-        self.arrows = 0  # todo:
+        self.arrows = 24
         self.ai = 234
 
         self.cur_health = self.health

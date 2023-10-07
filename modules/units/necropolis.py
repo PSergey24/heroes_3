@@ -154,6 +154,7 @@ class PLich(Units):
         self.damage = [11, 15]
         self.health = 40
         self.speed = 7
+        self.arrows = 24
         self.ai = 1049
 
         self.cur_health = self.health
@@ -193,6 +194,7 @@ class Lich(Units):
         self.damage = [11, 13]
         self.health = 30
         self.speed = 6
+        self.arrows = 12
         self.ai = 848
 
         self.cur_health = self.health

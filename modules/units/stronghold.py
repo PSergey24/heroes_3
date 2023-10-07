@@ -82,7 +82,7 @@ class Cyclr(Units):
         self.damage = [16, 20]
         self.health = 70
         self.speed = 8
-        self.arrows = 0 #todo
+        self.arrows = 24
         self.ai = 1443
 
         self.cur_health = self.health
@@ -121,7 +121,7 @@ class Cyclp(Units):
         self.damage = [16, 20]
         self.health = 70
         self.speed = 6
-        self.arrows = 0  # todo
+        self.arrows = 16
         self.ai = 1266
 
         self.cur_health = self.health
@@ -302,7 +302,7 @@ class Orcch(Units):
         self.damage = [2, 5]
         self.health = 20
         self.speed = 5
-        self.arrows = 0 #todo
+        self.arrows = 24
         self.ai = 240
 
         self.cur_health = self.health
@@ -342,7 +342,7 @@ class Orc(Units):
         self.damage = [2, 5]
         self.health = 15
         self.speed = 4
-        self.arrows = 0 #todo
+        self.arrows = 12
         self.ai = 192
 
         self.cur_health = self.health

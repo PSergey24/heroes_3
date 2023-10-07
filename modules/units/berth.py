@@ -304,7 +304,7 @@ class Pr3up(Units):
         self.damage = [3, 7]
         self.health = 16
         self.speed = 8
-        self.arrows = 8
+        self.arrows = 12
         self.ai = 602
 
         self.cur_health = self.health
