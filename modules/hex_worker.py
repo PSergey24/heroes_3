@@ -129,7 +129,7 @@ class HexWorker:
 
             if 0 <= nb_r < Settings.n_rows and 0 <= nb_c < Settings.n_columns and (States.hexagons[nb_r][nb_c].who_engaged is None or [nb_r, nb_c] in States.hexagons[row_active][col_active].who_engaged.hex) and (nb_r, nb_c) in States.reachable_points:
                 p.update({i: True})
-                if (i in [0, 1, 5] and 0 <= nb_c + 1 < Settings.n_columns and (nb_r, nb_c + 1) in States.reachable_points and (States.hexagons[nb_r][nb_c + 1].who_engaged is None or [nb_r, nb_c + 1] in States.hexagons[row_active][col_active].who_engaged.hex)) or (i in [2, 3, 4] and 0 <= nb_c - 1 < Settings.n_columns and (nb_r, nb_c) in States.reachable_points and (States.hexagons[nb_r][nb_c - 1].who_engaged is None or [nb_r, nb_c - 1] in States.hexagons[row_active][col_active].who_engaged.hex)):
+                if (i in [0, 1, 5] and 0 <= nb_c + 1 < Settings.n_columns and (nb_r, nb_c + 1) in States.reachable_points and (nb_r, nb_c + 1) not in States.reachable_left_points and (States.hexagons[nb_r][nb_c + 1].who_engaged is None or [nb_r, nb_c + 1] in States.hexagons[row_active][col_active].who_engaged.hex)) or (i in [2, 3, 4] and 0 <= nb_c - 1 < Settings.n_columns and (nb_r, nb_c - 1) in States.reachable_points and (nb_r, nb_c - 1) not in States.reachable_right_points and (States.hexagons[nb_r][nb_c - 1].who_engaged is None or [nb_r, nb_c - 1] in States.hexagons[row_active][col_active].who_engaged.hex)):
                     positions.update({i: True})
                 else:
                     positions.update({i: False})
@@ -319,22 +319,28 @@ class HexWorker:
 
     def update_reachable_points(self):
         row_active, col_active = States.unit_active.hex[0][0], States.unit_active.hex[0][1]
-        is_double_hex = States.queue.current[0].character in Settings.double_hex_units
 
         x_active, y_active, z_active = self.offset2cube(row_active, col_active)
         speed_active = States.queue.current[0].speed
-        States.reachable_points = self.cube_reachable((x_active, y_active, z_active), speed_active,
-                                                      States.queue.current[0].is_flyer)
+        self.cube_reachable((x_active, y_active, z_active), speed_active)
 
-        if is_double_hex:
+    def cube_reachable(self, start, movement):
+        if States.active_is_double:
+            row_active, col_active = States.unit_active.hex[0][0], States.unit_active.hex[0][1]
             x_active, y_active, z_active = self.offset2cube(row_active, col_active + 1)
-            reachable = self.cube_reachable((x_active, y_active, z_active), speed_active,
-                                            States.queue.current[0].is_flyer)
-            States.double_reachable_points = reachable - States.reachable_points
-            States.reachable_points = States.reachable_points.union(reachable)
-            self.correct_reachable_points()
 
-    def cube_reachable(self, start, movement, is_flyer):
+            reachable_left = self.cube_reachable_double(start, movement, is_left=True)
+            reachable_right = self.cube_reachable_double((x_active, y_active, z_active), movement, is_left=False)
+
+            States.reachable_left_points = reachable_left - reachable_right
+            States.reachable_right_points = reachable_right - reachable_left
+            States.reachable_points = reachable_left.union(reachable_right)
+        else:
+            States.reachable_points = self.cube_reachable_single(start, movement)
+
+    def cube_reachable_single(self, start, movement):
+        is_flyer, is_jumper = States.queue.current[0].is_flyer, States.queue.current[0].is_jumper
+
         visited = set()
         visited.add(self.cube2offset(start[0], start[1], start[2]))
 
@@ -349,9 +355,43 @@ class HexWorker:
 
                 r, c = self.cube2offset(neighbor[0], neighbor[1], neighbor[2])
                 if 0 <= r < Settings.n_rows and 0 <= c < Settings.n_columns:
-                    if (r, c) not in visited and (States.hexagons[r][c].who_engaged is None or is_flyer is True) and level <= movement:
+                    if (r, c) not in visited and (States.hexagons[r][c].who_engaged is None or is_flyer is True or is_jumper is True) and level <= movement:
                         visited.add(self.cube2offset(neighbor[0], neighbor[1], neighbor[2]))
                         queue.append((neighbor, level))
+        return visited
+
+    def cube_reachable_double(self, start, movement, is_left=True):
+        is_flyer, is_jumper = States.queue.current[0].is_flyer, States.queue.current[0].is_jumper
+
+        visited = set()
+        visited.add(self.cube2offset(start[0], start[1], start[2]))
+
+        level = 0
+        queue = [(start, level)]
+        while queue:
+            (x, y, z), level = queue.pop(0)
+            level += 1
+
+            for i in range(6):
+                neighbor = self.cube_neighbor((x, y, z), i)
+
+                r, c = self.cube2offset(neighbor[0], neighbor[1], neighbor[2])
+                if (0 <= r < Settings.n_rows and 0 <= c < Settings.n_columns and is_left and c + 1 < Settings.n_columns) or (0 <= r < Settings.n_rows and 0 <= c < Settings.n_columns and not is_left):
+                    if is_left:
+                        is_left_ = (States.hexagons[r][c].who_engaged is None or id(States.hexagons[r][c].who_engaged) == id(States.unit_active))
+                        is_right_ = (States.hexagons[r][c + 1].who_engaged is None or id(States.hexagons[r][c + 1].who_engaged) == id(States.unit_active))
+                    else:
+                        is_left_ = (States.hexagons[r][c - 1].who_engaged is None or id(States.hexagons[r][c - 1].who_engaged) == id(States.unit_active))
+                        is_right_ = (States.hexagons[r][c].who_engaged is None or id(States.hexagons[r][c].who_engaged) == id(States.unit_active))
+
+                    if ((r, c) not in visited and ((is_left_ and is_right_) or is_flyer is True or is_jumper is True)) and level <= movement:
+                        visited.add(self.cube2offset(neighbor[0], neighbor[1], neighbor[2]))
+                        queue.append((neighbor, level))
+
+                        if not is_left and States.hexagons[r][c].who_engaged is None:
+                            visited.add((r, c))
+                        if is_left and States.hexagons[r][c].who_engaged is None:
+                            visited.add((r, c))
         return visited
 
     @staticmethod
@@ -366,11 +406,16 @@ class HexWorker:
     def correct_reachable_points():
         States.reachable_points = list(States.reachable_points)
         for r, c in reversed(States.reachable_points):
+            is_double_back = (States.unit_active.team == 1 and ((r, c + 1) in States.reachable_points or (c - 1 >= 0 and States.hexagons[r][c - 1].who_engaged is None))) or \
+                             (States.unit_active.team == 2 and ((r, c - 1) in States.reachable_points or (c + 1 < Settings.n_columns and States.hexagons[r][c + 1].who_engaged is None)))
+
             if 0 < c < Settings.n_columns - 1 and States.hexagons[r][c - 1].who_engaged is not None and States.hexagons[r][c + 1].who_engaged is not None and id(States.hexagons[r][c - 1].who_engaged) != id(States.queue.current[0]) and id(States.hexagons[r][c + 1].who_engaged) != id(States.queue.current[0]):
                 States.reachable_points.remove((r, c))
             elif c == 0 and States.hexagons[r][c + 1].who_engaged is not None and id(States.hexagons[r][c + 1].who_engaged) != id(States.queue.current[0]):
                 States.reachable_points.remove((r, c))
             elif c == Settings.n_columns - 1 and States.hexagons[r][c - 1].who_engaged is not None and id(States.hexagons[r][c - 1].who_engaged) != id(States.queue.current[0]):
+                States.reachable_points.remove((r, c))
+            elif is_double_back is False:
                 States.reachable_points.remove((r, c))
         States.reachable_points = set(States.reachable_points)
 
@@ -420,7 +465,6 @@ class HexWorker:
         start, goal = self.offset2cube(row_active, col_active), self.offset2cube(goal_row, goal_col)
 
         way = self.way_search(start, goal)
-        # here need to correct movement for double hex units near border
 
         if States.queue.current[0].is_jumper is False:
             self.generate_steps(way)

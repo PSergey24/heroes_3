@@ -31,8 +31,9 @@ class InfoUpdater:
         States.round += 1
 
     def update_step_info(self):
-        self.update_active_info()
-        self.hex_worker.update_reachable_points()
+        if not States.is_animate:
+            self.update_active_info()
+            self.hex_worker.update_reachable_points()
 
     @staticmethod
     def update_active_info():

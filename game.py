@@ -17,8 +17,8 @@ class Game:
         self.bg = pygame.image.load(os.path.join("data/bg", "CmBkDrDd.bmp"))
         self.bg = pygame.transform.scale(self.bg, (Settings.width, Settings.height))
 
-        self.left_team = [unit('gdrag', 6, 0, 3, 1), unit('plich', 0, 0, 73, 1), unit('harpy', 3, 7, 53, 1)]
-        self.right_team = [unit('lich', 6, 12, 3, 2)]
+        self.left_team = [unit('gdrag', 6, 6, 3, 1), unit('plich', 4, 5, 73, 1), unit('plich', 4, 7, 73, 1), unit('harpy', 5, 9, 53, 1)]
+        self.right_team = [unit('lich', 6, 10, 3, 2), unit('hydra', 7, 10, 3, 2)]
 
         self.hex_worker = HexWorker()
         self.unit_worker = UnitWorker()
@@ -84,7 +84,7 @@ class Game:
         States.queue = MyQueue(self.info_updater.generate_move_order(self.left_team, self.right_team))
 
     def update_round_info(self):
-        if len(States.queue.current) == States.step:
+        if not States.is_animate and len(States.queue.current) == States.step:
             States.queue.update_queue()
             self.info_updater.update_steps()
             self.info_updater.update_rounds()

@@ -67,6 +67,8 @@ class States:
     active_is_double = None
     speed_active = None
     reachable_points = None
+    reachable_left_points = None
+    reachable_right_points = None
     double_reachable_points = None
     whom_attack = None
     point_attack = None

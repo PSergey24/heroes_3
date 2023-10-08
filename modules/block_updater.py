@@ -114,7 +114,8 @@ class BlockUpdater:
         txt.create_txt(str(current_round), (255, 255, 255))
         box.update_children(txt)
 
-    def get_avatar_position(self, idx):
+    @staticmethod
+    def get_avatar_position(idx):
         return 0 if idx == 0 else idx * States.top_center.children[-1].width
 
     def update_buttons(self):

@@ -32,7 +32,7 @@ class UnitWorker:
         if action == 'moving':
             if States.active_is_double:
 
-                if (States.point_c > 0 and (States.hexagons[States.point_r][States.point_c - 1].who_engaged is None or id(States.hexagons[States.point_r][States.point_c - 1].who_engaged) == id(States.unit_active)) and States.unit_active.team == 1) or ((States.point_c == Settings.n_columns - 1 or (States.hexagons[States.point_r][States.point_c + 1].who_engaged is not None and id(States.hexagons[States.point_r][States.point_c + 1].who_engaged) != id(States.unit_active))) and States.unit_active.team == 2):
+                if (States.point_c > 0 and (States.hexagons[States.point_r][States.point_c - 1].who_engaged is None or id(States.hexagons[States.point_r][States.point_c - 1].who_engaged) == id(States.unit_active)) and (States.point_r, States.point_c) not in States.reachable_left_points and States.unit_active.team == 1) or ((States.point_c == Settings.n_columns - 1 or (States.hexagons[States.point_r][States.point_c + 1].who_engaged is not None and id(States.hexagons[States.point_r][States.point_c + 1].who_engaged) != id(States.unit_active))) and (States.point_r, States.point_c) not in States.reachable_right_points and States.unit_active.team == 2):
                     States.queue.current[0].create_animation('moving', States.point_r, States.point_c - 1)
                 else:
                     States.queue.current[0].create_animation('moving', States.point_r, States.point_c)
