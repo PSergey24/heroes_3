@@ -335,8 +335,35 @@ class HexWorker:
             States.reachable_left_points = reachable_left - reachable_right
             States.reachable_right_points = reachable_right - reachable_left
             States.reachable_points = reachable_left.union(reachable_right)
+
+            self.correct_reachable_points()
         else:
             States.reachable_points = self.cube_reachable_single(start, movement)
+
+    @staticmethod
+    def correct_reachable_points():
+        States.reachable_points, States.reachable_left_points, States.reachable_right_points = list(
+            States.reachable_points), list(States.reachable_left_points), list(States.reachable_right_points)
+
+        for r, c in reversed(States.reachable_points):
+            if States.hexagons[r][c].who_engaged is not None and id(States.hexagons[r][c].who_engaged) != id(
+                    States.unit_active):
+                States.reachable_points.remove((r, c))
+                if (r, c) in States.reachable_left_points:
+                    States.reachable_left_points.remove((r, c))
+                if (r, c) in States.reachable_right_points:
+                    States.reachable_right_points.remove((r, c))
+
+        for r, c in reversed(States.reachable_points):
+            if (r, c + 1) not in States.reachable_points and (r, c - 1) not in States.reachable_points:
+                States.reachable_points.remove((r, c))
+                if (r, c) in States.reachable_left_points:
+                    States.reachable_left_points.remove((r, c))
+                if (r, c) in States.reachable_right_points:
+                    States.reachable_right_points.remove((r, c))
+
+        States.reachable_points, States.reachable_left_points, States.reachable_right_points = set(
+            States.reachable_points), set(States.reachable_left_points), set(States.reachable_right_points)
 
     def cube_reachable_single(self, start, movement):
         is_flyer, is_jumper = States.queue.current[0].is_flyer, States.queue.current[0].is_jumper
@@ -401,23 +428,6 @@ class HexWorker:
             (-1, +1, 0), (-1, 0, +1), (0, -1, +1)
         ]
         return current[0] + directions[i][0], current[1] + directions[i][1], current[2] + directions[i][2]
-
-    @staticmethod
-    def correct_reachable_points():
-        States.reachable_points = list(States.reachable_points)
-        for r, c in reversed(States.reachable_points):
-            is_double_back = (States.unit_active.team == 1 and ((r, c + 1) in States.reachable_points or (c - 1 >= 0 and States.hexagons[r][c - 1].who_engaged is None))) or \
-                             (States.unit_active.team == 2 and ((r, c - 1) in States.reachable_points or (c + 1 < Settings.n_columns and States.hexagons[r][c + 1].who_engaged is None)))
-
-            if 0 < c < Settings.n_columns - 1 and States.hexagons[r][c - 1].who_engaged is not None and States.hexagons[r][c + 1].who_engaged is not None and id(States.hexagons[r][c - 1].who_engaged) != id(States.queue.current[0]) and id(States.hexagons[r][c + 1].who_engaged) != id(States.queue.current[0]):
-                States.reachable_points.remove((r, c))
-            elif c == 0 and States.hexagons[r][c + 1].who_engaged is not None and id(States.hexagons[r][c + 1].who_engaged) != id(States.queue.current[0]):
-                States.reachable_points.remove((r, c))
-            elif c == Settings.n_columns - 1 and States.hexagons[r][c - 1].who_engaged is not None and id(States.hexagons[r][c - 1].who_engaged) != id(States.queue.current[0]):
-                States.reachable_points.remove((r, c))
-            elif is_double_back is False:
-                States.reachable_points.remove((r, c))
-        States.reachable_points = set(States.reachable_points)
 
     @staticmethod
     def cube_distance(a, b):
