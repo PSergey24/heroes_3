@@ -304,6 +304,7 @@ class RGrif(Units):
 
         self.cur_health = self.health
         self.is_flyer = True
+        self.is_answer = float('inf')
 
         self.moving = ["11", "12", "11", "10"]
         self.mouse_over = ["01", "04", "05", "06", "06", "05", "04", "01"]
@@ -338,6 +339,7 @@ class Griff(Units):
 
         self.cur_health = self.health
         self.is_flyer = True
+        self.is_answer = 2
 
         self.moving = ["11", "12", "11", "10"]
         self.mouse_over = ["01", "04", "05", "06", "06", "05", "04", "01"]

@@ -72,7 +72,7 @@ class Gdrag(Units):
 
         self.img_size_x = 288
         self.img_size_y = self.img_size_x / 1.125
-        self.img_shift_x = -20
+        self.img_shift_x = -10
         self.img_shift_y = 10
 
         self.update_hex(i, j)

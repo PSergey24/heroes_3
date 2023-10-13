@@ -78,7 +78,7 @@ class HexWorker:
             if States.btn_shooter:
                 if States.hexagons[r_over][c_over].who_engaged is not None and States.hexagons[r_over][c_over].who_engaged.team != States.unit_active.team:
                     is_neighbor_enemy = self.enemy_is_neighbor(row_active, col_active)
-                    if is_neighbor_enemy is False:
+                    if is_neighbor_enemy is False and States.unit_active.arrows > 0:
                         States.whom_attack = States.hexagons[r_over][c_over].who_engaged
                         if dist <= 10:
                             States.penalty_shooter = 1
@@ -437,16 +437,16 @@ class HexWorker:
     def get_move_type():
         if States.whom_attack:
             if States.btn_shooter:
-                if States.point_r > States.whom_attack.hex[0][0]:
-                    return 'shoot_up'
-                if States.point_r < States.whom_attack.hex[0][0]:
+                if States.point_r > States.unit_active.hex[0][0]:
                     return 'shoot_down'
+                if States.point_r < States.unit_active.hex[0][0]:
+                    return 'shoot_up'
                 return 'shoot_straight'
             else:
-                if States.point_r > States.whom_attack.hex[0][0]:
-                    return 'attack_up'
-                if States.point_r < States.whom_attack.hex[0][0]:
+                if States.point_r > States.unit_active.hex[0][0]:
                     return 'attack_down'
+                if States.point_r < States.unit_active.hex[0][0]:
+                    return 'attack_up'
                 return 'attack_straight'
 
         if 0 <= States.point_r < Settings.n_rows and 0 <= States.point_c < Settings.n_columns:

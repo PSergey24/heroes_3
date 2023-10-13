@@ -31,13 +31,20 @@ class Settings:
     avatar_width = 58
     avatar_height = 64
 
-    # special units
+    # special units:
     double_hex_units = ["bdrgn", "rdrgn", "chydr", "hydra", "rgrif", "griff", "cmcor", "mcore", "tbird", "roc",
                         "hdrgn", "ndrgn", "gbasi", "basil", "cerbu", "hhoun", "apegs", "pegas", "phx", "fbird",
                         "nagag", "naga", "meduq", "medus", "ddrag", "gdrag", "wunic", "unico", "ecent", "centr",
                         "cavlr", "champ", "abehe", "ybehe", "bgorg", "cgorg", "wyvmn", "wyver", "assidup", "assid",
                         "blord", "bknig", "icee", "welem", "uwlfr", "bwlfr", "haspid", "serpent", "adrgn"]
-    without_answer = ["chydr", "hydra", "corsair"]
+    without_answer = ["magel", "psyel", "chydr", "hydra", "cerbu", "nagag", "naga", "adevl", "devil", "harph", "corsair"]
+    mass_attack_around = ["chydr", "hydra"]
+    mass_attack_3 = ["magel", "psyel", "cerbu"]
+    mass_fired = ["bdrgn", "rdrgn", "ddrag", "gdrag", "phx", "fbird", "adrgn"]
+    mass_arrows = ["plich", "magog"]
+    double_shot = ["grelf", "hcbow"]
+    double_punch = ["crusd", "uwlfr"]
+
     factions = {"Dungeon": ["bdrgn", "rdrgn", "cmcor", "mcore", "minok", "minot", "meduq", "medus", "eveye", "behol", "harph", "harpy", "itrog", "trogl"],
                 "Conflux": ["phx", "fbird", "magel", "psyel", "eelem", "ston", "nrg", "felem", "icee", "welem", "storm", "aelem", "sprit", "pixie"],
                 "Fortress": ["chydr", "hydra", "wyvmn", "wyver", "bgorg", "cgorg", "gbasi", "basil", "drfir", "drfly", "aliza", "pliza", "gnolm", "gnoll"],
@@ -72,7 +79,6 @@ class States:
     double_reachable_points = None
     whom_attack = None
     point_attack = None
-    direction_attack = None
 
     # shooter btn info:
     btn_shooter = False

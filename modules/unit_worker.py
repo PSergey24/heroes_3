@@ -31,7 +31,6 @@ class UnitWorker:
         States.is_animate = True
         if action == 'moving':
             if States.active_is_double:
-
                 if (States.point_c > 0 and (States.hexagons[States.point_r][States.point_c - 1].who_engaged is None or id(States.hexagons[States.point_r][States.point_c - 1].who_engaged) == id(States.unit_active)) and (States.point_r, States.point_c) not in States.reachable_left_points and States.unit_active.team == 1) or ((States.point_c == Settings.n_columns - 1 or (States.hexagons[States.point_r][States.point_c + 1].who_engaged is not None and id(States.hexagons[States.point_r][States.point_c + 1].who_engaged) != id(States.unit_active))) and (States.point_r, States.point_c) not in States.reachable_right_points and States.unit_active.team == 2):
                     States.queue.current[0].create_animation('moving', States.point_r, States.point_c - 1)
                 else:
@@ -51,9 +50,19 @@ class UnitWorker:
                 self.getting_hit(States.whom_attack, States.queue.current[0], is_answer=True)
                 States.whom_attack.is_answer -= 1
 
+            if States.queue.current[0].character in Settings.double_punch and States.queue.current[0].count > 0:
+                States.queue.current[0].create_animation(action)
+                self.getting_hit(States.queue.current[0], States.whom_attack)
+
         if action.find('shoot') != -1:
             States.queue.current[0].create_animation(action)
             self.getting_hit(States.queue.current[0], States.whom_attack)
+            States.unit_active.arrows -= 1
+
+            if States.queue.current[0].character in Settings.double_shot and States.queue.current[0].arrows > 0:
+                States.queue.current[0].create_animation(action)
+                self.getting_hit(States.queue.current[0], States.whom_attack)
+                States.unit_active.arrows -= 1
 
         States.queue.current.append(States.queue.current.pop(0))
 
@@ -66,23 +75,66 @@ class UnitWorker:
             self.animation_updater(defender)
 
     def get_defenders(self, attacker, defender, is_answer):
-        mass_attack = ["hydra"]
-
         defenders = []
         if is_answer:
             defenders.append(defender)
             return defenders
 
-        if attacker.character in mass_attack:
-            for hexagon in attacker.hex:
-                neighbors = self.hex_worker.get_neighbors(hexagon[0], hexagon[1])
-                defenders.extend(neighbors)
-
-            defenders = list(set(defenders))
-            defenders = self.drop_own_team(attacker, defenders)
+        if attacker.character in Settings.mass_attack_around:
+            defenders = self.get_defenders_mass_attack_around(attacker)
             return defenders
+
+        if attacker.character in Settings.mass_attack_3:
+            defenders = self.get_defenders_mass_attack_3(attacker)
+            return defenders
+
+        if attacker.character in Settings.mass_fired:
+            pass
+
+        if attacker.character in Settings.mass_arrows and States.btn_shooter:
+            defenders = self.get_defenders_mass_arrows(defender)
+            return defenders
+
         defenders.append(defender)
         return defenders
+
+    def get_defenders_mass_attack_around(self, attacker):
+        defenders = []
+        for hexagon in attacker.hex:
+            neighbors = self.hex_worker.get_neighbors(hexagon[0], hexagon[1])
+            defenders.extend(neighbors)
+
+        return self.drop_own_team(attacker, list(set(defenders)))
+
+    def get_defenders_mass_attack_3(self, attacker):
+        point_attack = None
+        a = []
+        for i in range(6):
+            nb_x, nb_y, nb_z = self.hex_worker.cube_neighbor((States.point_x, States.point_y, States.point_z), i)
+            nb_r, nb_c = self.hex_worker.cube2offset(nb_x, nb_y, nb_z)
+            a.append((nb_r, nb_c))
+            if [nb_r, nb_c] in attacker.hex:
+                point_attack = [nb_r, nb_c]
+
+        x, y, z = self.hex_worker.offset2cube(point_attack[0], point_attack[1])
+        b = []
+        for i in range(6):
+            nb_x, nb_y, nb_z = self.hex_worker.cube_neighbor((x, y, z), i)
+            nb_r, nb_c = self.hex_worker.cube2offset(nb_x, nb_y, nb_z)
+            b.append((nb_r, nb_c))
+
+        defenders = [States.hexagons[point[0]][point[1]].who_engaged for point in set(a).intersection(set(b)) if States.hexagons[point[0]][point[1]].who_engaged is not None]
+        defenders.append(States.hexagons[States.point_r][States.point_c].who_engaged)
+        return defenders
+
+    def get_defenders_mass_arrows(self, defender):
+        defenders = []
+        for hexagon in defender.hex:
+            neighbors = self.hex_worker.get_neighbors(hexagon[0], hexagon[1])
+            defenders.extend(neighbors)
+
+        defenders.append(defender)
+        return list(set(defenders))
 
     @staticmethod
     def drop_own_team(attacker, neighbors):
