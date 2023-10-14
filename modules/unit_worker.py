@@ -1,8 +1,8 @@
 import os
-import random
 import pygame
 
 from modules.hex_worker import HexWorker
+from modules.damage_counter import DamageCounter
 from modules.settings import Settings, States
 
 
@@ -10,6 +10,7 @@ class UnitWorker:
 
     def __init__(self):
         self.hex_worker = HexWorker()
+        self.damage_counter = DamageCounter()
 
     @staticmethod
     def create_units(team):
@@ -70,8 +71,8 @@ class UnitWorker:
         defenders = self.get_defenders(attacker, defender, is_answer)
 
         for defender in defenders:
-            damage = self.damage_counter(attacker, defender)
-            defender = self.health_updater(defender, damage)
+            damage = self.damage_counter.count_damage(attacker, defender)
+            defender = self.damage_counter.update_health(defender, damage)
             self.animation_updater(defender)
 
     def get_defenders(self, attacker, defender, is_answer):
@@ -139,38 +140,6 @@ class UnitWorker:
     @staticmethod
     def drop_own_team(attacker, neighbors):
         return [nb for nb in neighbors if nb.team != attacker.team]
-
-    def damage_counter(self, attacker, defender):
-        k = self.get_damage_k(attacker, defender)
-        luck = self.get_luck_k()
-
-        damage = attacker.count * random.randint(attacker.damage[0], attacker.damage[1]) * k * luck
-        return damage
-
-    @staticmethod
-    def get_damage_k(attacker, defender):
-        if attacker.attack - defender.defense > 0:
-            k = 0.05 * (attacker.attack - defender.defense)
-            k = 1 + (3 if k > 3 else k)
-        else:
-            k = 0.025 * (defender.defense - attacker.attack)
-            k = 1 - (0.7 if k > 0.7 else k)
-        return k
-
-    @staticmethod
-    def get_luck_k():
-        return 1
-
-    @staticmethod
-    def health_updater(defender, damage):
-        total_health = (defender.count - 1) * defender.health + defender.cur_health
-
-        count_alive, count_health = int((total_health - damage) // defender.health) + 1, (total_health - damage) % defender.health
-        defender.count = count_alive
-        defender.cur_health = count_health
-        if defender.count <= 0:
-            defender.count, defender.cur_health = 0, 0
-        return defender
 
     @staticmethod
     def animation_updater(defender):

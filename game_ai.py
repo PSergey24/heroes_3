@@ -9,23 +9,25 @@ from modules.unit_worker import UnitWorker
 from modules.info_updater import InfoUpdater
 from modules.block_updater import BlockUpdater
 from modules.damage_counter import DamageCounter
+from modules.game_generator import GameGenerator
 
 
-class Game:
+class GameAI:
 
     def __init__(self):
         self.screen = pygame.display.set_mode((Settings.width, Settings.height))
         self.bg = pygame.image.load(os.path.join("data/bg", "CmBkDrDd.bmp"))
         self.bg = pygame.transform.scale(self.bg, (Settings.width, Settings.height))
 
-        self.left_team = [unit('gdrag', 5, 5, 3, 1), unit('gdrag', 0, 5, 30, 1)]
-        self.right_team = [unit('gdrag', 6, 5, 1, 2), unit('gdrag', 1, 5, 30, 2)]
+        self.left_team = None
+        self.right_team = None
 
         self.hex_worker = HexWorker()
         self.unit_worker = UnitWorker()
         self.info_updater = InfoUpdater()
         self.block_updater = BlockUpdater()
         self.damage_counter = DamageCounter()
+        self.game_generator = GameGenerator()
 
     def run(self):
         run = True
@@ -34,6 +36,7 @@ class Game:
 
         self.create_cursor()
         self.hex_worker.create_hexagons()
+        self.generate_units()
         self.create_units()
         self.generate_move_order()
         self.create_info_block()
@@ -43,27 +46,13 @@ class Game:
 
             self.update_round_info()
             self.info_updater.update_step_info()
-            self.update_buttons()
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     run = False
 
-                if event.type == pygame.MOUSEMOTION and States.is_animate is False:
-                    States.point_over = pygame.mouse.get_pos()
+                # self.update_unit_info(action)
 
-                    self.hex_worker.update_point_over()
-                    self.hex_worker.update_cursor()
-                    self.hex_worker.update_hexagons()
-                    self.damage_counter.predict_damage()
-
-                if event.type == pygame.MOUSEBUTTONDOWN and States.is_animate is False:
-                    self.block_updater.update_buttons_by_click()
-
-                    if action := self.hex_worker.get_move_type():
-                        self.update_unit_info(action)
-
-            self.draw_cursor()
             self.draw_info_block()
             self.hex_worker.draw_hexagons(self.screen)
             self.unit_worker.draw_units(self.screen)
@@ -75,6 +64,9 @@ class Game:
     def create_cursor():
         States.cursor = pygame.image.load(os.path.join(f"data/rcom/clean/Crcom000.png"))
         pygame.mouse.set_cursor(pygame.cursors.Cursor((0, 0), States.cursor))
+
+    def generate_units(self):
+        self.left_team, self.right_team = self.game_generator.main()
 
     def create_units(self):
         self.unit_worker.create_units(self.left_team)
@@ -115,5 +107,5 @@ class Game:
 
 
 if __name__ == '__main__':
-    game = Game()
+    game = GameAI()
     game.run()

@@ -443,9 +443,9 @@ class HexWorker:
                     return 'shoot_up'
                 return 'shoot_straight'
             else:
-                if States.point_r > States.unit_active.hex[0][0]:
+                if States.point_r < States.whom_attack.hex[0][0]:
                     return 'attack_down'
-                if States.point_r < States.unit_active.hex[0][0]:
+                if States.point_r > States.whom_attack.hex[0][0]:
                     return 'attack_up'
                 return 'attack_straight'
 
