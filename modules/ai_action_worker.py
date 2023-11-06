@@ -30,9 +30,17 @@ class AIActionWorker:
 
         States.point_r, States.point_c = row, col
 
-        if (row, col) not in States.reachable_points:
+        teams, opps = [], []
+        for unit in States.queue.current:
+            pos = (unit.hex[0][0], unit.hex[0][1])
+            if States.queue.current[0].team == unit.team:
+                teams.append(pos)
+            else:
+                opps.append(pos)
+
+        if ((row, col) not in States.reachable_points or (row, col) in teams) or (direction == 6 and (row, col) in States.reachable_points and (row, col) in opps):
             return False, -5
-        if direction == 6 and (row, col) in States.reachable_points:
+        if direction == 6 and (row, col) in States.reachable_points and (row, col) not in opps:
             return 'moving', 0
 
         x, y, z = self.hex_worker.offset2cube(row, col)
