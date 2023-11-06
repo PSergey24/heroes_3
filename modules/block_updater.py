@@ -147,21 +147,30 @@ class BlockUpdater:
 
     def update_button_by_click(self, btn):
         if btn.name == 'wait' and btn.isActive is True:
-
-            States.queue.current[0].btn_wait = True
-            States.queue.current.insert(self.get_wait_index(), States.queue.current.pop(0))
-            self.update_avatars()
+            self.update_wait_by_click()
         if btn.name == 'defense' and btn.isActive is True:
-            States.step += 1
-
-            States.queue.current[0].btn_defense, States.queue.current[0].btn_wait = True, True
-            States.queue.current.append(States.queue.current.pop(0))
-            self.update_avatars()
+            self.update_defend_by_click()
         if btn.name == 'shooter':
-            if States.queue.current[0].is_shooter is False or (States.queue.current[0].is_shooter and States.btn_shooter):
-                States.btn_shooter = False
-            elif States.queue.current[0].is_shooter and not States.btn_shooter:
-                States.btn_shooter = True
+            self.update_shooter_by_click()
+
+    def update_wait_by_click(self):
+        States.queue.current[0].btn_wait = True
+        States.queue.current.insert(self.get_wait_index(), States.queue.current.pop(0))
+        self.update_avatars()
+
+    def update_defend_by_click(self):
+        States.step += 1
+
+        States.queue.current[0].btn_defense, States.queue.current[0].btn_wait = True, True
+        States.queue.current.append(States.queue.current.pop(0))
+        self.update_avatars()
+
+    @staticmethod
+    def update_shooter_by_click():
+        if States.queue.current[0].is_shooter is False or (States.queue.current[0].is_shooter and States.btn_shooter):
+            States.btn_shooter = False
+        elif States.queue.current[0].is_shooter and not States.btn_shooter:
+            States.btn_shooter = True
 
     @staticmethod
     def get_wait_index():

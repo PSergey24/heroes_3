@@ -461,14 +461,6 @@ class HexWorker:
                 return 'moving'
         return False
 
-    @staticmethod
-    def update_double_hex_position():
-        if States.point_c > 0:
-            if States.point_c + 1 >= Settings.n_columns or \
-                    (States.point_r, States.point_c + 1) not in States.double_reachable_points and (States.point_r, States.point_c + 1) not in States.reachable_points or \
-                    States.hexagons[States.point_r][States.point_c + 1].who_engaged is not None and id(States.hexagons[States.point_r][States.point_c + 1].who_engaged) != id(States.queue.current[0]):
-                States.point_c -= 1
-
     # way search
     def update_character_position(self, goal_row, goal_col):
         row_active, col_active = States.unit_active.hex[0][0], States.unit_active.hex[0][1]

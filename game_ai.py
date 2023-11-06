@@ -1,15 +1,16 @@
 import os
 import pygame
+import numpy as np
 
 from modules.settings import Settings, States
 from modules.my_queue import MyQueue
-from modules.units import unit
 from modules.hex_worker import HexWorker
 from modules.unit_worker import UnitWorker
 from modules.info_updater import InfoUpdater
 from modules.block_updater import BlockUpdater
 from modules.damage_counter import DamageCounter
 from modules.game_generator import GameGenerator
+from modules.ai_action_worker import AIActionWorker
 
 
 class GameAI:
@@ -28,12 +29,12 @@ class GameAI:
         self.block_updater = BlockUpdater()
         self.damage_counter = DamageCounter()
         self.game_generator = GameGenerator()
+        self.action_matrix_worker = AIActionWorker()
 
-    def run(self):
-        run = True
+        self.reset()
 
+    def reset(self):
         self.screen.blit(self.bg, (0, 0))
-
         self.create_cursor()
         self.hex_worker.create_hexagons()
         self.generate_units()
@@ -41,23 +42,11 @@ class GameAI:
         self.generate_move_order()
         self.create_info_block()
 
+    def run(self):
+        run = True
+
         while run:
-            self.screen.blit(self.bg, (0, 0))
-
-            self.update_round_info()
-            self.info_updater.update_step_info()
-
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    run = False
-
-                # self.update_unit_info(action)
-
-            self.draw_info_block()
-            self.hex_worker.draw_hexagons(self.screen)
-            self.unit_worker.draw_units(self.screen)
-
-            pygame.display.update()
+            self.play_step([1, 0, 0])
         pygame.quit()
 
     @staticmethod
@@ -84,26 +73,55 @@ class GameAI:
             self.info_updater.update_steps()
             self.info_updater.update_rounds()
 
-    def update_buttons(self):
-        self.block_updater.update_buttons()
+    def update_button_info(self, action):
+        if action == "wait":
+            self.block_updater.update_wait_by_click()
+        if action == "defend":
+            self.block_updater.update_defend_by_click()
 
     def update_unit_info(self, action):
-        self.unit_worker.update_units(action)
-        self.block_updater.update_avatars()
+        if action not in [False, "wait", "defend"]:
+            self.unit_worker.update_units(action)
+            self.block_updater.update_avatars()
+
+    def play_step(self, ai_move):
+        flag = True
+        while len(States.animations) > 0 or flag:
+            flag = False
+
+            self.screen.blit(self.bg, (0, 0))
+
+            self.update_round_info()
+            self.info_updater.update_step_info()
+
+            for event in pygame.event.get():
+                pass
+
+            if len(States.animations) == 0:
+                action, reward = self.action_matrix_worker.num_to_action(ai_move)
+                self.update_button_info(action)
+                self.update_unit_info(action)
+
+            self.hex_worker.draw_hexagons(self.screen)
+            self.unit_worker.draw_units(self.screen)
+
+            pygame.display.update()
+
+        return reward, False, 0
 
     @staticmethod
-    def draw_cursor():
-        pygame.mouse.set_cursor(pygame.cursors.Cursor((0, 0), States.cursor))
-
-    def draw_info_block(self):
-        def draw_child(parent):
-            for child in parent.children:
-                draw_child(child)
-                if child.parent is not None:
-                    child.draw()
-
-        draw_child(States.main)
-        self.screen.blit(States.main.surf, States.main.rect)
+    def get_state():
+        states = []
+        for row in range(Settings.n_rows):
+            for col in range(Settings.n_columns):
+                if not States.hexagons[row][col].who_engaged:
+                    states.append([1, 0, 0])
+                else:
+                    if States.hexagons[row][col].who_engaged.team == States.queue.current[0].team:
+                        states.append([0, 1, 0])
+                    else:
+                        states.append([0, 0, 1])
+        return np.hstack(states).tolist()
 
 
 if __name__ == '__main__':

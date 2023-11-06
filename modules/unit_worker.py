@@ -39,7 +39,7 @@ class UnitWorker:
             else:
                 States.queue.current[0].create_animation('moving', States.point_r, States.point_c)
 
-        if action.find('attack') != -1:
+        if action is not None and action.find('attack') != -1:
             if (not States.active_is_double and (row_active != States.point_attack[0] or col_active != States.point_attack[1])) or (States.point_attack != States.unit_active.hex[0] and States.active_is_double):
                 States.queue.current[0].create_animation('moving', States.point_attack[0], States.point_attack[1])
 
@@ -55,7 +55,7 @@ class UnitWorker:
                 States.queue.current[0].create_animation(action)
                 self.getting_hit(States.queue.current[0], States.whom_attack)
 
-        if action.find('shoot') != -1:
+        if action is not None and action.find('shoot') != -1:
             States.queue.current[0].create_animation(action)
             self.getting_hit(States.queue.current[0], States.whom_attack)
             States.unit_active.arrows -= 1
