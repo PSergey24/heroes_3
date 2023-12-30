@@ -30,7 +30,7 @@ class Rangl(Units):
 
         self.img_size_x = 216
         self.img_size_y = self.img_size_x / 1.125
-        self.img_shift_x = -15
+        self.img_shift_x = 0
         self.img_shift_y = -10
 
         self.update_hex(i, j)

@@ -7,14 +7,19 @@ from modules.units import unit
 class GameGenerator:
 
     def __init__(self):
-        self.teams = {"left": [], "right": []}
-        self.team_values = {"left": 0, "right": 0}
+        self.teams = None
+        self.team_values = None
 
     def main(self):
+        self.reset()
         self.generate_team("left")
         self.generate_team("right")
 
         return self.teams["left"], self.teams["right"]
+
+    def reset(self):
+        self.teams = {"left": [], "right": []}
+        self.team_values = {"left": 0, "right": 0}
 
     def generate_team(self, team):
         col = {"left": 0, "right": 14}

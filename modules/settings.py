@@ -32,7 +32,7 @@ class Settings:
     avatar_height = 64
 
     # special units:
-    double_hex_units = ["bdrgn", "rdrgn", "chydr", "hydra", "rgrif", "griff", "cmcor", "mcore", "tbird", "roc",
+    double_hex_units = ["rangl", "bdrgn", "rdrgn", "chydr", "hydra", "rgrif", "griff", "cmcor", "mcore", "tbird", "roc",
                         "hdrgn", "ndrgn", "gbasi", "basil", "cerbu", "hhoun", "apegs", "pegas", "phx", "fbird",
                         "nagag", "naga", "meduq", "medus", "ddrag", "gdrag", "wunic", "unico", "ecent", "centr",
                         "cavlr", "champ", "abehe", "ybehe", "bgorg", "cgorg", "wyvmn", "wyver", "assidup", "assid",

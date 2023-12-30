@@ -1,5 +1,6 @@
 import torch
 import random
+import numpy as np
 from collections import deque
 from game_ai import GameAI
 from modules.model import LinearQnet, QTrainer
@@ -19,13 +20,16 @@ class Agent:
         self.gamma = 0.9
         self.epsilon = 0
 
-        self.model = LinearQnet(495, 4000, 1157)
+        self.model = LinearQnet(660, 4000, 1155)
         self.trainer = QTrainer(self.model, self.lr, self.gamma)
         self.memory = deque(maxlen=MAX_MEMORY)
 
     @staticmethod
     def get_state(game):
-        return game.get_state()
+        game.update_round_info()
+        game.info_updater.update_step_info()
+        state, mask = game.get_state()
+        return state, mask
 
     def remember(self, state, action, reward, next_state, done):
         self.memory.append((state, action, reward, next_state, done))
@@ -42,20 +46,22 @@ class Agent:
     def train_short_memory(self, state, action, reward, next_state, done):
         self.trainer.train_step(state, action, reward, next_state, done)
 
-    def get_action(self, state):
-        self.epsilon = 80 - self.n_games
-        final_move = [0] * 1157
-        if random.randint(0, 200) < self.epsilon:
-            move = random.randint(0, 1156)
-            print("random selected action:")
+    def get_action(self, state, mask):
+        self.epsilon = 150 - self.n_games
+        ai_move = [0] * 1155
+        r = random.randint(0, 200)
+        if r < self.epsilon:
+            move = np.random.choice(np.where(mask == 1)[0])
+            print(f"random {r} selected action:")
         else:
             state_ = torch.tensor(state, dtype=torch.float)
             prediction = self.model(state_)
-            move = torch.argmax(prediction).item()
-            print("model selected action:")
+            prediction_masked = prediction.detach().numpy() * mask
+            move = torch.argmax(torch.from_numpy(prediction_masked)).item()
+            print(f"model {r} selected action:")
 
-        final_move[move] = 1
-        return final_move
+        ai_move[move] = 1
+        return ai_move
 
 
 def train():
@@ -67,15 +73,15 @@ def train():
     game = GameAI()
 
     while True:
-        state_old = agent.get_state(game)
-        final_move = agent.get_action(state_old)
+        state_old, mask = agent.get_state(game)
+        ai_move = agent.get_action(state_old, mask)
 
-        reward, done, score = game.play_step(final_move)
+        reward, done, score = game.play_step(ai_move)
 
-        state_new = agent.get_state(game)
+        state_new, _ = agent.get_state(game)
 
-        agent.train_short_memory(state_old, final_move, reward, state_new, done)
-        agent.remember(state_old, final_move, reward, state_new, done)
+        agent.train_short_memory(state_old, ai_move, reward, state_new, done)
+        agent.remember(state_old, ai_move, reward, state_new, done)
 
         if done:
             game.reset()
