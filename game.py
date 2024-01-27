@@ -56,7 +56,6 @@ class Game:
         self.screen = pygame.display.set_mode(window_size)
         pygame.display.set_caption('Heroes III of might and magic')
         self.bg = pygame.transform.scale(pygame.image.load(os.path.join("data/bg", "CmBkDrDd.bmp")), window_size)
-        # self.bg = pygame.transform.scale(pygame.image.load(os.path.join("data/bg", "CmBkLvSt.bmp")), window_size)
 
     def create_game(self):
         self.create_workers()
@@ -80,12 +79,10 @@ class Game:
         Objects.field = Field()
 
     def create_teams(self):
-        # self.left_team = [unit('nosfe', 3, 1, 35, 1), unit('nosfe', 8, 0, 267, 1), unit('devil', 7, 2, 1, 1)]
-        # self.left_team = [unit('grelf', 3, 1, 327, 1), unit('nosfe', 4, 0, 30, 1), unit('ndrgn', 6, 0, 1, 1)]
-        # self.left_team = [unit('chydr', 10, 9, 298, 1), unit('elf', 10, 13, 327, 1), unit('crusd', 7, 1, 7, 1)]
-        # self.right_team = [unit('chydr', 5, 10, 427, 2), unit('crusd', 10, 11, 56, 2)]
-        self.left_team = [unit('chydr', 10, 9, 298, 1), unit('pliza', 7, 5, 298, 1)]
-        self.right_team = [unit('chydr', 5, 10, 427, 2)]
+        self.left_team = [unit('ecent', 3, 1, 97, 1), unit('grelf', 8, 0, 62, 1), unit('tree', 9, 0, 31, 1),  unit('wunic', 6, 0, 28, 1),
+                          unit('ddrag', 10, 0, 13, 1)]
+        self.right_team = [unit('nagag', 9, 7, 25, 2), unit('sulta', 2, 8, 31, 2), unit('mage', 5, 7, 44, 2), unit('gremm', 6, 7, 215, 2),
+                           unit('gtita', 7, 13, 8, 2)]
 
     def create_queue(self):
         Objects.queue = Queue(self.left_team, self.right_team)

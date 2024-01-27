@@ -1,4 +1,12 @@
-# Heroes 3 + Machine Learning
+## Heroes 3 with Machine Learning
+
+<p align="center">
+    <img src="data/battle_01.png" alt="Castle vs Inferno" width="70%" title="Castle vs Inferno">
+</p>
+<p align="center">
+    <img src="data/battle_02.png" alt="Rampart vs Tower" width="70%" title="Rampart vs Tower">
+</p>
+
 ## Reinforcement Learning for heroes battles
 #### Project contains environment for human and AI play. 
 #### Now I am working on environment.
