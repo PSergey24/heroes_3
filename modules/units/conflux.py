@@ -103,10 +103,9 @@ class Magel(Units):
 
         self.init(i, j)
 
-    def add_animation_attack_(self):
-        self.update_fight_info()
-        self.add_animation(self, Objects.cursor.action)
-        self.add_animation(Objects.cursor.whom_attack, "getting_hit")
+    # special ability: attack w/o answer
+    def add_animation_attack(self):
+        self.add_animation_attack_no_answer()
 
     # todo: They cannot be resurrected, their morale is always neutral, and they are immune to mind-affecting spells
     # todo: Circular attack - attacks all nearby enemy units.
@@ -144,10 +143,9 @@ class Psyel(Units):
 
         self.init(i, j)
 
-    def add_animation_attack_(self):
-        self.update_fight_info()
-        self.add_animation(self, Objects.cursor.action)
-        self.add_animation(Objects.cursor.whom_attack, "getting_hit")
+    # special ability: attack w/o answer
+    def add_animation_attack(self):
+        self.add_animation_attack_no_answer()
 
     # todo: They cannot be resurrected, their morale is always neutral, and they are immune to mind-affecting spells
     # todo: Circular attack - attacks all nearby enemy units.
@@ -262,7 +260,7 @@ class Nrg(Units):
 
         self.init(i, j)
 
-    def add_animation_moving_(self):
+    def add_animation_moving(self):
         self.add_animation(self, "start_moving")
         self.add_animation(self, "stop_moving")
 
@@ -497,10 +495,9 @@ class Sprit(Units):
 
         self.init(i, j)
 
-    def add_animation_attack_(self):
-        self.update_fight_info()
-        self.add_animation(self, Objects.cursor.action)
-        self.add_animation(Objects.cursor.whom_attack, "getting_hit")
+    # special ability: attack w/o answer
+    def add_animation_attack(self):
+        self.add_animation_attack_no_answer()
 
 
 class Pixie(Units):

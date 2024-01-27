@@ -1,4 +1,5 @@
 from .units import Units
+from modules.states import Objects
 
 
 class Abehe(Units):
@@ -376,7 +377,9 @@ class Uwlfr(Units):
 
         self.init(i, j)
 
-    # todo: double attack
+    # special ability: double attack
+    def add_animation_attack(self):
+        self.add_animation_double_attack()
 
 
 class Bwlfr(Units):

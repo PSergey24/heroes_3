@@ -106,10 +106,9 @@ class Nagag(Units):
 
         self.init(i, j)
 
-    def add_animation_attack_(self):
-        self.update_fight_info()
-        self.add_animation(self, Objects.cursor.action)
-        self.add_animation(Objects.cursor.whom_attack, "getting_hit")
+    # special ability: attack w/o answer
+    def add_animation_attack(self):
+        self.add_animation_attack_no_answer()
 
 
 class Naga(Units):
@@ -143,10 +142,9 @@ class Naga(Units):
 
         self.init(i, j)
 
-    def add_animation_attack_(self):
-        self.update_fight_info()
-        self.add_animation(self, Objects.cursor.action)
-        self.add_animation(Objects.cursor.whom_attack, "getting_hit")
+    # special ability: attack w/o answer
+    def add_animation_attack(self):
+        self.add_animation_attack_no_answer()
 
 
 class Sulta(Units):

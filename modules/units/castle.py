@@ -244,7 +244,9 @@ class Crusd(Units):
 
         self.init(i, j)
 
-    # todo: double attack
+    # special ability: double attack
+    def add_animation_attack(self):
+        self.add_animation_double_attack()
 
 
 class Sword(Units):
@@ -388,14 +390,8 @@ class Hcbow(Units):
         self.init(i, j)
 
     # special ability: double shoot
-    def add_animation_shoot_(self):
-        self.update_fight_info()
-
-        self.add_animation(self, Objects.cursor.action)
-        self.add_animation(Objects.cursor.whom_attack, "getting_hit")
-
-        self.add_animation(self, Objects.cursor.action)
-        self.add_animation(Objects.cursor.whom_attack, "getting_hit")
+    def add_animation_shoot(self):
+        self.add_animation_double_shoot_()
 
 
 class Lcbow(Units):

@@ -36,10 +36,9 @@ class Chydr(Units):
 
         self.init(i, j)
 
-    def add_animation_attack_(self):
-        self.update_fight_info()
-        self.add_animation(self, Objects.cursor.action)
-        self.add_animation(Objects.cursor.whom_attack, "getting_hit")
+    # special ability: attack w/o answer
+    def add_animation_attack(self):
+        self.add_animation_attack_no_answer()
 
     # todo: Circular attack - units attack all enemies within eight squares around them.
 
@@ -78,10 +77,9 @@ class Hydra(Units):
 
         self.init(i, j)
 
-    def add_animation_attack_(self):
-        self.update_fight_info()
-        self.add_animation(self, Objects.cursor.action)
-        self.add_animation(Objects.cursor.whom_attack, "getting_hit")
+    # special ability: attack w/o answer
+    def add_animation_attack(self):
+        self.add_animation_attack_no_answer()
 
     # todo: Circular attack - units attack all enemies within eight squares around them.
 

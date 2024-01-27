@@ -138,33 +138,54 @@ class Units:
 
         if Objects.cursor.action is not None:
             if Objects.cursor.action == "moving":
-                self.add_animation_moving_()
+                self.add_animation_moving()
             elif Objects.cursor.action.find("attack") != -1 and Objects.cursor.destination_point == self.hex[0]:
-                self.add_animation_attack_()
+                self.add_animation_attack()
             elif Objects.cursor.action.find("attack") != -1 and Objects.cursor.destination_point != self.hex[0]:
-                self.add_moving_and_attack_()
+                self.add_moving_and_attack()
             elif Objects.cursor.action.find("shoot") != -1:
-                self.add_animation_shoot_()
+                self.add_animation_shoot()
 
-    def add_moving_and_attack_(self):
-        self.add_animation_moving_()
-        self.add_animation_attack_()
+    def add_moving_and_attack(self):
+        self.add_animation_moving()
+        self.add_animation_attack()
 
-    def add_animation_moving_(self):
+    def add_animation_moving(self):
         self.add_animation(self, "moving")
 
-    def add_animation_attack_(self):
+    def add_animation_attack(self):
         self.update_fight_info()
+        self.add_animation_attack_()
+        self.add_animation_attack_back()
+
+    def add_animation_double_attack(self):
+        self.update_fight_info()
+        self.add_animation_attack_()
+        self.add_animation_attack_back()
+        self.add_animation_attack_()
+
+    def add_animation_attack_(self):
         self.add_animation(self, Objects.cursor.action)
         self.add_animation(Objects.cursor.whom_attack, "getting_hit")
 
+    def add_animation_attack_back(self):
         if Objects.cursor.whom_attack.is_answer > 0:
             Objects.cursor.whom_attack.is_answer -= 1
             self.add_animation(Objects.cursor.whom_attack, self.get_answer_animation(Objects.cursor.action))
             self.add_animation(self, "getting_hit")
 
-    def add_animation_shoot_(self):
+    def add_animation_attack_no_answer(self):
+        self.add_animation_attack_()
+
+    def add_animation_shoot(self):
         self.update_fight_info()
+        self.add_animation_shoot_()
+
+    def add_animation_double_shoot_(self):
+        self.add_animation_shoot_()
+        self.add_animation_shoot_()
+
+    def add_animation_shoot_(self):
         self.add_animation(self, Objects.cursor.action)
         self.add_animation(Objects.cursor.whom_attack, "getting_hit")
 

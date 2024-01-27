@@ -398,6 +398,7 @@ class Harph(Units):
 
         self.init(i, j)
 
+    # special ability: hits and run
     def reset_moving(self):
         self.reset_field()
         self.init_hex(Objects.cursor.destination_point[0], Objects.cursor.destination_point[1])
@@ -410,19 +411,18 @@ class Harph(Units):
         Objects.cursor.point_attack = None
         Objects.cursor.whom_attack = None
 
-    def add_moving_and_attack_(self):
-        self.add_animation_moving_()
-        self.add_animation_attack_()
-        self.add_animation_moving_back_()
+    def add_moving_and_attack(self):
+        self.add_animation_moving()
+        self.add_animation_attack()
+        self.add_animation_moving_back()
 
-    def add_animation_attack_(self):
-        self.update_fight_info()
-        self.add_animation(self, Objects.cursor.action)
-        self.add_animation(Objects.cursor.whom_attack, "getting_hit")
+    # special ability: attack w/o answer
+    def add_animation_attack(self):
+        self.add_animation_attack_no_answer()
 
-    def add_animation_moving_back_(self):
+    def add_animation_moving_back(self):
         self.status["destination_back"] = self.hex[0]
-        self.add_animation_moving_()
+        self.add_animation_moving()
 
 
 class Harpy(Units):
@@ -460,6 +460,7 @@ class Harpy(Units):
 
         self.init(i, j)
 
+    # special ability: hits and run
     def reset_moving(self):
         self.reset_field()
         self.init_hex(Objects.cursor.destination_point[0], Objects.cursor.destination_point[1])
@@ -472,14 +473,14 @@ class Harpy(Units):
         Objects.cursor.point_attack = None
         Objects.cursor.whom_attack = None
 
-    def add_moving_and_attack_(self):
-        self.add_animation_moving_()
-        self.add_animation_attack_()
-        self.add_animation_moving_back_()
+    def add_moving_and_attack(self):
+        self.add_animation_moving()
+        self.add_animation_attack()
+        self.add_animation_moving_back()
 
-    def add_animation_moving_back_(self):
+    def add_animation_moving_back(self):
         self.status["destination_back"] = self.hex[0]
-        self.add_animation_moving_()
+        self.add_animation_moving()
 
 
 class Itrog(Units):
