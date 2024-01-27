@@ -38,7 +38,6 @@ class Settings:
     avatar_height = 59
 
     # special units:
-    without_answer = ["magel", "psyel", "chydr", "hydra", "cerbu", "nagag", "naga", "adevl", "devil", "harph", "corsair"]
     mass_attack_around = ["chydr", "hydra"]
     mass_attack_3 = ["magel", "psyel", "cerbu"]
     mass_fired = ["bdrgn", "rdrgn", "ddrag", "gdrag", "phx", "fbird", "adrgn"]

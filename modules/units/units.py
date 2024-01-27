@@ -22,7 +22,8 @@ class Units:
                                 "is_double": False, "is_shooter": False, "is_flyer": False, "is_jumper": False
                                 }
 
-        self.status = {"is_answer": 1, "is_wait": False, "is_defense": False}
+        # self.status = {"is_answer": 1, "is_wait": False, "is_defense": False}
+        self.status = {}
         self.is_answer = 1
         self.is_wait = False
         self.is_defense = False
@@ -77,9 +78,7 @@ class Units:
             self.animation_id = 0
 
         if name == "moving":
-            self.reset_field()
-            self.init_hex(Objects.cursor.destination_point[0], Objects.cursor.destination_point[1])
-            self.init_field()
+            self.reset_moving()
 
         if name == "start_moving":
             pass
@@ -98,6 +97,11 @@ class Units:
 
         if name in ["shoot_down", "shoot_up", "shoot_straight"]:
             pass
+
+    def reset_moving(self):
+        self.reset_field()
+        self.init_hex(Objects.cursor.destination_point[0], Objects.cursor.destination_point[1])
+        self.init_field()
 
     def get_animation_images(self):
         """
@@ -134,39 +138,30 @@ class Units:
 
         if Objects.cursor.action is not None:
             if Objects.cursor.action == "moving":
-                if self.characteristics["is_jumper"] is False:
-                    self.add_animation(self, "moving")
-                else:
-                    self.add_animation(self, "start_moving")
-                    self.add_animation(self, "stop_moving")
-
+                self.add_animation_moving_()
             elif Objects.cursor.action.find("attack") != -1 and Objects.cursor.destination_point == self.hex[0]:
-                self.update_fight_info()
-                self.add_animation(self, Objects.cursor.action)
-                self.add_animation(Objects.cursor.whom_attack, "getting_hit")
-
-                if Objects.cursor.whom_attack.is_answer > 0:
-                    Objects.cursor.whom_attack.is_answer -= 1
-                    self.add_animation(Objects.cursor.whom_attack, self.get_answer_animation(Objects.cursor.action))
-                    self.add_animation(self, "getting_hit")
-
+                self.add_animation_attack_()
             elif Objects.cursor.action.find("attack") != -1 and Objects.cursor.destination_point != self.hex[0]:
-                if self.characteristics["is_jumper"] is False:
-                    self.add_animation(self, "moving")
-                else:
-                    self.add_animation(self, "start_moving")
-                    self.add_animation(self, "stop_moving")
-
-                self.update_fight_info()
-                self.add_animation(self, Objects.cursor.action)
-                self.add_animation(Objects.cursor.whom_attack, "getting_hit")
-
-                if Objects.cursor.whom_attack.is_answer > 0:
-                    Objects.cursor.whom_attack.is_answer -= 1
-                    self.add_animation(Objects.cursor.whom_attack, self.get_answer_animation(Objects.cursor.action))
-                    self.add_animation(self, "getting_hit")
+                self.add_moving_and_attack_()
             elif Objects.cursor.action.find("shoot") != -1:
                 self.add_animation_shoot_()
+
+    def add_moving_and_attack_(self):
+        self.add_animation_moving_()
+        self.add_animation_attack_()
+
+    def add_animation_moving_(self):
+        self.add_animation(self, "moving")
+
+    def add_animation_attack_(self):
+        self.update_fight_info()
+        self.add_animation(self, Objects.cursor.action)
+        self.add_animation(Objects.cursor.whom_attack, "getting_hit")
+
+        if Objects.cursor.whom_attack.is_answer > 0:
+            Objects.cursor.whom_attack.is_answer -= 1
+            self.add_animation(Objects.cursor.whom_attack, self.get_answer_animation(Objects.cursor.action))
+            self.add_animation(self, "getting_hit")
 
     def add_animation_shoot_(self):
         self.update_fight_info()

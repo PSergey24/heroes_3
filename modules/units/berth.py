@@ -1,4 +1,5 @@
 from .units import Units
+from modules.states import Objects
 
 
 class Haspid(Units):
@@ -312,8 +313,12 @@ class Pr3up(Units):
 
         self.init(i, j)
 
+    def add_animation_attack_(self):
+        self.update_fight_info()
+        self.add_animation(self, Objects.cursor.action)
+        self.add_animation(Objects.cursor.whom_attack, "getting_hit")
+
     # todo: There is no melee penalty.
-    # todo: attack w/o answer
     # todo: Accurate shot
 
 
@@ -351,8 +356,12 @@ class Corsair(Units):
 
         self.init(i, j)
 
+    def add_animation_attack_(self):
+        self.update_fight_info()
+        self.add_animation(self, Objects.cursor.action)
+        self.add_animation(Objects.cursor.whom_attack, "getting_hit")
+
     # todo: There is no melee penalty.
-    # todo: attack w/o answer
 
 
 class Pirate(Units):
@@ -489,6 +498,10 @@ class Oceanid(Units):
 
         self.init(i, j)
 
+    def add_animation_moving_(self):
+        self.add_animation(self, "start_moving")
+        self.add_animation(self, "stop_moving")
+
     # todo: Immune to Ice magic
 
 
@@ -524,5 +537,9 @@ class Nimph(Units):
         self.image = {"x_size": 216, "y_size": 216 / 1.125, "x_shift": -25, "y_shift": 0}
 
         self.init(i, j)
+
+    def add_animation_moving_(self):
+        self.add_animation(self, "start_moving")
+        self.add_animation(self, "stop_moving")
 
     # todo: Immune to Ice magic

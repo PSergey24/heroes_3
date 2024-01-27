@@ -1,4 +1,5 @@
 from .units import Units
+from modules.states import Objects
 
 
 class Phx(Units):
@@ -102,8 +103,12 @@ class Magel(Units):
 
         self.init(i, j)
 
+    def add_animation_attack_(self):
+        self.update_fight_info()
+        self.add_animation(self, Objects.cursor.action)
+        self.add_animation(Objects.cursor.whom_attack, "getting_hit")
+
     # todo: They cannot be resurrected, their morale is always neutral, and they are immune to mind-affecting spells
-    # todo: attack w/o answer
     # todo: Circular attack - attacks all nearby enemy units.
     # todo: magic Attack - Thought elementals only deal 50% damage to black dragons and other magical elementals.
 
@@ -139,8 +144,12 @@ class Psyel(Units):
 
         self.init(i, j)
 
+    def add_animation_attack_(self):
+        self.update_fight_info()
+        self.add_animation(self, Objects.cursor.action)
+        self.add_animation(Objects.cursor.whom_attack, "getting_hit")
+
     # todo: They cannot be resurrected, their morale is always neutral, and they are immune to mind-affecting spells
-    # todo: attack w/o answer
     # todo: Circular attack - attacks all nearby enemy units.
     # todo: Psychic Attack - Thought elementals only deal 50% damage to all units immune to mind affecting spells.
 
@@ -252,6 +261,10 @@ class Nrg(Units):
         self.image = {"x_size": 216, "y_size": 216 / 1.125, "x_shift": -25, "y_shift": -10}
 
         self.init(i, j)
+
+    def add_animation_moving_(self):
+        self.add_animation(self, "start_moving")
+        self.add_animation(self, "stop_moving")
 
     # todo: They cannot be resurrected, their morale is always neutral, and they are immune to mind-affecting spells
     # todo: Receive double damage from spells: Ring of Frost and Frostbolt
@@ -484,7 +497,10 @@ class Sprit(Units):
 
         self.init(i, j)
 
-    # todo: attack w/o answer
+    def add_animation_attack_(self):
+        self.update_fight_info()
+        self.add_animation(self, Objects.cursor.action)
+        self.add_animation(Objects.cursor.whom_attack, "getting_hit")
 
 
 class Pixie(Units):

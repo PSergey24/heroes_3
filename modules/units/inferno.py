@@ -1,4 +1,5 @@
 from .units import Units
+from modules.states import Objects
 
 
 class Adevl(Units):
@@ -34,9 +35,17 @@ class Adevl(Units):
 
         self.init(i, j)
 
-        # todo: attack w/o answer
         # todo: Hatred of Angels and Archangels => +50% additional attack damage.
         # todo: Failure => -1point to good fortune of all enemy warriors; works even after the destruction of devils.
+
+    def add_animation_moving_(self):
+        self.add_animation(self, "start_moving")
+        self.add_animation(self, "stop_moving")
+
+    def add_animation_attack_(self):
+        self.update_fight_info()
+        self.add_animation(self, Objects.cursor.action)
+        self.add_animation(Objects.cursor.whom_attack, "getting_hit")
 
 
 class Devil(Units):
@@ -72,9 +81,17 @@ class Devil(Units):
 
         self.init(i, j)
 
-        # todo: attack w/o answer
         # todo: Hatred of Angels and Archangels => +50% additional attack damage.
         # todo: Failure => -1point to good fortune of all enemy warriors; works even after the destruction of devils.
+
+    def add_animation_moving_(self):
+        self.add_animation(self, "start_moving")
+        self.add_animation(self, "stop_moving")
+
+    def add_animation_attack_(self):
+        self.update_fight_info()
+        self.add_animation(self, Objects.cursor.action)
+        self.add_animation(Objects.cursor.whom_attack, "getting_hit")
 
 
 class Efres(Units):
@@ -311,8 +328,12 @@ class Cerbu(Units):
 
         self.init(i, j)
 
-        # todo: attack w/o answer
-        # todo: attack all units in 3 cells before heads
+    def add_animation_attack_(self):
+        self.update_fight_info()
+        self.add_animation(self, Objects.cursor.action)
+        self.add_animation(Objects.cursor.whom_attack, "getting_hit")
+
+    # todo: attack all units in 3 cells before heads
 
 
 class Hhoun(Units):

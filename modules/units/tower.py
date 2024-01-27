@@ -1,4 +1,5 @@
 from .units import Units
+from modules.states import Objects
 
 
 class Gtita(Units):
@@ -105,7 +106,10 @@ class Nagag(Units):
 
         self.init(i, j)
 
-    # todo: attack w/o answer
+    def add_animation_attack_(self):
+        self.update_fight_info()
+        self.add_animation(self, Objects.cursor.action)
+        self.add_animation(Objects.cursor.whom_attack, "getting_hit")
 
 
 class Naga(Units):
@@ -139,7 +143,10 @@ class Naga(Units):
 
         self.init(i, j)
 
-    # todo: attack w/o answer
+    def add_animation_attack_(self):
+        self.update_fight_info()
+        self.add_animation(self, Objects.cursor.action)
+        self.add_animation(Objects.cursor.whom_attack, "getting_hit")
 
 
 class Sulta(Units):

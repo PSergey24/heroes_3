@@ -1,4 +1,5 @@
 from .units import Units
+from modules.states import Objects
 
 
 class Chydr(Units):
@@ -35,7 +36,11 @@ class Chydr(Units):
 
         self.init(i, j)
 
-    # todo: attack w/o answer.
+    def add_animation_attack_(self):
+        self.update_fight_info()
+        self.add_animation(self, Objects.cursor.action)
+        self.add_animation(Objects.cursor.whom_attack, "getting_hit")
+
     # todo: Circular attack - units attack all enemies within eight squares around them.
 
 
@@ -73,7 +78,11 @@ class Hydra(Units):
 
         self.init(i, j)
 
-    # todo: attack w/o answer.
+    def add_animation_attack_(self):
+        self.update_fight_info()
+        self.add_animation(self, Objects.cursor.action)
+        self.add_animation(Objects.cursor.whom_attack, "getting_hit")
+
     # todo: Circular attack - units attack all enemies within eight squares around them.
 
 

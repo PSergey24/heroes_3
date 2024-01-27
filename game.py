@@ -79,10 +79,8 @@ class Game:
         Objects.field = Field()
 
     def create_teams(self):
-        self.left_team = [unit('ecent', 3, 1, 97, 1), unit('grelf', 8, 0, 62, 1), unit('tree', 9, 0, 31, 1),  unit('wunic', 6, 0, 28, 1),
-                          unit('ddrag', 10, 0, 13, 1)]
-        self.right_team = [unit('nagag', 9, 7, 25, 2), unit('sulta', 2, 8, 31, 2), unit('mage', 5, 7, 44, 2), unit('gremm', 6, 7, 215, 2),
-                           unit('gtita', 7, 13, 8, 2)]
+        self.left_team = [unit('harph', 8, 0, 62, 1), unit('cerbu', 10, 0, 13, 1)]
+        self.right_team = [unit('nagag', 9, 7, 25, 2), unit('harpy', 7, 13, 8, 2)]
 
     def create_queue(self):
         Objects.queue = Queue(self.left_team, self.right_team)
@@ -121,7 +119,8 @@ class Game:
 
     @staticmethod
     def active_unit_update():
-        Objects.active_unit.update()
+        if not States.is_animate:
+            Objects.active_unit.update()
 
     @staticmethod
     def info_block_update():

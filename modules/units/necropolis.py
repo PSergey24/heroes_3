@@ -1,4 +1,5 @@
 from .units import Units
+from modules.states import Objects
 
 
 class Hdrgn(Units):
@@ -244,8 +245,12 @@ class Nosfe(Units):
 
         self.init(i, j)
 
-        # todo: health recovery - 1 point of damage = 1 point of health
-        # todo: attack w/o answer
+    def add_animation_attack_(self):
+        self.update_fight_info()
+        self.add_animation(self, Objects.cursor.action)
+        self.add_animation(Objects.cursor.whom_attack, "getting_hit")
+
+    # todo: health recovery - 1 point of damage = 1 point of health
 
 
 class Vamp(Units):
@@ -279,7 +284,10 @@ class Vamp(Units):
 
         self.init(i, j)
 
-        # todo: attack w/o answer
+    def add_animation_attack_(self):
+        self.update_fight_info()
+        self.add_animation(self, Objects.cursor.action)
+        self.add_animation(Objects.cursor.whom_attack, "getting_hit")
 
 
 class Wrait(Units):

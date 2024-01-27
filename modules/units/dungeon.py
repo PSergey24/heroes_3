@@ -1,4 +1,5 @@
 from .units import Units
+from modules.states import Objects
 
 
 class BDragon(Units):
@@ -376,6 +377,8 @@ class Harph(Units):
                                 "is_double": False, "is_shooter": False, "is_flyer": True, "is_jumper": False
                                 }
 
+        self.status = {"destination_back": [0, 0]}
+
         self.animations = {
             "moving": ["54", "55", "56", "57", "58", "59", "60"],
             "mouse_over": ["42", "43", "44", "45", "46", "45", "46", "45", "44", "43", "42"],
@@ -395,8 +398,31 @@ class Harph(Units):
 
         self.init(i, j)
 
-    # todo: Hit and Return
-    # todo: attack w/o answer
+    def reset_moving(self):
+        self.reset_field()
+        self.init_hex(Objects.cursor.destination_point[0], Objects.cursor.destination_point[1])
+        self.init_field()
+        self.reset_cursor()
+
+    def reset_cursor(self):
+        Objects.cursor.destination_point = self.status["destination_back"]
+        Objects.cursor.offset = tuple(self.status["destination_back"])
+        Objects.cursor.point_attack = None
+        Objects.cursor.whom_attack = None
+
+    def add_moving_and_attack_(self):
+        self.add_animation_moving_()
+        self.add_animation_attack_()
+        self.add_animation_moving_back_()
+
+    def add_animation_attack_(self):
+        self.update_fight_info()
+        self.add_animation(self, Objects.cursor.action)
+        self.add_animation(Objects.cursor.whom_attack, "getting_hit")
+
+    def add_animation_moving_back_(self):
+        self.status["destination_back"] = self.hex[0]
+        self.add_animation_moving_()
 
 
 class Harpy(Units):
@@ -412,6 +438,8 @@ class Harpy(Units):
                                 "current_health": 14, "current_count": count, "current_arrows": 0,
                                 "is_double": False, "is_shooter": False, "is_flyer": True, "is_jumper": False
                                 }
+
+        self.status = {"destination_back": [0, 0]}
 
         self.animations = {
             "moving": ["54", "55", "56", "57", "58", "59", "60"],
@@ -432,7 +460,26 @@ class Harpy(Units):
 
         self.init(i, j)
 
-    # todo: Hit and Return
+    def reset_moving(self):
+        self.reset_field()
+        self.init_hex(Objects.cursor.destination_point[0], Objects.cursor.destination_point[1])
+        self.init_field()
+        self.reset_cursor()
+
+    def reset_cursor(self):
+        Objects.cursor.destination_point = self.status["destination_back"]
+        Objects.cursor.offset = tuple(self.status["destination_back"])
+        Objects.cursor.point_attack = None
+        Objects.cursor.whom_attack = None
+
+    def add_moving_and_attack_(self):
+        self.add_animation_moving_()
+        self.add_animation_attack_()
+        self.add_animation_moving_back_()
+
+    def add_animation_moving_back_(self):
+        self.status["destination_back"] = self.hex[0]
+        self.add_animation_moving_()
 
 
 class Itrog(Units):
