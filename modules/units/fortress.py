@@ -4,507 +4,477 @@ from .units import Units
 class Chydr(Units):
 
     def __init__(self, i, j, count, team):
-        super().__init__(count, team)
+        super().__init__(team)
 
-        self.character = 'chydr'
-        self.attack = 18
-        self.defense = 20
-        self.damage = [25, 45]
-        self.health = 250
-        self.speed = 7
+        self.name = 'chydr'
         self.ai = 5931
 
-        self.cur_health = self.health
+        self.characteristics = {"base_characteristics": {"attack": 18, "defense": 20, "damage": [25, 45],
+                                                         "health": 250, "speed": 7},
+                                "current_health": 250, "current_count": count, "current_arrows": 0,
+                                "is_double": True, "is_shooter": False, "is_flyer": False, "is_jumper": False
+                                }
 
-        self.moving = ["40", "41", "42", "43", "44", "45", "46", "47"]
-        self.mouse_over = ["28", "29", "30", "31", "32", "33"]
-        self.standing = ["58", "34", "35", "36", "37", "36", "35", "34"]
-        self.getting_hit = ["50", "51", "52", "53", "54", "55"]
-        self.defend = ["24", "25", "26", "27", "27", "27", "27", "26", "25", "24"]
-        self.death = ["50", "51", "18", "19", "20", "21", "22", "23"]
-        self.dead = "23"
-        self.attack_up = ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17"]
-        self.attack_straight = ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17"]
-        self.attack_down = ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17"]
+        self.animations = {
+            "moving": ["40", "41", "42", "43", "44", "45", "46", "47"],
+            "mouse_over": ["28", "29", "30", "31", "32", "33"],
+            "standing": ["58", "34", "35", "36", "37", "36", "35", "34"],
+            "getting_hit": ["50", "51", "52", "53", "54", "55"],
+            "defend": ["24", "25", "26", "27", "27", "27", "27", "26", "25", "24"],
+            "death": ["50", "51", "18", "19", "20", "21", "22", "23"],
+            "dead": ["23"],
+            "attack_up": ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17"],
+            "attack_straight": ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17"],
+            "attack_down": ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17"],
+            "dhex_attack_up": ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17"],
+            "dhex_attack_straight": ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17"],
+            "dhex_attack_down": ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17"]
+        }
 
-        self.dhex_attack_up = ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17"]
-        self.dhex_attack_straight = ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17"]
-        self.dhex_attack_down = ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17"]
+        self.image = {"x_size": 216, "y_size": 216 / 1.125, "x_shift": 0, "y_shift": -5}
 
-        self.img_size_x = 216
-        self.img_size_y = self.img_size_x / 1.125
-        self.img_shift_x = 0
-        self.img_shift_y = -5
+        self.init(i, j)
 
-        self.update_hex(i, j)
-        self.create_animation('standing')
+    # todo: attack w/o answer.
+    # todo: Circular attack - units attack all enemies within eight squares around them.
 
 
 class Hydra(Units):
 
     def __init__(self, i, j, count, team):
-        super().__init__(count, team)
+        super().__init__(team)
 
-        self.character = 'hydra'
-        self.attack = 16
-        self.defense = 18
-        self.damage = [25, 45]
-        self.health = 175
-        self.speed = 5
+        self.name = 'hydra'
         self.ai = 4120
 
-        self.cur_health = self.health
+        self.characteristics = {"base_characteristics": {"attack": 16, "defense": 18, "damage": [25, 45],
+                                                         "health": 175, "speed": 5},
+                                "current_health": 175, "current_count": count, "current_arrows": 0,
+                                "is_double": True, "is_shooter": False, "is_flyer": False, "is_jumper": False
+                                }
 
-        self.moving = ["38", "39", "40", "41", "42", "43", "44", "45"]
-        self.mouse_over = ["28", "29", "30", "31", "30", "29", "28"]
-        self.standing = ["56", "32", "33", "34", "35", "34", "33", "32"]
-        self.getting_hit = ["48", "49", "50", "51", "52", "53"]
-        self.defend = ["24", "25", "26", "27", "27", "27", "27", "26", "25", "24"]
-        self.death = ["48", "49", "18", "19", "20", "21", "22", "23"]
-        self.dead = "23"
-        self.attack_up = ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17"]
-        self.attack_straight = ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17"]
-        self.attack_down = ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17"]
+        self.animations = {
+            "moving": ["38", "39", "40", "41", "42", "43", "44", "45"],
+            "mouse_over": ["28", "29", "30", "31", "30", "29", "28"],
+            "standing": ["56", "32", "33", "34", "35", "34", "33", "32"],
+            "getting_hit": ["48", "49", "50", "51", "52", "53"],
+            "defend": ["24", "25", "26", "27", "27", "27", "27", "26", "25", "24"],
+            "death": ["48", "49", "18", "19", "20", "21", "22", "23"],
+            "dead": ["23"],
+            "attack_up": ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17"],
+            "attack_straight": ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17"],
+            "attack_down": ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17"],
+            "dhex_attack_up": ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17"],
+            "dhex_attack_straight": ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17"],
+            "dhex_attack_down": ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17"]
+        }
 
-        self.dhex_attack_up = ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17"]
-        self.dhex_attack_straight = ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17"]
-        self.dhex_attack_down = ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17"]
+        self.image = {"x_size": 144, "y_size": 144 / 1.125, "x_shift": 30, "y_shift": 0}
 
-        self.img_size_x = 144
-        self.img_size_y = self.img_size_x / 1.125
-        self.img_shift_x = 30
+        self.init(i, j)
 
-        self.update_hex(i, j)
-        self.create_animation('standing')
+    # todo: attack w/o answer.
+    # todo: Circular attack - units attack all enemies within eight squares around them.
 
 
 class Wyvmn(Units):
 
     def __init__(self, i, j, count, team):
-        super().__init__(count, team)
+        super().__init__(team)
 
-        self.character = 'wyvmn'
-        self.attack = 14
-        self.defense = 14
-        self.damage = [18, 22]
-        self.health = 70
-        self.speed = 11
+        self.name = 'wyvmn'
         self.ai = 1518
 
-        self.cur_health = self.health
+        self.characteristics = {"base_characteristics": {"attack": 14, "defense": 14, "damage": [18, 22],
+                                                         "health": 70, "speed": 11},
+                                "current_health": 70, "current_count": count, "current_arrows": 0,
+                                "is_double": True, "is_shooter": False, "is_flyer": True, "is_jumper": False
+                                }
 
-        self.moving = ["12", "10", "11", "10", "12", "13"]
-        self.mouse_over = ["01", "04", "05", "06", "06", "05", "04", "01"]
-        self.standing = ["01", "02", "03", "03", "03", "02", "01", "01"]
-        self.getting_hit = ["01", "44", "45", "46", "47", "48", "49", "44", "01"]
-        self.defend = ["01", "20", "21", "22", "23", "24", "25", "01"]
-        self.death = ["01", "50", "51", "52", "53", "54", "55", "56"]
-        self.dead = "56"
-        self.attack_up = ["01", "26", "27", "28", "29", "30", "31", "01"]
-        self.attack_straight = ["01", "32", "33", "34", "35", "36", "37", "01"]
-        self.attack_down = ["01", "38", "39", "40", "41", "42", "43", "01"]
+        self.animations = {
+            "moving": ["12", "10", "11", "10", "12", "13"],
+            "mouse_over": ["01", "04", "05", "06", "06", "05", "04", "01"],
+            "standing": ["01", "02", "03", "03", "03", "02", "01", "01"],
+            "getting_hit": ["01", "44", "45", "46", "47", "48", "49", "44", "01"],
+            "defend": ["01", "20", "21", "22", "23", "24", "25", "01"],
+            "death": ["01", "50", "51", "52", "53", "54", "55", "56"],
+            "dead": ["56"],
+            "attack_up": ["01", "26", "27", "28", "29", "30", "31", "01"],
+            "attack_straight": ["01", "32", "33", "34", "35", "36", "37", "01"],
+            "attack_down": ["01", "38", "39", "40", "41", "42", "43", "01"]
+        }
 
-        self.img_size_x = 216
-        self.img_size_y = self.img_size_x / 1.125
-        self.img_shift_x = 0
-        self.img_shift_y = -10
+        self.image = {"x_size": 216, "y_size": 216 / 1.125, "x_shift": 0, "y_shift": -10}
 
-        self.update_hex(i, j)
-        self.create_animation('standing')
+        self.init(i, j)
+
+    # todo: Poisoning - 30% chance - the health of each of them will be reduced by 10% of the original every turn for 3 turns. Only affects living beings.
 
 
 class Wyver(Units):
 
     def __init__(self, i, j, count, team):
-        super().__init__(count, team)
+        super().__init__(team)
 
-        self.character = 'wyver'
-        self.attack = 14
-        self.defense = 14
-        self.damage = [14, 18]
-        self.health = 70
-        self.speed = 7
+        self.name = 'wyver'
         self.ai = 1350
 
-        self.cur_health = self.health
+        self.characteristics = {"base_characteristics": {"attack": 14, "defense": 14, "damage": [14, 18],
+                                                         "health": 70, "speed": 7},
+                                "current_health": 70, "current_count": count, "current_arrows": 0,
+                                "is_double": True, "is_shooter": False, "is_flyer": True, "is_jumper": False
+                                }
 
-        self.moving = ["12", "10", "11", "10", "12", "13"]
-        self.mouse_over = ["01", "04", "05", "06", "06", "05", "04", "01"]
-        self.standing = ["01", "02", "03", "03", "03", "02", "01", "01"]
-        self.getting_hit = ["01", "44", "45", "46", "47", "48", "49", "44", "01"]
-        self.defend = ["01", "20", "21", "22", "23", "24", "25", "01"]
-        self.death = ["01", "50", "51", "52", "53", "54", "55", "56"]
-        self.dead = "56"
-        self.attack_up = ["01", "26", "27", "28", "29", "30", "31", "01"]
-        self.attack_straight = ["01", "32", "33", "34", "35", "36", "37", "01"]
-        self.attack_down = ["01", "38", "39", "40", "41", "42", "43", "01"]
+        self.animations = {
+            "moving": ["12", "10", "11", "10", "12", "13"],
+            "mouse_over": ["01", "04", "05", "06", "06", "05", "04", "01"],
+            "standing": ["01", "02", "03", "03", "03", "02", "01", "01"],
+            "getting_hit": ["01", "44", "45", "46", "47", "48", "49", "44", "01"],
+            "defend": ["01", "20", "21", "22", "23", "24", "25", "01"],
+            "death": ["01", "50", "51", "52", "53", "54", "55", "56"],
+            "dead": ["56"],
+            "attack_up": ["01", "26", "27", "28", "29", "30", "31", "01"],
+            "attack_straight": ["01", "32", "33", "34", "35", "36", "37", "01"],
+            "attack_down": ["01", "38", "39", "40", "41", "42", "43", "01"]
+        }
 
-        self.img_size_x = 216
-        self.img_size_y = self.img_size_x / 1.125
-        self.img_shift_x = 0
-        self.img_shift_y = -10
+        self.image = {"x_size": 216, "y_size": 216 / 1.125, "x_shift": 0, "y_shift": -10}
 
-        self.update_hex(i, j)
-        self.create_animation('standing')
+        self.init(i, j)
 
 
 class Bgorg(Units):
 
     def __init__(self, i, j, count, team):
-        super().__init__(count, team)
+        super().__init__(team)
 
-        self.character = 'bgorg'
-        self.attack = 11
-        self.defense = 16
-        self.damage = [12, 16]
-        self.health = 70
-        self.speed = 6
+        self.name = 'bgorg'
         self.ai = 1028
 
-        self.cur_health = self.health
+        self.characteristics = {"base_characteristics": {"attack": 11, "defense": 16, "damage": [12, 16],
+                                                         "health": 70, "speed": 6},
+                                "current_health": 70, "current_count": count, "current_arrows": 0,
+                                "is_double": True, "is_shooter": False, "is_flyer": False, "is_jumper": False
+                                }
 
-        self.moving = ["10", "11", "12", "13", "14", "15"]
-        self.mouse_over = ["06", "07", "08", "09"]
-        self.standing = ["01", "02", "03", "04", "05", "04", "03", "02"]
-        self.getting_hit = ["19", "20", "21", "22", "23", "24"]
-        self.defend = ["25", "26", "27", "28", "28", "28", "28", "28", "28", "27", "26", "25"]
-        self.death = ["50", "51", "52", "53", "54"]
-        self.dead = "54"
-        self.attack_up = ["36", "37", "38", "39", "40", "41", "42", "43"]
-        self.attack_straight = ["29", "30", "31", "32", "33", "34", "35"]
-        self.attack_down = ["44", "45", "46", "47", "48", "49", "46", "45", "44"]
+        self.animations = {
+            "moving": ["10", "11", "12", "13", "14", "15"],
+            "mouse_over": ["06", "07", "08", "09"],
+            "standing": ["01", "02", "03", "04", "05", "04", "03", "02"],
+            "getting_hit": ["19", "20", "21", "22", "23", "24"],
+            "defend": ["25", "26", "27", "28", "28", "28", "28", "28", "28", "27", "26", "25"],
+            "death": ["50", "51", "52", "53", "54"],
+            "dead": ["54"],
+            "attack_up": ["36", "37", "38", "39", "40", "41", "42", "43"],
+            "attack_straight": ["29", "30", "31", "32", "33", "34", "35"],
+            "attack_down": ["44", "45", "46", "47", "48", "49", "46", "45", "44"]
+        }
 
-        self.img_size_x = 216
-        self.img_size_y = self.img_size_x / 1.125
-        self.img_shift_x = 0
-        self.img_shift_y = 0
+        self.image = {"x_size": 216, "y_size": 216 / 1.125, "x_shift": 0, "y_shift": 0}
 
-        self.update_hex(i, j)
-        self.create_animation('standing')
+        self.init(i, j)
+
+    # todo: Death glare – additionally destroy N enemy. Calculation – 1 destroyed unit for every 10 gorgons.
 
 
 class Cgorg(Units):
 
     def __init__(self, i, j, count, team):
-        super().__init__(count, team)
+        super().__init__(team)
 
-        self.character = 'cgorg'
-        self.attack = 10
-        self.defense = 14
-        self.damage = [12, 16]
-        self.health = 70
-        self.speed = 5
+        self.name = 'cgorg'
         self.ai = 890
 
-        self.cur_health = self.health
+        self.characteristics = {"base_characteristics": {"attack": 10, "defense": 14, "damage": [12, 16],
+                                                         "health": 70, "speed": 5},
+                                "current_health": 70, "current_count": count, "current_arrows": 0,
+                                "is_double": True, "is_shooter": False, "is_flyer": False, "is_jumper": False
+                                }
 
-        self.moving = ["10", "11", "12", "13", "14", "15"]
-        self.mouse_over = ["06", "07", "08", "09"]
-        self.standing = ["01", "02", "03", "04", "05", "04", "03", "02"]
-        self.getting_hit = ["19", "20", "21", "22", "23", "24"]
-        self.defend = ["25", "26", "27", "28", "28", "28", "28", "28", "28", "27", "26", "25"]
-        self.death = ["48", "49", "50", "51", "52"]
-        self.dead = "52"
-        self.attack_up = ["35", "36", "37", "38", "39", "40", "41"]
-        self.attack_straight = ["29", "30", "31", "32", "33", "34"]
-        self.attack_down = ["42", "43", "44", "45", "46", "47"]
+        self.animations = {
+            "moving": ["10", "11", "12", "13", "14", "15"],
+            "mouse_over": ["06", "07", "08", "09"],
+            "standing": ["01", "02", "03", "04", "05", "04", "03", "02"],
+            "getting_hit": ["19", "20", "21", "22", "23", "24"],
+            "defend": ["25", "26", "27", "28", "28", "28", "28", "28", "28", "27", "26", "25"],
+            "death": ["48", "49", "50", "51", "52"],
+            "dead": ["52"],
+            "attack_up": ["35", "36", "37", "38", "39", "40", "41"],
+            "attack_straight": ["29", "30", "31", "32", "33", "34"],
+            "attack_down": ["42", "43", "44", "45", "46", "47"]
+        }
 
-        self.img_size_x = 216
-        self.img_size_y = self.img_size_x / 1.125
-        self.img_shift_x = 0
-        self.img_shift_y = 0
+        self.image = {"x_size": 216, "y_size": 216 / 1.125, "x_shift": 0, "y_shift": 0}
 
-        self.update_hex(i, j)
-        self.create_animation('standing')
+        self.init(i, j)
 
 
 class Gbasi(Units):
 
     def __init__(self, i, j, count, team):
-        super().__init__(count, team)
+        super().__init__(team)
 
-        self.character = 'gbasi'
-        self.attack = 12
-        self.defense = 12
-        self.damage = [6, 10]
-        self.health = 40
-        self.speed = 7
+        self.name = 'gbasi'
         self.ai = 714
 
-        self.cur_health = self.health
+        self.characteristics = {"base_characteristics": {"attack": 12, "defense": 12, "damage": [6, 10],
+                                                         "health": 40, "speed": 7},
+                                "current_health": 40, "current_count": count, "current_arrows": 0,
+                                "is_double": True, "is_shooter": False, "is_flyer": False, "is_jumper": False
+                                }
 
-        self.moving = ["51", "52", "53", "54", "55", "56", "57", "58"]
-        self.mouse_over = ["41", "42", "43", "44"]
-        self.standing = ["69", "45", "46", "47", "48", "47", "46", "45"]
-        self.getting_hit = ["61", "62", "63", "64", "65", "66"]
-        self.defend = ["37", "38", "39", "40", "40", "40", "40", "39", "38", "37"]
-        self.death = ["31", "32", "33", "34", "35", "36"]
-        self.dead = "36"
-        self.attack_up = ["07", "08", "09", "10", "11", "12"]
-        self.attack_straight = ["01", "02", "03", "04", "05", "06"]
-        self.attack_down = ["13", "14", "15", "16", "17", "18"]
+        self.animations = {
+            "moving": ["51", "52", "53", "54", "55", "56", "57", "58"],
+            "mouse_over": ["41", "42", "43", "44"],
+            "standing": ["69", "45", "46", "47", "48", "47", "46", "45"],
+            "getting_hit": ["61", "62", "63", "64", "65", "66"],
+            "defend": ["37", "38", "39", "40", "40", "40", "40", "39", "38", "37"],
+            "death": ["31", "32", "33", "34", "35", "36"],
+            "dead": ["36"],
+            "attack_up": ["07", "08", "09", "10", "11", "12"],
+            "attack_straight": ["01", "02", "03", "04", "05", "06"],
+            "attack_down": ["13", "14", "15", "16", "17", "18"]
+        }
 
-        self.img_size_x = 216
-        self.img_size_y = self.img_size_x / 1.125
-        self.img_shift_x = 0
-        self.img_shift_y = 0
+        self.image = {"x_size": 216, "y_size": 216 / 1.125, "x_shift": 0, "y_shift": 0}
 
-        self.update_hex(i, j)
-        self.create_animation('standing')
+        self.init(i, j)
+
+    # todo: 20% chance Petrification for 3 turns; and if they were previously attacked, then the damage inflicted on such units will be reduced – 50% of the original
 
 
 class Basil(Units):
 
     def __init__(self, i, j, count, team):
-        super().__init__(count, team)
+        super().__init__(team)
 
-        self.character = 'basil'
-        self.attack = 11
-        self.defense = 11
-        self.damage = [6, 10]
-        self.health = 35
-        self.speed = 5
+        self.name = 'basil'
         self.ai = 552
 
-        self.cur_health = self.health
+        self.characteristics = {"base_characteristics": {"attack": 11, "defense": 11, "damage": [6, 10],
+                                                         "health": 35, "speed": 5},
+                                "current_health": 35, "current_count": count, "current_arrows": 0,
+                                "is_double": True, "is_shooter": False, "is_flyer": False, "is_jumper": False
+                                }
 
-        self.moving = ["51", "52", "53", "54", "55", "56", "57", "58"]
-        self.mouse_over = ["41", "42", "43", "44"]
-        self.standing = ["69", "45", "46", "47", "48", "47", "46", "45"]
-        self.getting_hit = ["61", "62", "63", "64", "65", "66"]
-        self.defend = ["37", "38", "39", "40", "40", "40", "40", "39", "38", "37"]
-        self.death = ["31", "32", "33", "34", "35", "36"]
-        self.dead = "36"
-        self.attack_up = ["07", "08", "09", "10", "11", "12"]
-        self.attack_straight = ["01", "02", "03", "04", "05", "06"]
-        self.attack_down = ["13", "14", "15", "16", "17", "18"]
+        self.animations = {
+            "moving": ["51", "52", "53", "54", "55", "56", "57", "58"],
+            "mouse_over": ["41", "42", "43", "44"],
+            "standing": ["69", "45", "46", "47", "48", "47", "46", "45"],
+            "getting_hit": ["61", "62", "63", "64", "65", "66"],
+            "defend": ["37", "38", "39", "40", "40", "40", "40", "39", "38", "37"],
+            "death": ["31", "32", "33", "34", "35", "36"],
+            "dead": ["36"],
+            "attack_up": ["07", "08", "09", "10", "11", "12"],
+            "attack_straight": ["01", "02", "03", "04", "05", "06"],
+            "attack_down": ["13", "14", "15", "16", "17", "18"]
+        }
 
-        self.img_size_x = 216
-        self.img_size_y = self.img_size_x / 1.125
-        self.img_shift_x = 0
-        self.img_shift_y = 0
+        self.image = {"x_size": 216, "y_size": 216 / 1.125, "x_shift": 0, "y_shift": 0}
 
-        self.update_hex(i, j)
-        self.create_animation('standing')
+        self.init(i, j)
+
+    # todo: 20% chance Petrification for 3 turns; and if they were previously attacked, then the damage inflicted on such units will be reduced – 50% of the original
 
 
 class Drfir(Units):
 
     def __init__(self, i, j, count, team):
-        super().__init__(count, team)
+        super().__init__(team)
 
-        self.character = 'drfir'
-        self.attack = 8
-        self.defense = 10
-        self.damage = [2, 5]
-        self.health = 20
-        self.speed = 13
+        self.name = 'drfir'
         self.ai = 312
 
-        self.cur_health = self.health
-        self.is_flyer = True
+        self.characteristics = {"base_characteristics": {"attack": 8, "defense": 10, "damage": [2, 5],
+                                                         "health": 20, "speed": 13},
+                                "current_health": 20, "current_count": count, "current_arrows": 0,
+                                "is_double": False, "is_shooter": False, "is_flyer": True, "is_jumper": False
+                                }
 
-        self.moving = ["11", "12", "13", "14", "15", "16"]
-        self.mouse_over = ["01", "06", "07", "08", "09"]
-        self.standing = ["01", "02", "03", "03", "04", "05"]
-        self.getting_hit = ["01", "44", "45", "46", "47", "48"]
-        self.defend = ["01", "20", "21", "22", "23", "24", "25"]
-        self.death = ["01", "49", "50", "51", "52", "53", "54"]
-        self.dead = "54"
-        self.attack_up = ["01", "26", "27", "28", "29", "30", "31"]
-        self.attack_straight = ["01", "32", "33", "34", "35", "36", "37"]
-        self.attack_down = ["01", "38", "39", "40", "41", "42", "43"]
+        self.animations = {
+            "moving": ["11", "12", "13", "14", "15", "16"],
+            "mouse_over": ["01", "06", "07", "08", "09"],
+            "standing": ["01", "02", "03", "03", "04", "05"],
+            "getting_hit": ["01", "44", "45", "46", "47", "48"],
+            "defend": ["01", "20", "21", "22", "23", "24", "25"],
+            "death": ["01", "49", "50", "51", "52", "53", "54"],
+            "dead": ["54"],
+            "attack_up": ["01", "26", "27", "28", "29", "30", "31"],
+            "attack_straight": ["01", "32", "33", "34", "35", "36", "37"],
+            "attack_down": ["01", "38", "39", "40", "41", "42", "43"]
+        }
 
-        self.img_size_x = 216
-        self.img_size_y = self.img_size_x / 1.125
-        self.img_shift_x = -20
-        self.img_shift_y = -10
+        self.image = {"x_size": 216, "y_size": 216 / 1.125, "x_shift": -20, "y_shift": -10}
 
-        self.update_hex(i, j)
-        self.create_animation('standing')
+        self.init(i, j)
+
+    # todo: Dispel Magic – When attacking, units remove all positive spell effects from the enemy unit.
+    # todo: weakness - -6 to the attack indicator. Duration – 3 turns.
 
 
 class Drfly(Units):
 
     def __init__(self, i, j, count, team):
-        super().__init__(count, team)
+        super().__init__(team)
 
-        self.character = 'drfly'
-        self.attack = 7
-        self.defense = 9
-        self.damage = [2, 5]
-        self.health = 20
-        self.speed = 9
+        self.name = 'drfly'
         self.ai = 268
 
-        self.cur_health = self.health
-        self.is_flyer = True
+        self.characteristics = {"base_characteristics": {"attack": 7, "defense": 9, "damage": [2, 5],
+                                                         "health": 20, "speed": 9},
+                                "current_health": 20, "current_count": count, "current_arrows": 0,
+                                "is_double": False, "is_shooter": False, "is_flyer": True, "is_jumper": False
+                                }
 
-        self.moving = ["11", "12", "13", "14", "15", "16"]
-        self.mouse_over = ["01", "06", "07", "08", "09"]
-        self.standing = ["01", "02", "03", "03", "02", "01"]
-        self.getting_hit = ["01", "44", "45", "46", "47", "48"]
-        self.defend = ["01", "20", "21", "22", "23", "24", "25"]
-        self.death = ["01", "49", "50", "51", "52", "53", "54"]
-        self.dead = "54"
-        self.attack_up = ["01", "26", "27", "28", "29", "30", "31"]
-        self.attack_straight = ["01", "32", "33", "34", "35", "36", "37"]
-        self.attack_down = ["01", "38", "39", "40", "41", "42", "43"]
+        self.animations = {
+            "moving": ["11", "12", "13", "14", "15", "16"],
+            "mouse_over": ["01", "06", "07", "08", "09"],
+            "standing": ["01", "02", "03", "03", "02", "01"],
+            "getting_hit": ["01", "44", "45", "46", "47", "48"],
+            "defend": ["01", "20", "21", "22", "23", "24", "25"],
+            "death": ["01", "49", "50", "51", "52", "53", "54"],
+            "dead": ["54"],
+            "attack_up": ["01", "26", "27", "28", "29", "30", "31"],
+            "attack_straight": ["01", "32", "33", "34", "35", "36", "37"],
+            "attack_down": ["01", "38", "39", "40", "41", "42", "43"]
+        }
 
-        self.img_size_x = 216
-        self.img_size_y = self.img_size_x / 1.125
-        self.img_shift_x = -20
-        self.img_shift_y = -10
+        self.image = {"x_size": 216, "y_size": 216 / 1.125, "x_shift": -20, "y_shift": -10}
 
-        self.update_hex(i, j)
-        self.create_animation('standing')
+        self.init(i, j)
+
+    # todo: Dispel Magic – When attacking, units remove all positive spell effects from the enemy unit.
 
 
 class Aliza(Units):
 
     def __init__(self, i, j, count, team):
-        super().__init__(count, team)
+        super().__init__(team)
 
-        self.character = 'aliza'
-        self.attack = 6
-        self.defense = 8
-        self.damage = [2, 5]
-        self.health = 15
-        self.speed = 5
-        self.arrows = 24
+        self.name = 'aliza'
         self.ai = 156
 
-        self.cur_health = self.health
-        self.is_shooter = True
+        self.characteristics = {"base_characteristics": {"attack": 6, "defense": 8, "damage": [2, 5],
+                                                         "health": 15, "speed": 5},
+                                "current_health": 15, "current_count": count, "current_arrows": 24,
+                                "is_double": False, "is_shooter": True, "is_flyer": False, "is_jumper": False
+                                }
 
-        self.moving = ["54", "55", "56", "57", "58", "59", "60"]
-        self.mouse_over = ["44", "45", "46", "47", "47", "47", "47", "46", "45", "44"]
-        self.standing = ["72", "48", "49", "50", "51", "50", "49", "48"]
-        self.getting_hit = ["64", "65", "66", "67", "68", "69"]
-        self.defend = ["40", "41", "42", "43", "43", "43", "43", "42", "41", "40"]
-        self.death = ["64", "65", "34", "35", "36", "37", "38", "39"]
-        self.dead = "39"
-        self.attack_up = ["19", "20", "21", "22", "28", "29", "30", "26", "27"]
-        self.attack_straight = ["19", "20", "21", "22", "23", "24", "25", "26", "27"]
-        self.attack_down = ["19", "20", "21", "22", "31", "32", "33", "26", "27"]
-        self.shoot_up = ["07", "08", "09", "10", "10", "10", "10", "10", "11", "12"]
-        self.shoot_straight = ["01", "02", "03", "04", "04", "04", "04", "04", "05", "06"]
-        self.shoot_down = ["13", "14", "15", "16", "16", "16", "16", "16", "17", "18"]
+        self.animations = {
+            "moving": ["54", "55", "56", "57", "58", "59", "60"],
+            "mouse_over": ["44", "45", "46", "47", "47", "47", "47", "46", "45", "44"],
+            "standing": ["72", "48", "49", "50", "51", "50", "49", "48"],
+            "getting_hit": ["64", "65", "66", "67", "68", "69"],
+            "defend": ["40", "41", "42", "43", "43", "43", "43", "42", "41", "40"],
+            "death": ["64", "65", "34", "35", "36", "37", "38", "39"],
+            "dead": ["39"],
+            "attack_up": ["19", "20", "21", "22", "28", "29", "30", "26", "27"],
+            "attack_straight": ["19", "20", "21", "22", "23", "24", "25", "26", "27"],
+            "attack_down": ["19", "20", "21", "22", "31", "32", "33", "26", "27"],
+            "shoot_up": ["07", "08", "09", "10", "10", "10", "10", "10", "11", "12"],
+            "shoot_straight": ["01", "02", "03", "04", "04", "04", "04", "04", "05", "06"],
+            "shoot_down": ["13", "14", "15", "16", "16", "16", "16", "16", "17", "18"]
+        }
 
-        self.img_size_x = 216
-        self.img_size_y = self.img_size_x / 1.125
-        self.img_shift_x = -25
-        self.img_shift_y = -5
+        self.image = {"x_size": 216, "y_size": 216 / 1.125, "x_shift": -25, "y_shift": -5}
 
-        self.update_hex(i, j)
-        self.create_animation('standing')
+        self.init(i, j)
 
 
 class Pliza(Units):
 
     def __init__(self, i, j, count, team):
-        super().__init__(count, team)
+        super().__init__(team)
 
-        self.character = 'pliza'
-        self.attack = 4
-        self.defense = 6
-        self.damage = [2, 3]
-        self.health = 14
-        self.speed = 4
-        self.arrows = 12
+        self.name = 'pliza'
         self.ai = 126
 
-        self.cur_health = self.health
-        self.is_shooter = True
+        self.characteristics = {"base_characteristics": {"attack": 4, "defense": 6, "damage": [2, 3],
+                                                         "health": 14, "speed": 4},
+                                "current_health": 14, "current_count": count, "current_arrows": 12,
+                                "is_double": False, "is_shooter": True, "is_flyer": False, "is_jumper": False
+                                }
 
-        self.moving = ["57", "58", "59", "60", "61", "62", "63"]
-        self.mouse_over = ["47", "48", "49", "50", "50", "50", "50", "49", "48", "47"]
-        self.standing = ["75", "51", "52", "53", "54", "53", "52", "51"]
-        self.getting_hit = ["67", "68", "69", "70", "71", "72"]
-        self.defend = ["43", "44", "45", "46", "46", "46", "46", "45", "44", "43"]
-        self.death = ["67", "68", "37", "38", "39", "40", "41", "42"]
-        self.dead = "42"
-        self.attack_up = ["25", "26", "27", "28", "29", "30"]
-        self.attack_straight = ["19", "20", "21", "22", "23", "24"]
-        self.attack_down = ["31", "32", "33", "34", "35", "36"]
-        self.shoot_up = ["07", "08", "09", "10", "10", "10", "10", "10", "11", "12"]
-        self.shoot_straight = ["01", "02", "03", "04", "04", "04", "04", "04", "05", "06"]
-        self.shoot_down = ["13", "14", "15", "16", "16", "16", "16", "16", "17", "18"]
+        self.animations = {
+            "moving": ["57", "58", "59", "60", "61", "62", "63"],
+            "mouse_over": ["47", "48", "49", "50", "50", "50", "50", "49", "48", "47"],
+            "standing": ["75", "51", "52", "53", "54", "53", "52", "51"],
+            "getting_hit": ["67", "68", "69", "70", "71", "72"],
+            "defend": ["43", "44", "45", "46", "46", "46", "46", "45", "44", "43"],
+            "death": ["67", "68", "37", "38", "39", "40", "41", "42"],
+            "dead": ["42"],
+            "attack_up": ["25", "26", "27", "28", "29", "30"],
+            "attack_straight": ["19", "20", "21", "22", "23", "24"],
+            "attack_down": ["31", "32", "33", "34", "35", "36"],
+            "shoot_up": ["07", "08", "09", "10", "10", "10", "10", "10", "11", "12"],
+            "shoot_straight": ["01", "02", "03", "04", "04", "04", "04", "04", "05", "06"],
+            "shoot_down": ["13", "14", "15", "16", "16", "16", "16", "16", "17", "18"]
+        }
 
-        self.img_size_x = 216
-        self.img_size_y = self.img_size_x / 1.125
-        self.img_shift_x = -25
-        self.img_shift_y = -5
+        self.image = {"x_size": 216, "y_size": 216 / 1.125, "x_shift": -25, "y_shift": -5}
 
-        self.update_hex(i, j)
-        self.create_animation('standing')
+        self.init(i, j)
 
 
 class Gnolm(Units):
 
     def __init__(self, i, j, count, team):
-        super().__init__(count, team)
+        super().__init__(team)
 
-        self.character = 'gnolm'
-        self.attack = 4
-        self.defense = 6
-        self.damage = [2, 3]
-        self.health = 6
-        self.speed = 5
+        self.name = 'gnolm'
         self.ai = 90
 
-        self.cur_health = self.health
+        self.characteristics = {"base_characteristics": {"attack": 4, "defense": 6, "damage": [2, 3],
+                                                         "health": 6, "speed": 5},
+                                "current_health": 6, "current_count": count, "current_arrows": 0,
+                                "is_double": False, "is_shooter": False, "is_flyer": False, "is_jumper": False
+                                }
 
-        self.moving = ["40", "41", "42", "43", "44", "45", "46", "47"]
-        self.mouse_over = ["29", "30", "31", "32", "33", "32", "33", "32", "33", "32", "33", "32", "31", "30", "29"]
-        self.standing = ["58", "34", "35", "36", "37", "36", "35", "34"]
-        self.getting_hit = ["50", "51", "52", "53", "54", "55"]
-        self.defend = ["25", "26", "27", "28", "28", "28", "28", "28", "27", "26", "25"]
-        self.death = ["19", "20", "21", "22", "23", "24"]
-        self.dead = "24"
-        self.attack_up = ["01", "02", "09", "10", "11", "12", "13", "08"]
-        self.attack_straight = ["01", "02", "03", "04", "05", "06", "07", "08"]
-        self.attack_down = ["01", "02", "14", "15", "16", "17", "18", "08"]
+        self.animations = {
+            "moving": ["40", "41", "42", "43", "44", "45", "46", "47"],
+            "mouse_over": ["29", "30", "31", "32", "33", "32", "33", "32", "33", "32", "33", "32", "31", "30", "29"],
+            "standing": ["58", "34", "35", "36", "37", "36", "35", "34"],
+            "getting_hit": ["50", "51", "52", "53", "54", "55"],
+            "defend": ["25", "26", "27", "28", "28", "28", "28", "28", "27", "26", "25"],
+            "death": ["19", "20", "21", "22", "23", "24"],
+            "dead": ["24"],
+            "attack_up": ["01", "02", "09", "10", "11", "12", "13", "08"],
+            "attack_straight": ["01", "02", "03", "04", "05", "06", "07", "08"],
+            "attack_down": ["01", "02", "14", "15", "16", "17", "18", "08"]
+        }
 
-        self.img_size_x = 216
-        self.img_size_y = self.img_size_x / 1.125
-        self.img_shift_x = -20
-        self.img_shift_y = -5
+        self.image = {"x_size": 216, "y_size": 216 / 1.125, "x_shift": -20, "y_shift": -5}
 
-        self.update_hex(i, j)
-        self.create_animation('standing')
+        self.init(i, j)
 
 
 class Gnoll(Units):
 
     def __init__(self, i, j, count, team):
-        super().__init__(count, team)
+        super().__init__(team)
 
-        self.character = 'gnoll'
-        self.attack = 3
-        self.defense = 5
-        self.damage = [2, 3]
-        self.health = 6
-        self.speed = 4
+        self.name = 'gnoll'
         self.ai = 56
 
-        self.cur_health = self.health
+        self.characteristics = {"base_characteristics": {"attack": 3, "defense": 5, "damage": [2, 3],
+                                                         "health": 6, "speed": 4},
+                                "current_health": 6, "current_count": count, "current_arrows": 0,
+                                "is_double": False, "is_shooter": False, "is_flyer": False, "is_jumper": False
+                                }
 
-        self.moving = ["40", "41", "42", "43", "44", "45", "46", "47"]
-        self.mouse_over = ["29", "30", "31", "32", "33", "32", "33", "32", "33", "32", "33", "32", "31", "30", "29"]
-        self.standing = ["58", "34", "35", "36", "37", "36", "35", "34"]
-        self.getting_hit = ["50", "51", "52", "53", "54", "55"]
-        self.defend = ["25", "26", "27", "28", "28", "28", "28", "28", "27", "26", "25"]
-        self.death = ["19", "20", "21", "22", "23", "24"]
-        self.dead = "24"
-        self.attack_up = ["01", "02", "09", "10", "11", "12", "13", "08"]
-        self.attack_straight = ["01", "02", "03", "04", "05", "06", "07", "08"]
-        self.attack_down = ["01", "02", "14", "15", "16", "17", "18", "08"]
+        self.animations = {
+            "moving": ["40", "41", "42", "43", "44", "45", "46", "47"],
+            "mouse_over": ["29", "30", "31", "32", "33", "32", "33", "32", "33", "32", "33", "32", "31", "30", "29"],
+            "standing": ["58", "34", "35", "36", "37", "36", "35", "34"],
+            "getting_hit": ["50", "51", "52", "53", "54", "55"],
+            "defend": ["25", "26", "27", "28", "28", "28", "28", "28", "27", "26", "25"],
+            "death": ["19", "20", "21", "22", "23", "24"],
+            "dead": ["24"],
+            "attack_up": ["01", "02", "09", "10", "11", "12", "13", "08"],
+            "attack_straight": ["01", "02", "03", "04", "05", "06", "07", "08"],
+            "attack_down": ["01", "02", "14", "15", "16", "17", "18", "08"]
+        }
 
-        self.img_size_x = 216
-        self.img_size_y = self.img_size_x / 1.125
-        self.img_shift_x = -20
-        self.img_shift_y = -5
+        self.image = {"x_size": 216, "y_size": 216 / 1.125, "x_shift": -20, "y_shift": -5}
 
-        self.update_hex(i, j)
-        self.create_animation('standing')
+        self.init(i, j)

@@ -1,5 +1,5 @@
 from game import Game
-from game_ai import GameAI
+# from game_ai import GameAI
 
 
 if __name__ == '__main__':

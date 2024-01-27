@@ -1,120 +1,158 @@
 import os
 import pygame
 
-from modules.settings import Settings, States
-from modules.my_queue import MyQueue
+from modules.settings import Settings
+from modules.states import States, Objects
+
+from modules.tools import Tools
+from modules.cursor import Cursor
+from modules.queue_ import Queue
+from modules.field import Field
 from modules.units import unit
-from modules.hex_worker import HexWorker
-from modules.unit_worker import UnitWorker
-from modules.info_updater import InfoUpdater
-from modules.block_updater import BlockUpdater
-from modules.damage_counter import DamageCounter
+from modules.active_unit import ActiveUnit
+from modules.info_block import InfoBlock
 
 
 class Game:
 
     def __init__(self):
-        self.screen = pygame.display.set_mode((Settings.width, Settings.height))
-        self.bg = pygame.image.load(os.path.join("data/bg", "CmBkDrDd.bmp"))
-        self.bg = pygame.transform.scale(self.bg, (Settings.width, Settings.height))
+        self.screen = None
+        self.bg = None
 
-        # self.left_team = [unit('adevl', 3, 1, 30, 1), unit('grelf', 5, 1, 3, 1), unit('rangl', 7, 1, 3, 1)]
-        # self.right_team = [unit('bdrgn', 3, 13, 1, 2), unit('nosfe', 5, 13, 1, 2), unit('gtita', 7, 13, 30, 2)]
-        self.left_team = [unit('grelf', 5, 1, 3, 1)]
-        self.right_team = [unit('nosfe', 5, 9, 1, 2)]
+        self.left_team = None
+        self.right_team = None
 
-        self.hex_worker = HexWorker()
-        self.unit_worker = UnitWorker()
-        self.info_updater = InfoUpdater()
-        self.block_updater = BlockUpdater()
-        self.damage_counter = DamageCounter()
+        self.init()
+
+    def init(self):
+        self.create_window()
+        self.create_game()
 
     def run(self):
         run = True
 
-        self.screen.blit(self.bg, (0, 0))
-
-        self.create_cursor()
-        self.hex_worker.create_hexagons()
-        self.create_units()
-        self.generate_move_order()
-        self.create_info_block()
-
         while run:
             self.screen.blit(self.bg, (0, 0))
-
-            self.update_round_info()
-            self.info_updater.update_step_info()
-            self.update_buttons()
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     run = False
 
                 if event.type == pygame.MOUSEMOTION and States.is_animate is False:
-                    States.point_over = pygame.mouse.get_pos()
-
-                    self.hex_worker.update_point_over()
-                    self.hex_worker.update_cursor()
-                    self.hex_worker.update_hexagons()
-                    self.damage_counter.predict_damage()
+                    self.handle_motion()
 
                 if event.type == pygame.MOUSEBUTTONDOWN and States.is_animate is False:
-                    self.block_updater.update_buttons_by_click()
+                    self.handle_click()
 
-                    if action := self.hex_worker.get_move_type():
-                        self.update_unit_info(action)
-
-            self.draw_cursor()
-            self.draw_info_block()
-            self.hex_worker.draw_hexagons(self.screen)
-            self.unit_worker.draw_units(self.screen)
-
+            self.draw_game()
             pygame.display.update()
+
+            self.update_frame()
         pygame.quit()
+
+    def create_window(self):
+        window_size = (Settings.width, Settings.height)
+
+        self.screen = pygame.display.set_mode(window_size)
+        pygame.display.set_caption('Heroes III of might and magic')
+        self.bg = pygame.transform.scale(pygame.image.load(os.path.join("data/bg", "CmBkDrDd.bmp")), window_size)
+        # self.bg = pygame.transform.scale(pygame.image.load(os.path.join("data/bg", "CmBkLvSt.bmp")), window_size)
+
+    def create_game(self):
+        self.create_workers()
+        self.create_cursor()
+        self.create_field()
+        self.create_teams()
+        self.create_queue()
+        self.create_active_unit()
+        self.create_info_block()
+
+    @staticmethod
+    def create_workers():
+        Objects.tools = Tools()
 
     @staticmethod
     def create_cursor():
-        States.cursor = pygame.image.load(os.path.join(f"data/rcom/clean/Crcom000.png"))
-        pygame.mouse.set_cursor(pygame.cursors.Cursor((0, 0), States.cursor))
+        Objects.cursor = Cursor()
 
-    def create_units(self):
-        self.unit_worker.create_units(self.left_team)
-        self.unit_worker.create_units(self.right_team)
+    @staticmethod
+    def create_field():
+        Objects.field = Field()
 
-    def create_info_block(self):
-        self.block_updater.create_info_block()
+    def create_teams(self):
+        # self.left_team = [unit('nosfe', 3, 1, 35, 1), unit('nosfe', 8, 0, 267, 1), unit('devil', 7, 2, 1, 1)]
+        # self.left_team = [unit('grelf', 3, 1, 327, 1), unit('nosfe', 4, 0, 30, 1), unit('ndrgn', 6, 0, 1, 1)]
+        # self.left_team = [unit('chydr', 10, 9, 298, 1), unit('elf', 10, 13, 327, 1), unit('crusd', 7, 1, 7, 1)]
+        # self.right_team = [unit('chydr', 5, 10, 427, 2), unit('crusd', 10, 11, 56, 2)]
+        self.left_team = [unit('chydr', 10, 9, 298, 1), unit('pliza', 7, 5, 298, 1)]
+        self.right_team = [unit('chydr', 5, 10, 427, 2)]
 
-    def generate_move_order(self):
-        States.queue = MyQueue(self.info_updater.generate_move_order(self.left_team, self.right_team))
-        States.unit_active = States.queue.current[0]
+    def create_queue(self):
+        Objects.queue = Queue(self.left_team, self.right_team)
 
-    def update_round_info(self):
-        if not States.is_animate and len(States.queue.current) == States.step:
-            States.queue.update_queue()
-            self.info_updater.update_steps()
-            self.info_updater.update_rounds()
+    @staticmethod
+    def create_active_unit():
+        Objects.active_unit = ActiveUnit()
 
-    def update_buttons(self):
-        self.block_updater.update_buttons()
+    @staticmethod
+    def create_info_block():
+        Objects.info_block = InfoBlock()
 
-    def update_unit_info(self, action):
-        self.unit_worker.update_units(action)
-        self.block_updater.update_avatars()
+    @staticmethod
+    def handle_motion():
+        Objects.cursor.handle_motion()
+        Objects.field.handle_motion()
+
+    @staticmethod
+    def handle_click():
+        Objects.info_block.handle_click()
+        Objects.cursor.handle_click()
+        Objects.active_unit.handle_click()
+
+    def update_frame(self):
+        self.update_round_info()
+        self.active_unit_update()
+        self.info_block_update()
+        self.units_update()
+
+    @staticmethod
+    def update_round_info():
+        if not States.is_animate and len(Objects.queue.sequence) == States.step:
+            Objects.queue.reset_queue()
+            States.step = 0
+            States.round += 1
+
+    @staticmethod
+    def active_unit_update():
+        Objects.active_unit.update()
+
+    @staticmethod
+    def info_block_update():
+        Objects.info_block.update()
+
+    @staticmethod
+    def units_update():
+        States.is_animate = True if len(States.stack_animations) > 0 else False
+        [unit_.update() for unit_ in Objects.queue.sequence]
+
+    def draw_game(self):
+        self.draw_cursor()
+        self.draw_info_block()
+        self.draw_field()
+        self.draw_units()
 
     @staticmethod
     def draw_cursor():
-        pygame.mouse.set_cursor(pygame.cursors.Cursor((0, 0), States.cursor))
+        Objects.cursor.draw()
 
     def draw_info_block(self):
-        def draw_child(parent):
-            for child in parent.children:
-                draw_child(child)
-                if child.parent is not None:
-                    child.draw()
+        Objects.info_block.draw(self.screen)
 
-        draw_child(States.main)
-        self.screen.blit(States.main.surf, States.main.rect)
+    def draw_field(self):
+        Objects.field.draw(self.screen)
+
+    def draw_units(self):
+        [item.draw(self.screen) for item in sorted(Objects.queue.sequence, key=lambda x: x.hex[0][0], reverse=False)]
 
 
 if __name__ == '__main__':

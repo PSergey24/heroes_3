@@ -52,7 +52,7 @@ class ImgBtn(Block):
     def __init__(self, left, top, width=None, height=None, parent=None, name=None):
         super().__init__(left, top, width=width, height=height, parent=parent, name=name)
         self.surf = None
-        self.isActive = True
+        self.is_active = True
         self.activeImg = None
         self.notActiveImg = None
 
@@ -70,11 +70,11 @@ class ImgBtn(Block):
 
     def switch_to_active(self):
         self.surf = self.activeImg
-        self.isActive = True
+        self.is_active = True
 
     def switch_to_not_active(self):
         self.surf = self.notActiveImg
-        self.isActive = False
+        self.is_active = False
 
     def draw(self):
         self.parent.surf.blit(self.surf, (self.left - self.parent.left, self.top - self.parent.top))
@@ -85,6 +85,8 @@ class ImgAvatar(Block):
     def __init__(self, left, top, width=None, height=None, parent=None, name=None, way=None):
         super().__init__(left, top, width=width, height=height, parent=parent, name=name)
         self.surf = None
+        self.width = width
+        self.height = height
 
         self.create_img(way)
 
@@ -94,6 +96,7 @@ class ImgAvatar(Block):
 
     def draw(self):
         self.parent.surf.blit(self.surf, (self.left - self.parent.left, self.top - self.parent.top))
+        pygame.draw.rect(self.parent.surf, (250, 226, 119, 255), (0, 0, self.width, self.height), 2)
 
 
 class Txt(Block):
@@ -101,11 +104,25 @@ class Txt(Block):
     def __init__(self, left, top, width=None, height=None, parent=None, name=None):
         super().__init__(left, top, width=width, height=height, parent=parent, name=name)
         self.surf = None
+        self.top_ = top
+        self.width = width
+        self.height = height
+
         self.txt = None
 
     def create_txt(self, text, color):
         self.txt = text
-        self.surf = Settings.FONT.render(text, True, color)
+        self.surf = Settings.FONT.render(text, False, color)
 
     def draw(self):
-        self.parent.surf.blit(self.surf, (self.left - self.parent.left, self.top - self.parent.top))
+        shift = self.get_shift()
+        pygame.draw.rect(self.parent.surf, (250, 226, 119, 255), (0, self.top_ - 2, self.width, self.height + 2), 2)
+        self.parent.surf.blit(self.surf, (self.left - self.parent.left + shift, self.top - self.parent.top))
+
+    def get_shift(self):
+        if len(self.txt) == 1:
+            return -1
+        if len(self.txt) == 2:
+            return -4
+        if len(self.txt) == 3:
+            return -8

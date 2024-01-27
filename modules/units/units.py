@@ -1,281 +1,287 @@
-import os.path
-
+import os
 import pygame
-import math
 
-from modules.settings import Settings, States
-from modules.block_updater import BlockUpdater
-from modules.hex_worker import HexWorker
+from modules.settings import Settings
+from modules.states import Objects, States
 
 
 class Units:
 
-    def __init__(self, count, team):
-        self.count = count
-        self.team = team
+    def __init__(self, team):
+        # coordinates
+        self.position = None
         self.hex = []
-        self.x = None
-        self.y = None
 
-        self.character = None
-        self.attack = None
-        self.defense = None
-        self.damage = None
-        self.health = None
-        self.cur_health = None
-        self.speed = None
-        self.arrows = None
+        self.name = None
         self.ai = None
+        self.team = team
 
-        self.is_shooter = False
-        self.is_flyer = False
-        self.is_jumper = False
+        self.characteristics = {"base_characteristics": {"attack": None, "defense": None, "damage": None,
+                                                         "health": None, "speed": None},
+                                "current_health": None, "current_count": None, "current_arrows": 0,
+                                "is_double": False, "is_shooter": False, "is_flyer": False, "is_jumper": False
+                                }
+
+        self.status = {"is_answer": 1, "is_wait": False, "is_defense": False}
         self.is_answer = 1
-
-        # btn
-        self.btn_wait = False
-        self.btn_defense = False
-
-        # type of animations
-        self.path = []
-        self.moving = None
-        self.start_moving = None
-        self.stop_moving = None
-        self.mouse_over = None
-        self.standing = None
-        self.getting_hit = None
-        self.defend = None
-        self.death = None
-        self.dead = None
-        self.attack_up = None
-        self.attack_straight = None
-        self.attack_down = None
-        self.shoot_up = None
-        self.shoot_straight = None
-        self.shoot_down = None
+        self.is_wait = False
+        self.is_defense = False
 
         # animations
-        self.direction = None
-        self.img = None
-        self.list_animations = None
-        self.is_active = False
+        self.animations = None
+        self.next_actions = []
+        self.animation_id = None
+        self.current_animation = None
+        self.to_attack = None
+        self.current_animation_images = []
+        self.current_animation_points = []
 
-        self.animation_count = 0
-        self.path_pos = 0
-        self.move_count = 0
-        self.dis = 0
+        # image
+        self.image = None
 
-        self.img_size_x = None
-        self.img_size_y = None
-        self.img_shift_x = 0
-        self.img_shift_y = 0
+    def init(self, i, j):
+        self.init_hex(i, j)
+        self.init_field()
+        self.init_coordinates()
+        self.init_animation("standing")
 
-        self.block_updater = BlockUpdater()
-        self.hex_worker = HexWorker()
-        self.reset_direction()
-
-    def update_hex(self, i, j):
+    def init_hex(self, i, j):
+        self.hex.clear()
         self.hex.append([i, j])
-        if self.character in Settings.double_hex_units:
+        if self.characteristics["is_double"]:
             self.hex.append([i, j + 1])
 
-    def reset_direction(self):
-        self.direction = False if self.team == 1 else True
+    def init_field(self):
+        Objects.field.hexagons[self.hex[0][0]][self.hex[0][1]].engaged = self
+        if self.characteristics["is_double"]:
+            Objects.field.hexagons[self.hex[1][0]][self.hex[1][1]].engaged = self
 
-    def update_direction(self, animation):
-        col_active = States.unit_active.hex[0][1]
+    def reset_field(self):
+        for hexagon in self.hex:
+            Objects.field.hexagons[hexagon[0]][hexagon[1]].engaged = None
 
-        if self.team == 2:
-            self.direction = True
-            if animation == 'getting_hit':
-                if States.cursor_direction is not None:
-                    self.direction = not States.cursor_direction
-                    States.cursor_direction = not States.cursor_direction
-                elif col_active > States.point_c:
-                    self.direction = False
-            else:
-                if animation != 'moving' and States.cursor_direction is not None:
-                    self.direction = States.cursor_direction
-                elif col_active < States.point_c:
-                    self.direction = False
+    def init_coordinates(self):
+        x = Objects.field.hexagons[self.hex[0][0]][self.hex[0][1]].corner[0]
+        y = Objects.field.hexagons[self.hex[0][0]][self.hex[0][1]].corner[1]
 
-        if self.team == 1:
-            self.direction = False
-            if animation == 'getting_hit':
-                if States.cursor_direction is not None:
-                    self.direction = not States.cursor_direction
-                    States.cursor_direction = not States.cursor_direction
-                elif col_active < States.point_c:
-                    self.direction = True
-            else:
-                if animation != 'moving' and States.cursor_direction is not None:
-                    self.direction = States.cursor_direction
-                elif col_active > States.point_c:
-                    self.direction = True
+        self.position = (x, y)
+
+    def init_animation(self, name):
+        self.current_animation = name
+        self.get_animation_images()
+        self.get_animation_points()
+
+        self.animation_id = States.current_animation
+
+        if name in ["standing", "dead"]:
+            self.animation_id = 0
+
+        if name == "moving":
+            self.reset_field()
+            self.init_hex(Objects.cursor.destination_point[0], Objects.cursor.destination_point[1])
+            self.init_field()
+
+        if name == "start_moving":
+            pass
+
+        if name == "stop_moving":
+            self.reset_field()
+            self.init_hex(Objects.cursor.destination_point[0], Objects.cursor.destination_point[1])
+            self.init_field()
+            self.init_coordinates()
+
+        if name == "getting_hit":
+            pass
+
+        if name in ["attack_down", "attack_up", "attack_straight"]:
+            pass
+
+        if name in ["shoot_down", "shoot_up", "shoot_straight"]:
+            pass
+
+    def get_animation_images(self):
+        """
+        Method is updating current animation with n repeats. More repeats - slower animation
+        :return: None
+        """
+        self.current_animation_images = [self.get_surface(img) for img in self.animations[self.current_animation] for _ in range(6)]
+
+    def get_surface(self, image):
+        direction = False if self.team == 1 else True
+
+        item = pygame.image.load(os.path.join(f"data/units/{self.name}/clean/c{self.name}{image}.png"))
+        item = pygame.transform.scale(item, (self.image["x_size"], self.image["y_size"]))
+        item = pygame.transform.flip(item, direction, False)
+        return item
+
+    def get_animation_points(self):
+        if self.current_animation == "moving":
+            route = Objects.field.get_route()
+            route = Objects.field.route_update(route)
+            self.current_animation_points = Objects.field.get_steps(route)
+
+    def handle_click(self):
+        self.update_actions()
+
+        if States.current_animation == States.stack_animations[0]["n"]:
+            item = States.stack_animations.pop(0)
+            self.init_animation(item["animation"])
+
+    def update_actions(self):
+        States.is_animate = True
+        Objects.queue.handle_move()
+        Objects.info_block.handle_move()
+
+        if Objects.cursor.action is not None:
+            if Objects.cursor.action == "moving":
+                if self.characteristics["is_jumper"] is False:
+                    self.add_animation(self, "moving")
+                else:
+                    self.add_animation(self, "start_moving")
+                    self.add_animation(self, "stop_moving")
+
+            elif Objects.cursor.action.find("attack") != -1 and Objects.cursor.destination_point == self.hex[0]:
+                self.update_fight_info()
+                self.add_animation(self, Objects.cursor.action)
+                self.add_animation(Objects.cursor.whom_attack, "getting_hit")
+
+                if Objects.cursor.whom_attack.is_answer > 0:
+                    Objects.cursor.whom_attack.is_answer -= 1
+                    self.add_animation(Objects.cursor.whom_attack, self.get_answer_animation(Objects.cursor.action))
+                    self.add_animation(self, "getting_hit")
+
+            elif Objects.cursor.action.find("attack") != -1 and Objects.cursor.destination_point != self.hex[0]:
+                if self.characteristics["is_jumper"] is False:
+                    self.add_animation(self, "moving")
+                else:
+                    self.add_animation(self, "start_moving")
+                    self.add_animation(self, "stop_moving")
+
+                self.update_fight_info()
+                self.add_animation(self, Objects.cursor.action)
+                self.add_animation(Objects.cursor.whom_attack, "getting_hit")
+
+                if Objects.cursor.whom_attack.is_answer > 0:
+                    Objects.cursor.whom_attack.is_answer -= 1
+                    self.add_animation(Objects.cursor.whom_attack, self.get_answer_animation(Objects.cursor.action))
+                    self.add_animation(self, "getting_hit")
+            elif Objects.cursor.action.find("shoot") != -1:
+                self.add_animation_shoot_()
+
+    def add_animation_shoot_(self):
+        self.update_fight_info()
+        self.add_animation(self, Objects.cursor.action)
+        self.add_animation(Objects.cursor.whom_attack, "getting_hit")
+
+    def update_fight_info(self):
+        self.to_attack = Objects.cursor.whom_attack
+        Objects.cursor.whom_attack.to_attack = self
+
+    @staticmethod
+    def add_animation(unit_, animation):
+        States.stack_animations.append({"unit": unit_, "animation": animation, "n": States.active_animation})
+        States.active_animation += 1
+
+    @staticmethod
+    def get_answer_animation(animation):
+        if animation.find("up") != -1:
+            return animation.replace("up", "down")
+        if animation.find("down") != -1:
+            return animation.replace("down", "up")
+        return animation
+
+    def update(self):
+        self.update_animation()
+        self.update_image_animation()
+        self.update_unit_position()
+
+        if len(self.current_animation_images) > 0 and self.current_animation == "moving":
+            States.is_animate = True
+
+    def update_animation(self):
+        if (len(self.current_animation_points) == 0 and self.current_animation == "moving") or len(self.current_animation_images) == 0 or self.current_animation == "standing":
+            if self.animation_id == States.current_animation:
+                is_exist_parallel = self.is_exist_parallel_animation()
+                if is_exist_parallel is False:
+                    States.current_animation += 1
+
+            if len(States.stack_animations) > 0 and States.stack_animations[0]["unit"] == self:
+                if States.current_animation == States.stack_animations[0]["n"]:
+                    item = States.stack_animations.pop(0)
+                    self.init_animation(item["animation"])
+            elif self.current_animation != "standing":
+                self.init_animation("standing")
+
+    def is_exist_parallel_animation(self):
+        for unit_ in reversed(Objects.queue.sequence):
+            if id(self) == id(unit_):
+                return False
+
+            if unit_.animation_id == States.current_animation and id(self) != id(unit_):
+                return True
+        return False
+
+    def update_image_animation(self):
+        current_image = self.current_animation_images.pop(0)
+        if self.current_animation in ["standing", "moving", "dead"]:
+            self.current_animation_images.append(current_image)
+
+    def update_unit_position(self):
+        if len(self.current_animation_points) > 0:
+            self.position = self.current_animation_points.pop(0)
+
+    def reset_round(self):
+        self.reset_buttons()
+        self.reset_answers()
+
+    def reset_buttons(self):
+        self.is_wait = False
+        self.is_defense = False
+
+    def reset_answers(self):
+        self.is_answer = 1
 
     def draw(self, screen):
-        self.draw_character(screen)
+        if len(self.current_animation_images) > 0:
+            self.draw_unit(screen)
+            self.draw_text(screen)
 
-        if self.is_active and States.animations[0].name == 'moving':
-            self.move()
+    def draw_unit(self, screen):
+        animation = self.correct_animation()
+        screen.blit(animation, (self.position[0] - self.image["x_size"] / 4 + self.image["x_shift"], self.position[1] - self.image["y_size"] * (1 / 2) + self.image["y_shift"]))
 
-        self.draw_character_count(screen)
+    def correct_animation(self):
+        item = self.current_animation_images[0]
+        if self.current_animation == "moving":
+            if len(self.current_animation_points) > 0:
+                if (self.current_animation_points[0][0] < self.current_animation_points[-1][0] and self.team == 2) or (self.current_animation_points[0][0] > self.current_animation_points[-1][0] and self.team == 1):
+                    item = pygame.transform.flip(item, True, False)
 
-    def draw_character(self, screen):
-        animation = self.list_animations
-        if self.is_active:
-            for i, unit in enumerate(States.animations):
-                if id(unit.who) == id(self):
-                    animation = States.animations[i]
-                    break
+        if (self.current_animation.find("attack") != -1 or self.current_animation.find("shoot") != -1 or self.current_animation == "getting_hit") and self.to_attack is not None:
+            if (self.hex[0][1] < self.to_attack.hex[0][1] and self.team == 2) or (self.hex[0][1] > self.to_attack.hex[0][1] and self.team == 1):
+                item = pygame.transform.flip(item, True, False)
 
-        self.img = animation.animation[self.animation_count]
-        self.animation_count += 1
+        return item
 
-        if self.animation_count >= len(animation.animation):
-            self.animation_count = 0
-            self.reset_direction()
+    def draw_text(self, screen):
+        def get_position(position, team):
+            x, y = position
+            if team == 1:
+                return x + Settings.R + 8, y + Settings.r + 9
+            else:
+                return x + Settings.R - 46, y + Settings.r - 9
 
-            if animation.name not in ['standing', 'moving', 'getting_hit', 'death']:
-                self.is_active, States.is_animate = False, False
-                States.animations.pop(0)
+        def get_text_shift(count):
+            if len(str(count)) == 2:
+                return -1
+            if len(str(count)) == 3:
+                return -4
+            return 1
 
-            elif animation.name in ['getting_hit', 'death']:
-                is_smb_else, current_ind = False, 0
-                for i, item in enumerate(States.animations):
-                    if item.name not in ['getting_hit', 'death']:
-                        break
-                    else:
-                        if id(item.who) != id(animation.who):
-                            is_smb_else = True
-                        else:
-                            current_ind = i
+        text = Settings.FONT.render(str(self.characteristics["current_count"]), True, (255, 255, 255))
+        x_, y_ = get_position(self.position, self.team)
+        len_ = get_text_shift(self.characteristics["current_count"])
 
-                self.is_active = False
-                States.is_animate = is_smb_else
-                States.animations.pop(current_ind)
-
-            if animation.name == 'death':
-                States.queue.drop_unit_by_id(id(animation.who))
-                States.hexagons[animation.who.hex[0][0]][animation.who.hex[0][1]].who_engaged = None
-
-                if animation.who.character in Settings.double_hex_units:
-                    States.hexagons[animation.who.hex[1][0]][animation.who.hex[1][1]].who_engaged = None
-                self.block_updater.update_avatars()
-
-            if animation.name == 'start_moving':
-                goal_row, goal_col = States.queue.current[len(States.queue.current)-1].hex[0][0], States.queue.current[len(States.queue.current)-1].hex[0][1]
-                States.queue.current[len(States.queue.current)-1].x = States.hexagons[goal_row][goal_col].corner[0]
-                States.queue.current[len(States.queue.current)-1].y = States.hexagons[goal_row][goal_col].corner[1]
-
-        screen.blit(self.img, (self.x - self.img_size_x / 4 + self.img_shift_x, self.y - self.img_size_y * (1 / 2) + self.img_shift_y))
-
-    def draw_character_count(self, screen):
-        txt = Settings.FONT.render(str(self.count), True, (255, 255, 255))
-        pygame.draw.rect(screen, (67, 19, 104),
-                         (self.x + Settings.R * 2 - txt.get_height() * 2.3,
-                          self.y + Settings.r * 2 - txt.get_width() * 1.2, 50, 20))
-        pygame.draw.rect(screen, (255, 255, 255),
-                         (self.x + Settings.R * 2 - txt.get_height() * 2.3,
-                          self.y + Settings.r * 2 - txt.get_width() * 1.2, 50, 20), 1)
-        screen.blit(txt, (self.x + Settings.R * 2 - txt.get_height(),
-                          self.y + Settings.r * 2 - txt.get_width()))
-
-    def move(self):
-        x1, y1 = self.path[self.path_pos]
-        x2, y2 = self.path[self.path_pos + 1]
-
-        move_dis = math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2)
-
-        self.move_count += 1
-        dirn = (x2 - x1), (y2 - y1)
-
-        move_x, move_y = (self.x + dirn[0] * self.move_count, self.y + dirn[1] * self.move_count)
-        self.dis += math.sqrt((move_x - x1) ** 2 + (move_y - y1) ** 2)
-
-        if self.dis >= move_dis:
-            self.dis, self.move_count = 0, 0
-            self.path_pos += 1
-
-            if self.path_pos == len(self.path) - 1:
-                self.path.clear()
-                self.animation_count, self.path_pos = 0, 0
-                self.is_active, States.is_animate = False, False
-                States.animations.pop(0)
-                if len(States.animations) > 0:
-                    States.animations[0].who.is_active = True
-
-        self.x = x2
-        self.y = y2
-
-    def create_animation(self, animation_name, goal_row=None, goal_col=None):
-        if animation_name == "moving":
-            self.create_moving(goal_row, goal_col)
-        else:
-            self.select_animation(animation_name)
-
-    def create_moving(self, goal_row, goal_col):
-        self.select_animation('moving')
-        self.hex_worker.update_character_position(goal_row, goal_col)
-
-    def select_animation(self, animation_name):
-        self.animation_count = 0
-        speed, images = self.choose_animation_info(animation_name)
-
-        animation_img = []
-        for x in images:
-            for j in range(speed):
-                unit = pygame.image.load(os.path.join(f"data/units/{self.character}/clean/c{self.character}{x}.png"))
-                unit = pygame.transform.scale(unit, (self.img_size_x, self.img_size_y))
-                unit = pygame.transform.flip(unit, self.direction, False)
-                animation_img.append(unit)
-
-        self.update_states(animation_name, animation_img)
-
-    def choose_animation_info(self, animation):
-        if animation == 'standing':
-            self.reset_direction()
-            self.is_active = False
-            return 6, self.standing
-
-        States.is_animate = True
-        self.update_direction(animation)
-        if animation == 'death':
-            return 4, self.death
-        if animation == 'moving':
-            return 4, self.moving
-        if animation == 'start_moving':
-            return 4, self.start_moving
-        if animation == 'stop_moving':
-            return 4, self.stop_moving
-        if animation == 'attack_straight':
-            return 4, self.attack_straight
-        if animation == 'attack_down':
-            return 4, self.attack_down
-        if animation == 'attack_up':
-            return 4, self.attack_up
-        if animation == 'shoot_straight':
-            return 4, self.shoot_straight
-        if animation == 'shoot_down':
-            return 4, self.shoot_down
-        if animation == 'shoot_up':
-            return 4, self.shoot_up
-
-        if animation == 'getting_hit':
-            return 4, self.getting_hit
-
-    def update_states(self, animation_name, animation_img):
-        if animation_name != 'standing':
-            if len(States.animations) == 0:
-                self.is_active = True
-            States.animations.append(Animation(animation_name, animation_img, self))
-        else:
-            self.list_animations = Animation(animation_name, animation_img, self)
-
-
-class Animation:
-
-    def __init__(self, name, animation, who):
-        self.name = name
-        self.animation = animation
-        self.who = who
+        pygame.draw.rect(screen, (67, 19, 104), (x_, y_, 40, 15))
+        pygame.draw.rect(screen, (255, 255, 255), (x_, y_, 40, 15), 1)
+        screen.blit(text, (x_ + 15 + len_, y_))
