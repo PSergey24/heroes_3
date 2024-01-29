@@ -5,6 +5,7 @@ from modules.settings import Settings
 from modules.states import States, Objects
 
 from modules.tools import Tools
+from modules.damage_counter import DamageCounter
 from modules.cursor import Cursor
 from modules.queue_ import Queue
 from modules.field import Field
@@ -69,6 +70,7 @@ class Game:
     @staticmethod
     def create_workers():
         Objects.tools = Tools()
+        Objects.damage_counter = DamageCounter()
 
     @staticmethod
     def create_cursor():
@@ -79,7 +81,7 @@ class Game:
         Objects.field = Field()
 
     def create_teams(self):
-        self.left_team = [unit('crusd', 8, 0, 62, 1), unit('lcbow', 10, 0, 13, 1)]
+        self.left_team = [unit('crusd', 8, 0, 62, 1), unit('grelf', 10, 0, 39, 1)]
         self.right_team = [unit('sword', 9, 7, 25, 2), unit('uwlfr', 7, 13, 8, 2)]
 
     def create_queue(self):
@@ -129,7 +131,7 @@ class Game:
     @staticmethod
     def units_update():
         States.is_animate = True if len(States.stack_animations) > 0 else False
-        [unit_.update() for unit_ in Objects.queue.sequence]
+        [unit_.update() for unit_ in Objects.queue.sequence + Objects.queue.dead_units]
 
     def draw_game(self):
         self.draw_cursor()
@@ -148,7 +150,7 @@ class Game:
         Objects.field.draw(self.screen)
 
     def draw_units(self):
-        [item.draw(self.screen) for item in sorted(Objects.queue.sequence, key=lambda x: x.hex[0][0], reverse=False)]
+        [item.draw(self.screen) for item in sorted(Objects.queue.dead_units + Objects.queue.sequence, key=lambda x: x.hex[0][0], reverse=False)]
 
 
 if __name__ == '__main__':

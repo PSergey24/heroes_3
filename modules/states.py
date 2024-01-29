@@ -20,6 +20,7 @@ class States:
 class Objects:
 
     tools = None
+    damage_counter = None
     cursor = None
     actions = None
     queue = None

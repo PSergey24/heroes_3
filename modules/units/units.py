@@ -18,7 +18,7 @@ class Units:
 
         self.characteristics = {"base_characteristics": {"attack": None, "defense": None, "damage": None,
                                                          "health": None, "speed": None},
-                                "current_health": None, "current_count": None, "current_arrows": 0,
+                                "current_health": 0, "current_count": 0, "current_arrows": 0,
                                 "is_double": False, "is_shooter": False, "is_flyer": False, "is_jumper": False
                                 }
 
@@ -74,7 +74,7 @@ class Units:
 
         self.animation_id = States.current_animation
 
-        if name in ["standing", "dead"]:
+        if name in ["standing"]:
             self.animation_id = 0
 
         if name == "moving":
@@ -82,6 +82,9 @@ class Units:
 
         if name == "start_moving":
             pass
+
+        if name == "death":
+            self.reset_death()
 
         if name == "stop_moving":
             self.reset_field()
@@ -102,6 +105,17 @@ class Units:
         self.reset_field()
         self.init_hex(Objects.cursor.destination_point[0], Objects.cursor.destination_point[1])
         self.init_field()
+
+    def reset_death(self):
+        # need decrease if unit did step before in this round, synchronization with step line
+        if self.is_defense:
+            States.step -= 1
+
+        States.current_animation += 1
+
+        self.reset_field()
+        Objects.queue.handle_death(id(self))
+        Objects.info_block.handle_move()
 
     def get_animation_images(self):
         """
@@ -165,14 +179,30 @@ class Units:
         self.add_animation_attack_()
 
     def add_animation_attack_(self):
-        self.add_animation(self, Objects.cursor.action)
-        self.add_animation(Objects.cursor.whom_attack, "getting_hit")
+        if Objects.cursor.whom_attack.characteristics["current_count"] > 0 and self.characteristics["current_count"] > 0:
+            damage = Objects.damage_counter.count_damage(self, Objects.cursor.whom_attack)
+            Objects.damage_counter.update_health(Objects.cursor.whom_attack, damage)
+
+            self.add_animation(self, Objects.cursor.action)
+
+            if Objects.cursor.whom_attack.characteristics["current_count"] > 0:
+                self.add_animation(Objects.cursor.whom_attack, "getting_hit")
+            else:
+                self.add_animation(Objects.cursor.whom_attack, "death")
 
     def add_animation_attack_back(self):
-        if Objects.cursor.whom_attack.is_answer > 0:
+        if Objects.cursor.whom_attack.is_answer > 0 and Objects.cursor.whom_attack.characteristics["current_count"] > 0:
             Objects.cursor.whom_attack.is_answer -= 1
+
+            damage = Objects.damage_counter.count_damage(Objects.cursor.whom_attack, self)
+            Objects.damage_counter.update_health(self, damage)
+
             self.add_animation(Objects.cursor.whom_attack, self.get_answer_animation(Objects.cursor.action))
-            self.add_animation(self, "getting_hit")
+
+            if self.characteristics["current_count"] > 0:
+                self.add_animation(self, "getting_hit")
+            else:
+                self.add_animation(self, "death")
 
     def add_animation_attack_no_answer(self):
         self.add_animation_attack_()
@@ -186,8 +216,16 @@ class Units:
         self.add_animation_shoot_()
 
     def add_animation_shoot_(self):
-        self.add_animation(self, Objects.cursor.action)
-        self.add_animation(Objects.cursor.whom_attack, "getting_hit")
+        if Objects.cursor.whom_attack.characteristics["current_count"] > 0 and self.characteristics["current_count"] > 0:
+            damage = Objects.damage_counter.count_damage(self, Objects.cursor.whom_attack)
+            Objects.damage_counter.update_health(Objects.cursor.whom_attack, damage)
+
+            self.add_animation(self, Objects.cursor.action)
+
+            if Objects.cursor.whom_attack.characteristics["current_count"] > 0:
+                self.add_animation(Objects.cursor.whom_attack, "getting_hit")
+            else:
+                self.add_animation(Objects.cursor.whom_attack, "death")
 
     def update_fight_info(self):
         self.to_attack = Objects.cursor.whom_attack
@@ -225,6 +263,8 @@ class Units:
                 if States.current_animation == States.stack_animations[0]["n"]:
                     item = States.stack_animations.pop(0)
                     self.init_animation(item["animation"])
+            elif self.current_animation == "death":
+                self.init_animation("dead")
             elif self.current_animation != "standing":
                 self.init_animation("standing")
 
@@ -294,10 +334,11 @@ class Units:
                 return -4
             return 1
 
-        text = Settings.FONT.render(str(self.characteristics["current_count"]), True, (255, 255, 255))
-        x_, y_ = get_position(self.position, self.team)
-        len_ = get_text_shift(self.characteristics["current_count"])
+        if self.characteristics["current_count"] > 0:
+            text = Settings.FONT.render(str(self.characteristics["current_count"]), True, (255, 255, 255))
+            x_, y_ = get_position(self.position, self.team)
+            len_ = get_text_shift(self.characteristics["current_count"])
 
-        pygame.draw.rect(screen, (67, 19, 104), (x_, y_, 40, 15))
-        pygame.draw.rect(screen, (255, 255, 255), (x_, y_, 40, 15), 1)
-        screen.blit(text, (x_ + 15 + len_, y_))
+            pygame.draw.rect(screen, (67, 19, 104), (x_, y_, 40, 15))
+            pygame.draw.rect(screen, (255, 255, 255), (x_, y_, 40, 15), 1)
+            screen.blit(text, (x_ + 15 + len_, y_))

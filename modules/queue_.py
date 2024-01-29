@@ -1,5 +1,4 @@
 import gc
-
 from modules.states import States
 
 
@@ -76,3 +75,6 @@ class Queue:
         States.step += 1
         self.sequence[0].is_defense, self.sequence[0].is_wait = True, True
         self.sequence.append(self.sequence.pop(0))
+
+    def handle_death(self, id_):
+        self.drop_unit_by_id(id_)
