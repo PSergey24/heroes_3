@@ -57,24 +57,24 @@ class Queue:
 
     def handle_wait(self):
         index = self.get_wait_index()
-        self.sequence[0].is_wait = True
+        self.sequence[0].status["is_wait"] = True
         self.sequence.insert(index, self.sequence.pop(0))
 
     def get_wait_index(self):
         for i, item in reversed(list(enumerate(self.sequence))):
-            if item.is_wait is False:
+            if item.status["is_wait"] is False:
                 return i
         return 0
 
     def handle_defense(self):
         States.step += 1
-        self.sequence[0].is_defense, self.sequence[0].is_wait = True, True
+        self.sequence[0].status["is_defense"], self.sequence[0].status["is_wait"] = True, True
         self.sequence.append(self.sequence.pop(0))
 
     def handle_move(self):
         States.step += 1
-        self.sequence[0].is_defense, self.sequence[0].is_wait = True, True
+        self.sequence[0].status["is_defense"], self.sequence[0].status["is_wait"] = True, True
         self.sequence.append(self.sequence.pop(0))
 
-    def handle_death(self, id_):
+    def handle_dead(self, id_):
         self.drop_unit_by_id(id_)

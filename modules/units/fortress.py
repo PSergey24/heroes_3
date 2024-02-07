@@ -1,11 +1,11 @@
 from .units import Units
-from modules.states import Objects
+from modules.states import Objects, States
 
 
 class Chydr(Units):
 
     def __init__(self, i, j, count, team):
-        super().__init__(team)
+        super().__init__(i, j, team)
 
         self.name = 'chydr'
         self.ai = 5931
@@ -13,7 +13,8 @@ class Chydr(Units):
         self.characteristics = {"base_characteristics": {"attack": 18, "defense": 20, "damage": [25, 45],
                                                          "health": 250, "speed": 7},
                                 "current_health": 250, "current_count": count, "current_arrows": 0,
-                                "is_double": True, "is_shooter": False, "is_flyer": False, "is_jumper": False
+                                "is_double": True, "is_shooter": False, "is_flyer": False, "is_jumper": False,
+                                "is_not_answer": True
                                 }
 
         self.animations = {
@@ -34,19 +35,17 @@ class Chydr(Units):
 
         self.image = {"x_size": 216, "y_size": 216 / 1.125, "x_shift": 0, "y_shift": -5}
 
-        self.init(i, j)
+        self.init()
 
-    # special ability: attack w/o answer
-    def add_animation_attack(self):
-        self.add_animation_attack_no_answer()
-
-    # todo: Circular attack - units attack all enemies within eight squares around them.
+    # special ability: circular attack
+    def get_defenders(self):
+        return self.to_circular_attack()
 
 
 class Hydra(Units):
 
     def __init__(self, i, j, count, team):
-        super().__init__(team)
+        super().__init__(i, j, team)
 
         self.name = 'hydra'
         self.ai = 4120
@@ -54,7 +53,8 @@ class Hydra(Units):
         self.characteristics = {"base_characteristics": {"attack": 16, "defense": 18, "damage": [25, 45],
                                                          "health": 175, "speed": 5},
                                 "current_health": 175, "current_count": count, "current_arrows": 0,
-                                "is_double": True, "is_shooter": False, "is_flyer": False, "is_jumper": False
+                                "is_double": True, "is_shooter": False, "is_flyer": False, "is_jumper": False,
+                                "is_not_answer": True
                                 }
 
         self.animations = {
@@ -75,19 +75,17 @@ class Hydra(Units):
 
         self.image = {"x_size": 144, "y_size": 144 / 1.125, "x_shift": 30, "y_shift": 0}
 
-        self.init(i, j)
+        self.init()
 
-    # special ability: attack w/o answer
-    def add_animation_attack(self):
-        self.add_animation_attack_no_answer()
-
-    # todo: Circular attack - units attack all enemies within eight squares around them.
+    # special ability: circular attack
+    def get_defenders(self):
+        return self.to_circular_attack()
 
 
 class Wyvmn(Units):
 
     def __init__(self, i, j, count, team):
-        super().__init__(team)
+        super().__init__(i, j, team)
 
         self.name = 'wyvmn'
         self.ai = 1518
@@ -95,7 +93,8 @@ class Wyvmn(Units):
         self.characteristics = {"base_characteristics": {"attack": 14, "defense": 14, "damage": [18, 22],
                                                          "health": 70, "speed": 11},
                                 "current_health": 70, "current_count": count, "current_arrows": 0,
-                                "is_double": True, "is_shooter": False, "is_flyer": True, "is_jumper": False
+                                "is_double": True, "is_shooter": False, "is_flyer": True, "is_jumper": False,
+                                "is_not_answer": False
                                 }
 
         self.animations = {
@@ -113,7 +112,7 @@ class Wyvmn(Units):
 
         self.image = {"x_size": 216, "y_size": 216 / 1.125, "x_shift": 0, "y_shift": -10}
 
-        self.init(i, j)
+        self.init()
 
     # todo: Poisoning - 30% chance - the health of each of them will be reduced by 10% of the original every turn for 3 turns. Only affects living beings.
 
@@ -121,7 +120,7 @@ class Wyvmn(Units):
 class Wyver(Units):
 
     def __init__(self, i, j, count, team):
-        super().__init__(team)
+        super().__init__(i, j, team)
 
         self.name = 'wyver'
         self.ai = 1350
@@ -129,7 +128,8 @@ class Wyver(Units):
         self.characteristics = {"base_characteristics": {"attack": 14, "defense": 14, "damage": [14, 18],
                                                          "health": 70, "speed": 7},
                                 "current_health": 70, "current_count": count, "current_arrows": 0,
-                                "is_double": True, "is_shooter": False, "is_flyer": True, "is_jumper": False
+                                "is_double": True, "is_shooter": False, "is_flyer": True, "is_jumper": False,
+                                "is_not_answer": False
                                 }
 
         self.animations = {
@@ -147,13 +147,13 @@ class Wyver(Units):
 
         self.image = {"x_size": 216, "y_size": 216 / 1.125, "x_shift": 0, "y_shift": -10}
 
-        self.init(i, j)
+        self.init()
 
 
 class Bgorg(Units):
 
     def __init__(self, i, j, count, team):
-        super().__init__(team)
+        super().__init__(i, j, team)
 
         self.name = 'bgorg'
         self.ai = 1028
@@ -161,7 +161,8 @@ class Bgorg(Units):
         self.characteristics = {"base_characteristics": {"attack": 11, "defense": 16, "damage": [12, 16],
                                                          "health": 70, "speed": 6},
                                 "current_health": 70, "current_count": count, "current_arrows": 0,
-                                "is_double": True, "is_shooter": False, "is_flyer": False, "is_jumper": False
+                                "is_double": True, "is_shooter": False, "is_flyer": False, "is_jumper": False,
+                                "is_not_answer": False
                                 }
 
         self.animations = {
@@ -179,7 +180,7 @@ class Bgorg(Units):
 
         self.image = {"x_size": 216, "y_size": 216 / 1.125, "x_shift": 0, "y_shift": 0}
 
-        self.init(i, j)
+        self.init()
 
     # todo: Death glare – additionally destroy N enemy. Calculation – 1 destroyed unit for every 10 gorgons.
 
@@ -187,7 +188,7 @@ class Bgorg(Units):
 class Cgorg(Units):
 
     def __init__(self, i, j, count, team):
-        super().__init__(team)
+        super().__init__(i, j, team)
 
         self.name = 'cgorg'
         self.ai = 890
@@ -195,7 +196,8 @@ class Cgorg(Units):
         self.characteristics = {"base_characteristics": {"attack": 10, "defense": 14, "damage": [12, 16],
                                                          "health": 70, "speed": 5},
                                 "current_health": 70, "current_count": count, "current_arrows": 0,
-                                "is_double": True, "is_shooter": False, "is_flyer": False, "is_jumper": False
+                                "is_double": True, "is_shooter": False, "is_flyer": False, "is_jumper": False,
+                                "is_not_answer": False
                                 }
 
         self.animations = {
@@ -213,13 +215,13 @@ class Cgorg(Units):
 
         self.image = {"x_size": 216, "y_size": 216 / 1.125, "x_shift": 0, "y_shift": 0}
 
-        self.init(i, j)
+        self.init()
 
 
 class Gbasi(Units):
 
     def __init__(self, i, j, count, team):
-        super().__init__(team)
+        super().__init__(i, j, team)
 
         self.name = 'gbasi'
         self.ai = 714
@@ -227,7 +229,8 @@ class Gbasi(Units):
         self.characteristics = {"base_characteristics": {"attack": 12, "defense": 12, "damage": [6, 10],
                                                          "health": 40, "speed": 7},
                                 "current_health": 40, "current_count": count, "current_arrows": 0,
-                                "is_double": True, "is_shooter": False, "is_flyer": False, "is_jumper": False
+                                "is_double": True, "is_shooter": False, "is_flyer": False, "is_jumper": False,
+                                "is_not_answer": False
                                 }
 
         self.animations = {
@@ -245,7 +248,7 @@ class Gbasi(Units):
 
         self.image = {"x_size": 216, "y_size": 216 / 1.125, "x_shift": 0, "y_shift": 0}
 
-        self.init(i, j)
+        self.init()
 
     # todo: 20% chance Petrification for 3 turns; and if they were previously attacked, then the damage inflicted on such units will be reduced – 50% of the original
 
@@ -253,7 +256,7 @@ class Gbasi(Units):
 class Basil(Units):
 
     def __init__(self, i, j, count, team):
-        super().__init__(team)
+        super().__init__(i, j, team)
 
         self.name = 'basil'
         self.ai = 552
@@ -261,7 +264,8 @@ class Basil(Units):
         self.characteristics = {"base_characteristics": {"attack": 11, "defense": 11, "damage": [6, 10],
                                                          "health": 35, "speed": 5},
                                 "current_health": 35, "current_count": count, "current_arrows": 0,
-                                "is_double": True, "is_shooter": False, "is_flyer": False, "is_jumper": False
+                                "is_double": True, "is_shooter": False, "is_flyer": False, "is_jumper": False,
+                                "is_not_answer": False
                                 }
 
         self.animations = {
@@ -279,7 +283,7 @@ class Basil(Units):
 
         self.image = {"x_size": 216, "y_size": 216 / 1.125, "x_shift": 0, "y_shift": 0}
 
-        self.init(i, j)
+        self.init()
 
     # todo: 20% chance Petrification for 3 turns; and if they were previously attacked, then the damage inflicted on such units will be reduced – 50% of the original
 
@@ -287,7 +291,7 @@ class Basil(Units):
 class Drfir(Units):
 
     def __init__(self, i, j, count, team):
-        super().__init__(team)
+        super().__init__(i, j, team)
 
         self.name = 'drfir'
         self.ai = 312
@@ -295,7 +299,8 @@ class Drfir(Units):
         self.characteristics = {"base_characteristics": {"attack": 8, "defense": 10, "damage": [2, 5],
                                                          "health": 20, "speed": 13},
                                 "current_health": 20, "current_count": count, "current_arrows": 0,
-                                "is_double": False, "is_shooter": False, "is_flyer": True, "is_jumper": False
+                                "is_double": False, "is_shooter": False, "is_flyer": True, "is_jumper": False,
+                                "is_not_answer": False
                                 }
 
         self.animations = {
@@ -313,7 +318,7 @@ class Drfir(Units):
 
         self.image = {"x_size": 216, "y_size": 216 / 1.125, "x_shift": -20, "y_shift": -10}
 
-        self.init(i, j)
+        self.init()
 
     # todo: Dispel Magic – When attacking, units remove all positive spell effects from the enemy unit.
     # todo: weakness - -6 to the attack indicator. Duration – 3 turns.
@@ -322,7 +327,7 @@ class Drfir(Units):
 class Drfly(Units):
 
     def __init__(self, i, j, count, team):
-        super().__init__(team)
+        super().__init__(i, j, team)
 
         self.name = 'drfly'
         self.ai = 268
@@ -330,7 +335,8 @@ class Drfly(Units):
         self.characteristics = {"base_characteristics": {"attack": 7, "defense": 9, "damage": [2, 5],
                                                          "health": 20, "speed": 9},
                                 "current_health": 20, "current_count": count, "current_arrows": 0,
-                                "is_double": False, "is_shooter": False, "is_flyer": True, "is_jumper": False
+                                "is_double": False, "is_shooter": False, "is_flyer": True, "is_jumper": False,
+                                "is_not_answer": False
                                 }
 
         self.animations = {
@@ -348,7 +354,7 @@ class Drfly(Units):
 
         self.image = {"x_size": 216, "y_size": 216 / 1.125, "x_shift": -20, "y_shift": -10}
 
-        self.init(i, j)
+        self.init()
 
     # todo: Dispel Magic – When attacking, units remove all positive spell effects from the enemy unit.
 
@@ -356,7 +362,7 @@ class Drfly(Units):
 class Aliza(Units):
 
     def __init__(self, i, j, count, team):
-        super().__init__(team)
+        super().__init__(i, j, team)
 
         self.name = 'aliza'
         self.ai = 156
@@ -364,7 +370,8 @@ class Aliza(Units):
         self.characteristics = {"base_characteristics": {"attack": 6, "defense": 8, "damage": [2, 5],
                                                          "health": 15, "speed": 5},
                                 "current_health": 15, "current_count": count, "current_arrows": 24,
-                                "is_double": False, "is_shooter": True, "is_flyer": False, "is_jumper": False
+                                "is_double": False, "is_shooter": True, "is_flyer": False, "is_jumper": False,
+                                "is_not_answer": False
                                 }
 
         self.animations = {
@@ -385,13 +392,13 @@ class Aliza(Units):
 
         self.image = {"x_size": 216, "y_size": 216 / 1.125, "x_shift": -25, "y_shift": -5}
 
-        self.init(i, j)
+        self.init()
 
 
 class Pliza(Units):
 
     def __init__(self, i, j, count, team):
-        super().__init__(team)
+        super().__init__(i, j, team)
 
         self.name = 'pliza'
         self.ai = 126
@@ -399,7 +406,8 @@ class Pliza(Units):
         self.characteristics = {"base_characteristics": {"attack": 4, "defense": 6, "damage": [2, 3],
                                                          "health": 14, "speed": 4},
                                 "current_health": 14, "current_count": count, "current_arrows": 12,
-                                "is_double": False, "is_shooter": True, "is_flyer": False, "is_jumper": False
+                                "is_double": False, "is_shooter": True, "is_flyer": False, "is_jumper": False,
+                                "is_not_answer": False
                                 }
 
         self.animations = {
@@ -420,13 +428,13 @@ class Pliza(Units):
 
         self.image = {"x_size": 216, "y_size": 216 / 1.125, "x_shift": -25, "y_shift": -5}
 
-        self.init(i, j)
+        self.init()
 
 
 class Gnolm(Units):
 
     def __init__(self, i, j, count, team):
-        super().__init__(team)
+        super().__init__(i, j, team)
 
         self.name = 'gnolm'
         self.ai = 90
@@ -434,7 +442,8 @@ class Gnolm(Units):
         self.characteristics = {"base_characteristics": {"attack": 4, "defense": 6, "damage": [2, 3],
                                                          "health": 6, "speed": 5},
                                 "current_health": 6, "current_count": count, "current_arrows": 0,
-                                "is_double": False, "is_shooter": False, "is_flyer": False, "is_jumper": False
+                                "is_double": False, "is_shooter": False, "is_flyer": False, "is_jumper": False,
+                                "is_not_answer": False
                                 }
 
         self.animations = {
@@ -452,13 +461,13 @@ class Gnolm(Units):
 
         self.image = {"x_size": 216, "y_size": 216 / 1.125, "x_shift": -20, "y_shift": -5}
 
-        self.init(i, j)
+        self.init()
 
 
 class Gnoll(Units):
 
     def __init__(self, i, j, count, team):
-        super().__init__(team)
+        super().__init__(i, j, team)
 
         self.name = 'gnoll'
         self.ai = 56
@@ -466,7 +475,8 @@ class Gnoll(Units):
         self.characteristics = {"base_characteristics": {"attack": 3, "defense": 5, "damage": [2, 3],
                                                          "health": 6, "speed": 4},
                                 "current_health": 6, "current_count": count, "current_arrows": 0,
-                                "is_double": False, "is_shooter": False, "is_flyer": False, "is_jumper": False
+                                "is_double": False, "is_shooter": False, "is_flyer": False, "is_jumper": False,
+                                "is_not_answer": False
                                 }
 
         self.animations = {
@@ -484,4 +494,4 @@ class Gnoll(Units):
 
         self.image = {"x_size": 216, "y_size": 216 / 1.125, "x_shift": -20, "y_shift": -5}
 
-        self.init(i, j)
+        self.init()

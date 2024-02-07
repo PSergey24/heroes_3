@@ -1,11 +1,11 @@
 from .units import Units
-from modules.states import Objects
+from modules.states import Objects, States
 
 
 class Rangl(Units):
 
     def __init__(self, i, j, count, team):
-        super().__init__(team)
+        super().__init__(i, j, team)
 
         self.name = 'rangl'
         self.ai = 8776
@@ -13,7 +13,8 @@ class Rangl(Units):
         self.characteristics = {"base_characteristics": {"attack": 30, "defense": 30, "damage": [50, 50],
                                                          "health": 250, "speed": 18},
                                 "current_health": 250, "current_count": count, "current_arrows": 0,
-                                "is_double": True, "is_shooter": False, "is_flyer": True, "is_jumper": False
+                                "is_double": True, "is_shooter": False, "is_flyer": True, "is_jumper": False,
+                                "is_not_answer": False
                                 }
 
         self.animations = {
@@ -31,7 +32,7 @@ class Rangl(Units):
 
         self.image = {"x_size": 216, "y_size": 216 / 1.125, "x_shift": 5, "y_shift": -25}
 
-        self.init(i, j)
+        self.init()
 
     # todo: Hatred of Devils and Archdevils => +50% additional attack damage.
     # todo: Inspiration => +1 units. to the morale of all allied soldiers; works even after the destruction of angels.
@@ -41,7 +42,7 @@ class Rangl(Units):
 class Angel(Units):
 
     def __init__(self, i, j, count, team):
-        super().__init__(team)
+        super().__init__(i, j, team)
 
         self.name = 'angel'
         self.ai = 5019
@@ -49,7 +50,8 @@ class Angel(Units):
         self.characteristics = {"base_characteristics": {"attack": 20, "defense": 20, "damage": [50, 50],
                                                          "health": 200, "speed": 12},
                                 "current_health": 200, "current_count": count, "current_arrows": 0,
-                                "is_double": False, "is_shooter": False, "is_flyer": True, "is_jumper": False
+                                "is_double": False, "is_shooter": False, "is_flyer": True, "is_jumper": False,
+                                "is_not_answer": False
                                 }
 
         self.animations = {
@@ -67,7 +69,7 @@ class Angel(Units):
 
         self.image = {"x_size": 140, "y_size": 140 / 1.125, "x_shift": 0, "y_shift": 0}
 
-        self.init(i, j)
+        self.init()
 
     # todo: Hatred of Devils and Archdevils => +50% additional attack damage.
     # todo: Inspiration => +1 units. to the morale of all allied soldiers; works even after the destruction of angels.
@@ -76,7 +78,7 @@ class Angel(Units):
 class Champ(Units):
 
     def __init__(self, i, j, count, team):
-        super().__init__(team)
+        super().__init__(i, j, team)
 
         self.name = 'champ'
         self.ai = 2100
@@ -84,7 +86,8 @@ class Champ(Units):
         self.characteristics = {"base_characteristics": {"attack": 16, "defense": 16, "damage": [20, 25],
                                                          "health": 100, "speed": 9},
                                 "current_health": 100, "current_count": count, "current_arrows": 0,
-                                "is_double": True, "is_shooter": False, "is_flyer": False, "is_jumper": False
+                                "is_double": True, "is_shooter": False, "is_flyer": False, "is_jumper": False,
+                                "is_not_answer": False
                                 }
 
         self.animations = {
@@ -102,7 +105,7 @@ class Champ(Units):
 
         self.image = {"x_size": 216, "y_size": 216 / 1.125, "x_shift": 0, "y_shift": -5}
 
-        self.init(i, j)
+        self.init()
 
     # todo: Cavalry Bonus – 5% more damage for each square they travel before attacking.
 
@@ -110,7 +113,7 @@ class Champ(Units):
 class Cavlr(Units):
 
     def __init__(self, i, j, count, team):
-        super().__init__(team)
+        super().__init__(i, j, team)
 
         self.name = 'cavlr'
         self.ai = 1946
@@ -118,7 +121,8 @@ class Cavlr(Units):
         self.characteristics = {"base_characteristics": {"attack": 15, "defense": 15, "damage": [15, 25],
                                                          "health": 100, "speed": 7},
                                 "current_health": 100, "current_count": count, "current_arrows": 0,
-                                "is_double": True, "is_shooter": False, "is_flyer": False, "is_jumper": False
+                                "is_double": True, "is_shooter": False, "is_flyer": False, "is_jumper": False,
+                                "is_not_answer": False
                                 }
 
         self.animations = {
@@ -136,7 +140,7 @@ class Cavlr(Units):
 
         self.image = {"x_size": 216, "y_size": 216 / 1.125, "x_shift": 0, "y_shift": -5}
 
-        self.init(i, j)
+        self.init()
 
     # todo: Cavalry Bonus – 5% more damage for each square they travel before attacking.
 
@@ -144,7 +148,7 @@ class Cavlr(Units):
 class Zealt(Units):
 
     def __init__(self, i, j, count, team):
-        super().__init__(team)
+        super().__init__(i, j, team)
 
         self.name = 'zealt'
         self.ai = 750
@@ -152,7 +156,8 @@ class Zealt(Units):
         self.characteristics = {"base_characteristics": {"attack": 12, "defense": 10, "damage": [10, 12],
                                                          "health": 30, "speed": 7},
                                 "current_health": 30, "current_count": count, "current_arrows": 24,
-                                "is_double": False, "is_shooter": True, "is_flyer": False, "is_jumper": False
+                                "is_double": False, "is_shooter": True, "is_flyer": False, "is_jumper": False,
+                                "is_not_answer": False
                                 }
 
         self.animations = {
@@ -173,7 +178,7 @@ class Zealt(Units):
 
         self.image = {"x_size": 216, "y_size": 216 / 1.125, "x_shift": -25, "y_shift": -5}
 
-        self.init(i, j)
+        self.init()
 
     # todo: No penalty in hand-to-hand combat.
 
@@ -181,7 +186,7 @@ class Zealt(Units):
 class Monkk(Units):
 
     def __init__(self, i, j, count, team):
-        super().__init__(team)
+        super().__init__(i, j, team)
 
         self.name = 'monkk'
         self.ai = 582
@@ -189,7 +194,8 @@ class Monkk(Units):
         self.characteristics = {"base_characteristics": {"attack": 12, "defense": 7, "damage": [10, 12],
                                                          "health": 30, "speed": 5},
                                 "current_health": 30, "current_count": count, "current_arrows": 12,
-                                "is_double": False, "is_shooter": True, "is_flyer": False, "is_jumper": False
+                                "is_double": False, "is_shooter": True, "is_flyer": False, "is_jumper": False,
+                                "is_not_answer": False
                                 }
 
         self.animations = {
@@ -210,13 +216,13 @@ class Monkk(Units):
 
         self.image = {"x_size": 216, "y_size": 216 / 1.125, "x_shift": -25, "y_shift": -5}
 
-        self.init(i, j)
+        self.init()
 
 
 class Crusd(Units):
 
     def __init__(self, i, j, count, team):
-        super().__init__(team)
+        super().__init__(i, j, team)
 
         self.name = 'crusd'
         self.ai = 588
@@ -224,8 +230,11 @@ class Crusd(Units):
         self.characteristics = {"base_characteristics": {"attack": 12, "defense": 12, "damage": [7, 10],
                                                          "health": 35, "speed": 6},
                                 "current_health": 35, "current_count": count, "current_arrows": 0,
-                                "is_double": False, "is_shooter": False, "is_flyer": False, "is_jumper": False
+                                "is_double": False, "is_shooter": False, "is_flyer": False, "is_jumper": False,
+                                "is_not_answer": False
                                 }
+
+        self.status = {"is_answer": 1, "is_wait": False, "is_defense": False, "is_second_attack": False}
 
         self.animations = {
             "moving": ["36", "37", "38", "39", "40", "41", "42", "43"],
@@ -242,17 +251,20 @@ class Crusd(Units):
 
         self.image = {"x_size": 144, "y_size": 144 / 1.125, "x_shift": 0, "y_shift": 0}
 
-        self.init(i, j)
+        self.init()
 
     # special ability: double attack
-    def add_animation_attack(self):
-        self.add_animation_double_attack()
+    def add_action_attack(self):
+        if self.characteristics["current_count"] > 0:
+            self.update_fight_info()
+            self.add_action_attack_()
+            self.add_action_second_attack_()
 
 
 class Sword(Units):
 
     def __init__(self, i, j, count, team):
-        super().__init__(team)
+        super().__init__(i, j, team)
 
         self.name = 'sword'
         self.ai = 445
@@ -260,7 +272,8 @@ class Sword(Units):
         self.characteristics = {"base_characteristics": {"attack": 10, "defense": 12, "damage": [6, 9],
                                                          "health": 35, "speed": 5},
                                 "current_health": 35, "current_count": count, "current_arrows": 0,
-                                "is_double": False, "is_shooter": False, "is_flyer": False, "is_jumper": False
+                                "is_double": False, "is_shooter": False, "is_flyer": False, "is_jumper": False,
+                                "is_not_answer": False
                                 }
 
         self.animations = {
@@ -278,13 +291,13 @@ class Sword(Units):
 
         self.image = {"x_size": 216, "y_size": 216 / 1.125, "x_shift": -20, "y_shift": -5}
 
-        self.init(i, j)
+        self.init()
 
 
 class RGrif(Units):
 
     def __init__(self, i, j, count, team):
-        super().__init__(team)
+        super().__init__(i, j, team)
 
         self.name = 'rgrif'
         self.ai = 488
@@ -292,10 +305,11 @@ class RGrif(Units):
         self.characteristics = {"base_characteristics": {"attack": 9, "defense": 9, "damage": [3, 6],
                                                          "health": 25, "speed": 9},
                                 "current_health": 25, "current_count": count, "current_arrows": 0,
-                                "is_double": True, "is_shooter": False, "is_flyer": True, "is_jumper": False
+                                "is_double": True, "is_shooter": False, "is_flyer": True, "is_jumper": False,
+                                "is_not_answer": False
                                 }
 
-        self.is_answer = float('inf')
+        self.status = {"is_answer": float('inf'), "is_wait": False, "is_defense": False}
 
         self.animations = {
             "moving": ["11", "12", "11", "10"],
@@ -312,16 +326,16 @@ class RGrif(Units):
 
         self.image = {"x_size": 216, "y_size": 216 / 1.125, "x_shift": 10, "y_shift": -10}
 
-        self.init(i, j)
+        self.init()
 
     def reset_answers(self):
-        self.is_answer = float('inf')
+        self.status["is_answer"] = float('inf')
 
 
 class Griff(Units):
 
     def __init__(self, i, j, count, team):
-        super().__init__(team)
+        super().__init__(i, j, team)
 
         self.name = 'griff'
         self.ai = 351
@@ -329,10 +343,11 @@ class Griff(Units):
         self.characteristics = {"base_characteristics": {"attack": 8, "defense": 8, "damage": [3, 6],
                                                          "health": 25, "speed": 6},
                                 "current_health": 25, "current_count": count, "current_arrows": 0,
-                                "is_double": True, "is_shooter": False, "is_flyer": True, "is_jumper": False
+                                "is_double": True, "is_shooter": False, "is_flyer": True, "is_jumper": False,
+                                "is_not_answer": False
                                 }
 
-        self.is_answer = 2
+        self.status = {"is_answer": 2, "is_wait": False, "is_defense": False}
 
         self.animations = {
             "moving": ["11", "12", "11", "10"],
@@ -349,16 +364,16 @@ class Griff(Units):
 
         self.image = {"x_size": 216, "y_size": 216 / 1.125, "x_shift": 0, "y_shift": -10}
 
-        self.init(i, j)
+        self.init()
 
     def reset_answers(self):
-        self.is_answer = 2
+        self.status["is_answer"] = 2
 
 
 class Hcbow(Units):
 
     def __init__(self, i, j, count, team):
-        super().__init__(team)
+        super().__init__(i, j, team)
 
         self.name = 'hcbow'
         self.ai = 184
@@ -366,8 +381,11 @@ class Hcbow(Units):
         self.characteristics = {"base_characteristics": {"attack": 6, "defense": 3, "damage": [2, 3],
                                                          "health": 10, "speed": 6},
                                 "current_health": 10, "current_count": count, "current_arrows": 24,
-                                "is_double": False, "is_shooter": True, "is_flyer": False, "is_jumper": False
+                                "is_double": False, "is_shooter": True, "is_flyer": False, "is_jumper": False,
+                                "is_not_answer": False
                                 }
+
+        self.status = {"is_answer": 1, "is_wait": False, "is_defense": False, "is_second_shoot": False}
 
         self.animations = {
             "moving": ["55", "56", "57", "58", "59", "60", "61", "62"],
@@ -387,17 +405,19 @@ class Hcbow(Units):
 
         self.image = {"x_size": 144, "y_size": 144 / 1.125, "x_shift": -5, "y_shift": 0}
 
-        self.init(i, j)
+        self.init()
 
     # special ability: double shoot
-    def add_animation_shoot(self):
-        self.add_animation_double_shoot_()
+    def add_action_shoot(self):
+        self.update_fight_info()
+        self.add_action_shoot_()
+        self.add_action_second_shoot_()
 
 
 class Lcbow(Units):
 
     def __init__(self, i, j, count, team):
-        super().__init__(team)
+        super().__init__(i, j, team)
 
         self.name = 'lcbow'
         self.ai = 126
@@ -405,7 +425,8 @@ class Lcbow(Units):
         self.characteristics = {"base_characteristics": {"attack": 6, "defense": 3, "damage": [2, 3],
                                                          "health": 10, "speed": 4},
                                 "current_health": 10, "current_count": count, "current_arrows": 12,
-                                "is_double": False, "is_shooter": True, "is_flyer": False, "is_jumper": False
+                                "is_double": False, "is_shooter": True, "is_flyer": False, "is_jumper": False,
+                                "is_not_answer": False
                                 }
 
         self.animations = {
@@ -426,13 +447,13 @@ class Lcbow(Units):
 
         self.image = {"x_size": 216, "y_size": 216 / 1.125, "x_shift": -20, "y_shift": -5}
 
-        self.init(i, j)
+        self.init()
 
 
 class Halbd(Units):
 
     def __init__(self, i, j, count, team):
-        super().__init__(team)
+        super().__init__(i, j, team)
 
         self.name = 'halbd'
         self.ai = 115
@@ -440,7 +461,8 @@ class Halbd(Units):
         self.characteristics = {"base_characteristics": {"attack": 6, "defense": 5, "damage": [2, 3],
                                                          "health": 10, "speed": 5},
                                 "current_health": 10, "current_count": count, "current_arrows": 0,
-                                "is_double": False, "is_shooter": False, "is_flyer": False, "is_jumper": False
+                                "is_double": False, "is_shooter": False, "is_flyer": False, "is_jumper": False,
+                                "is_not_answer": False
                                 }
 
         self.animations = {
@@ -458,7 +480,7 @@ class Halbd(Units):
 
         self.image = {"x_size": 216, "y_size": 216 / 1.125, "x_shift": -20, "y_shift": -10}
 
-        self.init(i, j)
+        self.init()
 
     # todo: Immunity to Cavalry Bonus
 
@@ -466,7 +488,7 @@ class Halbd(Units):
 class Pkman(Units):
 
     def __init__(self, i, j, count, team):
-        super().__init__(team)
+        super().__init__(i, j, team)
 
         self.name = 'pkman'
         self.ai = 80
@@ -474,7 +496,8 @@ class Pkman(Units):
         self.characteristics = {"base_characteristics": {"attack": 4, "defense": 5, "damage": [1, 3],
                                                          "health": 10, "speed": 4},
                                 "current_health": 10, "current_count": count, "current_arrows": 0,
-                                "is_double": False, "is_shooter": False, "is_flyer": False, "is_jumper": False
+                                "is_double": False, "is_shooter": False, "is_flyer": False, "is_jumper": False,
+                                "is_not_answer": False
                                 }
 
         self.animations = {
@@ -492,6 +515,6 @@ class Pkman(Units):
 
         self.image = {"x_size": 216, "y_size": 216 / 1.125, "x_shift": -20, "y_shift": -10}
 
-        self.init(i, j)
+        self.init()
 
     # todo: Immunity to Cavalry Bonus

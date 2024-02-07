@@ -7,8 +7,10 @@ from modules.states import Objects, States
 
 class Units:
 
-    def __init__(self, team):
+    def __init__(self, i, j, team):
         # coordinates
+        self.i = i
+        self.j = j
         self.position = None
         self.hex = []
 
@@ -19,103 +21,60 @@ class Units:
         self.characteristics = {"base_characteristics": {"attack": None, "defense": None, "damage": None,
                                                          "health": None, "speed": None},
                                 "current_health": 0, "current_count": 0, "current_arrows": 0,
-                                "is_double": False, "is_shooter": False, "is_flyer": False, "is_jumper": False
+                                "is_double": False, "is_shooter": False, "is_flyer": False, "is_jumper": False,
+                                "is_not_answer": False
                                 }
 
-        # self.status = {"is_answer": 1, "is_wait": False, "is_defense": False}
-        self.status = {}
-        self.is_answer = 1
-        self.is_wait = False
-        self.is_defense = False
+        self.status = {"is_answer": 1, "is_wait": False, "is_defense": False}
 
         # animations
         self.animations = None
-        self.next_actions = []
-        self.animation_id = None
         self.current_animation = None
+        self.next_actions = []
+
         self.to_attack = None
+        self.from_attack = None
+
         self.current_animation_images = []
         self.current_animation_points = []
 
         # image
         self.image = None
 
-    def init(self, i, j):
-        self.init_hex(i, j)
-        self.init_field()
-        self.init_coordinates()
+    def init(self):
         self.init_animation("standing")
-
-    def init_hex(self, i, j):
-        self.hex.clear()
-        self.hex.append([i, j])
-        if self.characteristics["is_double"]:
-            self.hex.append([i, j + 1])
-
-    def init_field(self):
-        Objects.field.hexagons[self.hex[0][0]][self.hex[0][1]].engaged = self
-        if self.characteristics["is_double"]:
-            Objects.field.hexagons[self.hex[1][0]][self.hex[1][1]].engaged = self
-
-    def reset_field(self):
-        for hexagon in self.hex:
-            Objects.field.hexagons[hexagon[0]][hexagon[1]].engaged = None
-
-    def init_coordinates(self):
-        x = Objects.field.hexagons[self.hex[0][0]][self.hex[0][1]].corner[0]
-        y = Objects.field.hexagons[self.hex[0][0]][self.hex[0][1]].corner[1]
-
-        self.position = (x, y)
 
     def init_animation(self, name):
         self.current_animation = name
         self.get_animation_images()
         self.get_animation_points()
 
-        self.animation_id = States.current_animation
+        if self.current_animation == "standing":
+            self.init_standing()
 
-        if name in ["standing"]:
-            self.animation_id = 0
+        if self.current_animation == "moving":
+            self.init_moving()
 
-        if name == "moving":
-            self.reset_moving()
-
-        if name == "start_moving":
+        if self.current_animation == "start_moving":
             pass
 
-        if name == "death":
-            self.reset_death()
+        if self.current_animation == "stop_moving":
+            self.init_stop_moving()
 
-        if name == "stop_moving":
-            self.reset_field()
-            self.init_hex(Objects.cursor.destination_point[0], Objects.cursor.destination_point[1])
-            self.init_field()
-            self.init_coordinates()
+        if self.current_animation.find("attack") != -1:
+            self.init_attack()
 
-        if name == "getting_hit":
+        if self.current_animation.find("shoot") != -1:
+            self.init_shoot()
+
+        if self.current_animation == "getting_hit":
             pass
 
-        if name in ["attack_down", "attack_up", "attack_straight"]:
-            pass
+        if self.current_animation == "death":
+            self.init_death()
 
-        if name in ["shoot_down", "shoot_up", "shoot_straight"]:
-            pass
-
-    def reset_moving(self):
-        self.reset_field()
-        self.init_hex(Objects.cursor.destination_point[0], Objects.cursor.destination_point[1])
-        self.init_field()
-
-    def reset_death(self):
-        # need decrease if unit did step before in this round, synchronization with step line
-        if self.is_defense:
-            States.step -= 1
-
-        States.current_animation += 1
-
-        self.reset_field()
-        Objects.queue.handle_death(id(self))
-        Objects.info_block.handle_move()
+        if self.current_animation == "dead":
+            self.init_dead()
 
     def get_animation_images(self):
         """
@@ -138,164 +97,305 @@ class Units:
             route = Objects.field.route_update(route)
             self.current_animation_points = Objects.field.get_steps(route)
 
-    def handle_click(self):
-        self.update_actions()
+    def init_standing(self):
+        self.reset_field()
+        self.init_hex()
+        self.init_field()
+        self.init_coordinates()
 
-        if States.current_animation == States.stack_animations[0]["n"]:
-            item = States.stack_animations.pop(0)
-            self.init_animation(item["animation"])
+    def reset_info(self):
+        self.to_attack = None
+        self.from_attack = None
 
-    def update_actions(self):
-        States.is_animate = True
-        Objects.queue.handle_move()
+    def reset_field(self):
+        for hexagon in self.hex:
+            Objects.field.hexagons[hexagon[0]][hexagon[1]].engaged = None
+
+    def init_hex(self):
+        self.hex.clear()
+        self.hex.append([self.i, self.j])
+        if self.characteristics["is_double"]:
+            self.hex.append([self.i, self.j + 1])
+
+    def init_field(self):
+        Objects.field.hexagons[self.hex[0][0]][self.hex[0][1]].engaged = self
+        if self.characteristics["is_double"]:
+            Objects.field.hexagons[self.hex[1][0]][self.hex[1][1]].engaged = self
+
+    def init_coordinates(self):
+        x = Objects.field.hexagons[self.hex[0][0]][self.hex[0][1]].corner[0]
+        y = Objects.field.hexagons[self.hex[0][0]][self.hex[0][1]].corner[1]
+
+        self.position = (x, y)
+
+    def init_moving(self):
+        self.reset_field()
+        self.init_hex()
+        self.init_field()
+
+        if id(self) == id(Objects.active_unit.info) and (len(self.next_actions) == 0 or (len(self.next_actions) != 0 and self.next_actions[0].find("attack") == -1)):
+            Objects.queue.handle_move()
+            Objects.info_block.handle_move()
+
+    def init_stop_moving(self):
+        self.reset_field()
+        self.init_hex()
+        self.init_field()
+
+        if id(self) == id(Objects.active_unit.info) and (len(self.next_actions) == 0 or (len(self.next_actions) != 0 and self.next_actions[0].find("attack") == -1)):
+            Objects.queue.handle_move()
+            Objects.info_block.handle_move()
+
+    def init_attack(self):
+        if id(self) == id(Objects.active_unit.info) and ("is_second_attack" not in self.status or ("is_second_attack" in self.status and self.status["is_second_attack"] is False)):
+            Objects.queue.handle_move()
+            Objects.info_block.handle_move()
+
+        if "is_second_attack" in self.status and len(self.next_actions) > 0 and self.next_actions[0].find("attack") != -1:
+            self.status["is_second_attack"] = not self.status["is_second_attack"]
+        else:
+            self.status["is_second_attack"] = False
+
+    def init_shoot(self):
+        if id(self) == id(Objects.active_unit.info) and ("is_second_shoot" not in self.status or ("is_second_shoot" in self.status and self.status["is_second_shoot"] is False)):
+            Objects.queue.handle_move()
+            Objects.info_block.handle_move()
+
+        if "is_second_shoot" in self.status and len(self.next_actions) > 0 and self.next_actions[0].find("shoot") != -1:
+            self.status["is_second_shoot"] = not self.status["is_second_shoot"]
+        else:
+            self.status["is_second_shoot"] = False
+
+    def init_death(self):
+        pass
+
+    def init_dead(self):
+        if self.status["is_defense"]:
+            States.step -= 1
+
+        self.reset_field()
+        Objects.queue.handle_dead(id(self))
         Objects.info_block.handle_move()
-
-        if Objects.cursor.action is not None:
-            if Objects.cursor.action == "moving":
-                self.add_animation_moving()
-            elif Objects.cursor.action.find("attack") != -1 and Objects.cursor.destination_point == self.hex[0]:
-                self.add_animation_attack()
-            elif Objects.cursor.action.find("attack") != -1 and Objects.cursor.destination_point != self.hex[0]:
-                self.add_moving_and_attack()
-            elif Objects.cursor.action.find("shoot") != -1:
-                self.add_animation_shoot()
-
-    def add_moving_and_attack(self):
-        self.add_animation_moving()
-        self.add_animation_attack()
-
-    def add_animation_moving(self):
-        self.add_animation(self, "moving")
-
-    def add_animation_attack(self):
-        self.update_fight_info()
-        self.add_animation_attack_()
-        self.add_animation_attack_back()
-
-    def add_animation_double_attack(self):
-        self.update_fight_info()
-        self.add_animation_attack_()
-        self.add_animation_attack_back()
-        self.add_animation_attack_()
-
-    def add_animation_attack_(self):
-        if Objects.cursor.whom_attack.characteristics["current_count"] > 0 and self.characteristics["current_count"] > 0:
-            damage = Objects.damage_counter.count_damage(self, Objects.cursor.whom_attack)
-            Objects.damage_counter.update_health(Objects.cursor.whom_attack, damage)
-
-            self.add_animation(self, Objects.cursor.action)
-
-            if Objects.cursor.whom_attack.characteristics["current_count"] > 0:
-                self.add_animation(Objects.cursor.whom_attack, "getting_hit")
-            else:
-                self.add_animation(Objects.cursor.whom_attack, "death")
-
-    def add_animation_attack_back(self):
-        if Objects.cursor.whom_attack.is_answer > 0 and Objects.cursor.whom_attack.characteristics["current_count"] > 0:
-            Objects.cursor.whom_attack.is_answer -= 1
-
-            damage = Objects.damage_counter.count_damage(Objects.cursor.whom_attack, self)
-            Objects.damage_counter.update_health(self, damage)
-
-            self.add_animation(Objects.cursor.whom_attack, self.get_answer_animation(Objects.cursor.action))
-
-            if self.characteristics["current_count"] > 0:
-                self.add_animation(self, "getting_hit")
-            else:
-                self.add_animation(self, "death")
-
-    def add_animation_attack_no_answer(self):
-        self.add_animation_attack_()
-
-    def add_animation_shoot(self):
-        self.update_fight_info()
-        self.add_animation_shoot_()
-
-    def add_animation_double_shoot_(self):
-        self.add_animation_shoot_()
-        self.add_animation_shoot_()
-
-    def add_animation_shoot_(self):
-        if Objects.cursor.whom_attack.characteristics["current_count"] > 0 and self.characteristics["current_count"] > 0:
-            damage = Objects.damage_counter.count_damage(self, Objects.cursor.whom_attack)
-            Objects.damage_counter.update_health(Objects.cursor.whom_attack, damage)
-
-            self.add_animation(self, Objects.cursor.action)
-
-            if Objects.cursor.whom_attack.characteristics["current_count"] > 0:
-                self.add_animation(Objects.cursor.whom_attack, "getting_hit")
-            else:
-                self.add_animation(Objects.cursor.whom_attack, "death")
-
-    def update_fight_info(self):
-        self.to_attack = Objects.cursor.whom_attack
-        Objects.cursor.whom_attack.to_attack = self
-
-    @staticmethod
-    def add_animation(unit_, animation):
-        States.stack_animations.append({"unit": unit_, "animation": animation, "n": States.active_animation})
-        States.active_animation += 1
-
-    @staticmethod
-    def get_answer_animation(animation):
-        if animation.find("up") != -1:
-            return animation.replace("up", "down")
-        if animation.find("down") != -1:
-            return animation.replace("down", "up")
-        return animation
 
     def update(self):
         self.update_animation()
         self.update_image_animation()
         self.update_unit_position()
 
-        if len(self.current_animation_images) > 0 and self.current_animation == "moving":
-            States.is_animate = True
-
+    # update animation
     def update_animation(self):
-        if (len(self.current_animation_points) == 0 and self.current_animation == "moving") or len(self.current_animation_images) == 0 or self.current_animation == "standing":
-            if self.animation_id == States.current_animation:
-                is_exist_parallel = self.is_exist_parallel_animation()
-                if is_exist_parallel is False:
-                    States.current_animation += 1
+        States.is_animate = self.is_animate()
 
-            if len(States.stack_animations) > 0 and States.stack_animations[0]["unit"] == self:
-                if States.current_animation == States.stack_animations[0]["n"]:
-                    item = States.stack_animations.pop(0)
-                    self.init_animation(item["animation"])
-            elif self.current_animation == "death":
-                self.init_animation("dead")
-            elif self.current_animation != "standing":
-                self.init_animation("standing")
+        if States.is_animate is False and len(States.stack_animations) > 0:
+            [item.init_animation("standing") for item in Objects.queue.sequence if item.current_animation not in ["standing", "death", "dead"]]
 
-    def is_exist_parallel_animation(self):
-        for unit_ in reversed(Objects.queue.sequence):
-            if id(self) == id(unit_):
-                return False
+            States.active = States.stack_animations.pop(0)
+            for item in States.active:
+                next_animation = item.next_actions.pop(0)
+                item.init_animation(next_animation)
+        else:
+            if States.is_animate is False:
+                [item.init_animation("standing") for item in Objects.queue.sequence if item.current_animation not in ["standing", "death", "dead"]]
 
-            if unit_.animation_id == States.current_animation and id(self) != id(unit_):
+    @staticmethod
+    def is_animate():
+        if States.active is None:
+            return False
+
+        for item in States.active:
+            if (len(item.current_animation_images) > 0 and item.current_animation not in ["standing", "moving", "dead"]) or len(item.current_animation_points) > 0:
                 return True
         return False
 
     def update_image_animation(self):
-        current_image = self.current_animation_images.pop(0)
-        if self.current_animation in ["standing", "moving", "dead"]:
-            self.current_animation_images.append(current_image)
+        if len(self.current_animation_images) > 0:
+            current_image = self.current_animation_images.pop(0)
+            if self.current_animation in ["standing", "moving", "dead"]:
+                self.current_animation_images.append(current_image)
 
     def update_unit_position(self):
         if len(self.current_animation_points) > 0:
             self.position = self.current_animation_points.pop(0)
+
+    def handle_click(self):
+        self.add_actions()
+
+    def add_actions(self):
+        if Objects.cursor.action is not None:
+            if Objects.cursor.action == "moving":
+                self.add_action_moving()
+            elif Objects.cursor.action.find("attack") != -1 and Objects.cursor.destination_point == self.hex[0]:
+                self.add_action_attack()
+            elif Objects.cursor.action.find("attack") != -1 and Objects.cursor.destination_point != self.hex[0]:
+                self.add_action_moving_and_attack()
+            elif Objects.cursor.action.find("shoot") != -1:
+                self.add_action_shoot()
+
+    def add_action_moving(self):
+        self.i, self.j = Objects.cursor.destination_point
+        self.next_actions.append("moving")
+
+        States.stack_animations.extend([[self]])
+
+    def add_action_attack(self):
+        if self.characteristics["current_count"] > 0:
+            self.update_fight_info()
+            self.add_action_attack_()
+
+    def add_action_moving_and_attack(self):
+        self.add_action_moving()
+        self.add_action_attack()
+
+    def add_action_shoot(self):
+        self.update_fight_info()
+        self.add_action_shoot_()
+
+    def update_fight_info(self):
+        self.to_attack = self.get_defenders()
+
+    # get defenders: default, to_fire_attack, to_circular_attack, three_heads_attack
+    @staticmethod
+    def get_defenders():
+        return [Objects.cursor.whom_attack]
+
+    def to_fire_attack(self):
+        """
+        Special ability for dragons, phoenix, fire bird
+        The function returns units that will be fired
+        :return: list
+        """
+        cube_ = Objects.tools.cube_neighbor(Objects.cursor.cube, Objects.cursor.direction_to_fire)
+        hex_ = Objects.tools.cube2offset(cube_[0], cube_[1], cube_[2])
+        if unit_ := Objects.tools.get_unit(hex_[0], hex_[1]):
+            if id(unit_) != id(Objects.cursor.whom_attack) and id(unit_) != id(self):
+                return [Objects.cursor.whom_attack, unit_]
+        return [Objects.cursor.whom_attack]
+
+    def to_circular_attack(self):
+        """
+        Special ability for chydr and hydra
+        The function returns units that will be circular attacked
+        :return: list
+        """
+        hex_ = Objects.cursor.destination_point
+        defenders = Objects.tools.get_neighbors(hex_[0], hex_[1])
+        defenders.extend(Objects.tools.get_neighbors(hex_[0], hex_[1] + 1))
+
+        defenders = [item for item in defenders if item.team != self.team]
+        return list(set(defenders))
+
+    def three_heads_attack(self):
+        """
+        Special ability for cerbu
+        The function returns units that will be attacked
+        :return: list
+        """
+        defenders = [Objects.cursor.whom_attack]
+
+        if Objects.cursor.direction_to_three_heads in [6, 7]:
+            next_ = [Objects.cursor.offset[0], Objects.cursor.offset[1] + 1]
+            before_ = [Objects.cursor.offset[0], Objects.cursor.offset[1] - 1]
+        else:
+            point_attack_cube = Objects.tools.offset2cube(Objects.cursor.point_attack[0], Objects.cursor.point_attack[1])
+            next_ = Objects.tools.cube_neighbor(point_attack_cube, (Objects.cursor.direction_to_three_heads + 1) % 6)
+            before_ = Objects.tools.cube_neighbor(point_attack_cube, (Objects.cursor.direction_to_three_heads - 1) % 6)
+            next_ = Objects.tools.cube2offset(next_[0], next_[1], next_[2])
+            before_ = Objects.tools.cube2offset(before_[0], before_[1], before_[2])
+
+        if unit_ := Objects.tools.get_unit(next_[0], next_[1]):
+            if id(unit_) != id(Objects.cursor.whom_attack):
+                defenders.append(unit_)
+
+        if unit_ := Objects.tools.get_unit(before_[0], before_[1]):
+            if id(unit_) != id(Objects.cursor.whom_attack):
+                defenders.append(unit_)
+
+        defenders = [item for item in defenders if id(item) != id(self)]
+        return defenders
+
+    # attack
+    def add_action_attack_(self):
+        self.to_attack[0].to_attack = [self]
+
+        self.next_actions.append(Objects.cursor.action)
+        States.stack_animations.extend([[self], self.to_attack])
+
+        self.to_damage_all(self, self.to_attack)
+
+        if self.characteristics["is_not_answer"] is False:
+            if self.to_attack[0].status["is_answer"] > 0 and self.to_attack[0].characteristics["current_count"] > 0:
+                self.to_attack[0].status["is_answer"] -= 1
+
+                self.to_attack[0].next_actions.append(self.get_answer_action())
+                States.stack_animations.extend([[self.to_attack[0]], [self]])
+
+                self.to_damage_all(self.to_attack[0], [self])
+
+    # second attack, special ability: crusd, uwlfr
+    def add_action_second_attack_(self):
+        if self.characteristics["current_count"] > 0 and self.to_attack[0].characteristics["current_count"] > 0:
+            self.next_actions.append(Objects.cursor.action)
+            States.stack_animations.extend([[self], self.to_attack])
+
+            self.to_damage_all(self, self.to_attack)
+
+    def to_damage_all(self, attacker,  defenders):
+        defenders = [self.to_damage_item(attacker, defender) for defender in defenders]
+        defenders = [defender for defender in defenders if defender is not None]
+        if len(defenders) > 0:
+            States.stack_animations.extend([defenders])
+
+    @staticmethod
+    def to_damage_item(attacker, defender):
+        damage = Objects.damage_counter.count_damage(attacker, defender)
+        Objects.damage_counter.update_health(defender, damage)
+
+        if defender.characteristics["current_count"] > 0:
+            defender.next_actions.append("getting_hit")
+            return None
+
+        defender.next_actions.append("death")
+        defender.next_actions.append("dead")
+        return defender
+
+    @staticmethod
+    def get_answer_action():
+        if Objects.cursor.action.find("up") != -1:
+            return Objects.cursor.action.replace("up", "down")
+        if Objects.cursor.action.find("down") != -1:
+            return Objects.cursor.action.replace("down", "up")
+        return Objects.cursor.action
+
+    # shoot
+    def add_action_shoot_(self):
+        self.to_attack[0].to_attack = [self]
+        self.characteristics["current_arrows"] -= 1
+
+        self.next_actions.append(Objects.cursor.action)
+        States.stack_animations.extend([[self], self.to_attack])
+
+        self.to_damage_all(self, self.to_attack)
+
+    # second shoot, special ability: hcbow, grelf
+    def add_action_second_shoot_(self):
+        if self.characteristics["current_count"] > 0 and self.characteristics["current_arrows"] > 0 and self.to_attack[0].characteristics["current_count"] > 0:
+            self.characteristics["current_arrows"] -= 1
+
+            self.next_actions.append(Objects.cursor.action)
+            States.stack_animations.extend([[self], self.to_attack])
+
+            self.to_damage_all(self, self.to_attack)
 
     def reset_round(self):
         self.reset_buttons()
         self.reset_answers()
 
     def reset_buttons(self):
-        self.is_wait = False
-        self.is_defense = False
+        self.status["is_wait"] = False
+        self.status["is_defense"] = False
 
     def reset_answers(self):
-        self.is_answer = 1
+        self.status["is_answer"] = 1
 
     def draw(self, screen):
         if len(self.current_animation_images) > 0:
@@ -314,7 +414,7 @@ class Units:
                     item = pygame.transform.flip(item, True, False)
 
         if (self.current_animation.find("attack") != -1 or self.current_animation.find("shoot") != -1 or self.current_animation == "getting_hit") and self.to_attack is not None:
-            if (self.hex[0][1] < self.to_attack.hex[0][1] and self.team == 2) or (self.hex[0][1] > self.to_attack.hex[0][1] and self.team == 1):
+            if (self.hex[0][1] < self.to_attack[0].hex[0][1] and self.team == 2) or (self.hex[0][1] > self.to_attack[0].hex[0][1] and self.team == 1):
                 item = pygame.transform.flip(item, True, False)
 
         return item

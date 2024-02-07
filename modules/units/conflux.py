@@ -1,11 +1,11 @@
 from .units import Units
-from modules.states import Objects
+from modules.states import Objects, States
 
 
 class Phx(Units):
 
     def __init__(self, i, j, count, team):
-        super().__init__(team)
+        super().__init__(i, j, team)
 
         self.name = 'phx'
         self.ai = 6721
@@ -13,7 +13,8 @@ class Phx(Units):
         self.characteristics = {"base_characteristics": {"attack": 21, "defense": 18, "damage": [30, 40],
                                                          "health": 200, "speed": 21},
                                 "current_health": 200, "current_count": count, "current_arrows": 0,
-                                "is_double": True, "is_shooter": False, "is_flyer": True, "is_jumper": False
+                                "is_double": True, "is_shooter": False, "is_flyer": True, "is_jumper": False,
+                                "is_not_answer": False
                                 }
 
         self.animations = {
@@ -31,16 +32,19 @@ class Phx(Units):
 
         self.image = {"x_size": 288, "y_size": 288 / 1.125, "x_shift": -15, "y_shift": -20}
 
-        self.init(i, j)
+        self.init()
 
-    # todo: Dragon's Breath - full damage is caused to both the target itself and the unit directly behind it
+    # special ability: fire attack
+    def get_defenders(self):
+        return self.to_fire_attack()
+
     # todo: ability to be revived of a squad of 20% of its original size. 20% chance
 
 
 class Fbird(Units):
 
     def __init__(self, i, j, count, team):
-        super().__init__(team)
+        super().__init__(i, j, team)
 
         self.name = 'fbird'
         self.ai = 4336
@@ -48,7 +52,8 @@ class Fbird(Units):
         self.characteristics = {"base_characteristics": {"attack": 18, "defense": 18, "damage": [30, 40],
                                                          "health": 150, "speed": 15},
                                 "current_health": 150, "current_count": count, "current_arrows": 0,
-                                "is_double": True, "is_shooter": False, "is_flyer": True, "is_jumper": False
+                                "is_double": True, "is_shooter": False, "is_flyer": True, "is_jumper": False,
+                                "is_not_answer": False
                                 }
 
         self.animations = {
@@ -66,16 +71,19 @@ class Fbird(Units):
 
         self.image = {"x_size": 268, "y_size": 268 / 1.125, "x_shift": -5, "y_shift": -15}
 
-        self.init(i, j)
+        self.init()
 
-    # todo: Dragon's Breath - full damage is caused to both the target itself and the unit directly behind it.
+    # special ability: fire attack
+    def get_defenders(self):
+        return self.to_fire_attack()
+
     # todo: Immunity to all Fire magic spells
 
 
 class Magel(Units):
 
     def __init__(self, i, j, count, team):
-        super().__init__(team)
+        super().__init__(i, j, team)
 
         self.name = 'magel'
         self.ai = 2012
@@ -83,7 +91,8 @@ class Magel(Units):
         self.characteristics = {"base_characteristics": {"attack": 15, "defense": 13, "damage": [15, 25],
                                                          "health": 80, "speed": 9},
                                 "current_health": 80, "current_count": count, "current_arrows": 0,
-                                "is_double": False, "is_shooter": False, "is_flyer": False, "is_jumper": False
+                                "is_double": False, "is_shooter": False, "is_flyer": False, "is_jumper": False,
+                                "is_not_answer": True
                                 }
 
         self.animations = {
@@ -101,21 +110,20 @@ class Magel(Units):
 
         self.image = {"x_size": 216, "y_size": 216 / 1.125, "x_shift": -20, "y_shift": -20}
 
-        self.init(i, j)
+        self.init()
 
-    # special ability: attack w/o answer
-    def add_animation_attack(self):
-        self.add_animation_attack_no_answer()
+    # special ability: circular attack
+    def get_defenders(self):
+        return self.three_heads_attack()
 
     # todo: They cannot be resurrected, their morale is always neutral, and they are immune to mind-affecting spells
-    # todo: Circular attack - attacks all nearby enemy units.
     # todo: magic Attack - Thought elementals only deal 50% damage to black dragons and other magical elementals.
 
 
 class Psyel(Units):
 
     def __init__(self, i, j, count, team):
-        super().__init__(team)
+        super().__init__(i, j, team)
 
         self.name = 'psyel'
         self.ai = 1669
@@ -123,7 +131,8 @@ class Psyel(Units):
         self.characteristics = {"base_characteristics": {"attack": 15, "defense": 13, "damage": [10, 20],
                                                          "health": 75, "speed": 7},
                                 "current_health": 75, "current_count": count, "current_arrows": 0,
-                                "is_double": False, "is_shooter": False, "is_flyer": False, "is_jumper": False
+                                "is_double": False, "is_shooter": False, "is_flyer": False, "is_jumper": False,
+                                "is_not_answer": True
                                 }
 
         self.animations = {
@@ -141,21 +150,20 @@ class Psyel(Units):
 
         self.image = {"x_size": 216, "y_size": 216 / 1.125, "x_shift": -20, "y_shift": -20}
 
-        self.init(i, j)
+        self.init()
 
-    # special ability: attack w/o answer
-    def add_animation_attack(self):
-        self.add_animation_attack_no_answer()
+    # special ability: circular attack
+    def get_defenders(self):
+        return self.three_heads_attack()
 
     # todo: They cannot be resurrected, their morale is always neutral, and they are immune to mind-affecting spells
-    # todo: Circular attack - attacks all nearby enemy units.
     # todo: Psychic Attack - Thought elementals only deal 50% damage to all units immune to mind affecting spells.
 
 
 class Ston(Units):
 
     def __init__(self, i, j, count, team):
-        super().__init__(team)
+        super().__init__(i, j, team)
 
         self.name = 'ston'
         self.ai = 490
@@ -163,7 +171,8 @@ class Ston(Units):
         self.characteristics = {"base_characteristics": {"attack": 11, "defense": 11, "damage": [6, 10],
                                                          "health": 40, "speed": 6},
                                 "current_health": 40, "current_count": count, "current_arrows": 0,
-                                "is_double": False, "is_shooter": False, "is_flyer": False, "is_jumper": False
+                                "is_double": False, "is_shooter": False, "is_flyer": False, "is_jumper": False,
+                                "is_not_answer": False
                                 }
 
         self.animations = {
@@ -181,7 +190,7 @@ class Ston(Units):
 
         self.image = {"x_size": 216, "y_size": 216 / 1.125, "x_shift": -20, "y_shift": -10}
 
-        self.init(i, j)
+        self.init()
 
     # todo: They cannot be resurrected, their morale is always neutral, and they are immune to mind-affecting spells
     # todo: Receive double damage from spells: Meteor Rain
@@ -193,7 +202,7 @@ class Ston(Units):
 class Eelem(Units):
 
     def __init__(self, i, j, count, team):
-        super().__init__(team)
+        super().__init__(i, j, team)
 
         self.name = 'eelem'
         self.ai = 330
@@ -201,7 +210,8 @@ class Eelem(Units):
         self.characteristics = {"base_characteristics": {"attack": 10, "defense": 10, "damage": [4, 8],
                                                          "health": 40, "speed": 4},
                                 "current_health": 40, "current_count": count, "current_arrows": 0,
-                                "is_double": False, "is_shooter": False, "is_flyer": False, "is_jumper": False
+                                "is_double": False, "is_shooter": False, "is_flyer": False, "is_jumper": False,
+                                "is_not_answer": False
                                 }
 
         self.animations = {
@@ -219,7 +229,7 @@ class Eelem(Units):
 
         self.image = {"x_size": 216, "y_size": 216 / 1.125, "x_shift": -20, "y_shift": -10}
 
-        self.init(i, j)
+        self.init()
 
     # todo: They cannot be resurrected, their morale is always neutral, and they are immune to mind-affecting spells
     # todo: Receive double damage from spells: Meteor Rain
@@ -230,7 +240,7 @@ class Eelem(Units):
 class Nrg(Units):
 
     def __init__(self, i, j, count, team):
-        super().__init__(team)
+        super().__init__(i, j, team)
 
         self.name = 'nrg'
         self.ai = 470
@@ -238,7 +248,8 @@ class Nrg(Units):
         self.characteristics = {"base_characteristics": {"attack": 12, "defense": 8, "damage": [4, 6],
                                                          "health": 35, "speed": 8},
                                 "current_health": 35, "current_count": count, "current_arrows": 0,
-                                "is_double": False, "is_shooter": False, "is_flyer": False, "is_jumper": True
+                                "is_double": False, "is_shooter": False, "is_flyer": False, "is_jumper": True,
+                                "is_not_answer": False
                                 }
 
         self.animations = {
@@ -258,11 +269,15 @@ class Nrg(Units):
 
         self.image = {"x_size": 216, "y_size": 216 / 1.125, "x_shift": -25, "y_shift": -10}
 
-        self.init(i, j)
+        self.init()
 
-    def add_animation_moving(self):
-        self.add_animation(self, "start_moving")
-        self.add_animation(self, "stop_moving")
+    # special ability: is jumper
+    def add_action_moving(self):
+        self.i, self.j = Objects.cursor.destination_point
+        self.next_actions.append("start_moving")
+        self.next_actions.append("stop_moving")
+
+        States.stack_animations.extend([[self], [self]])
 
     # todo: They cannot be resurrected, their morale is always neutral, and they are immune to mind-affecting spells
     # todo: Receive double damage from spells: Ring of Frost and Frostbolt
@@ -274,7 +289,7 @@ class Nrg(Units):
 class Felem(Units):
 
     def __init__(self, i, j, count, team):
-        super().__init__(team)
+        super().__init__(i, j, team)
 
         self.name = 'felem'
         self.ai = 345
@@ -282,7 +297,8 @@ class Felem(Units):
         self.characteristics = {"base_characteristics": {"attack": 10, "defense": 8, "damage": [4, 6],
                                                          "health": 35, "speed": 6},
                                 "current_health": 35, "current_count": count, "current_arrows": 0,
-                                "is_double": False, "is_shooter": False, "is_flyer": False, "is_jumper": False
+                                "is_double": False, "is_shooter": False, "is_flyer": False, "is_jumper": False,
+                                "is_not_answer": False
                                 }
 
         self.animations = {
@@ -300,7 +316,7 @@ class Felem(Units):
 
         self.image = {"x_size": 216, "y_size": 216 / 1.125, "x_shift": -15, "y_shift": -10}
 
-        self.init(i, j)
+        self.init()
 
     # todo: They cannot be resurrected, their morale is always neutral, and they are immune to mind-affecting spells
     # todo: Receive double damage from spells: Ring of Frost and Frostbolt
@@ -311,7 +327,7 @@ class Felem(Units):
 class Icee(Units):
 
     def __init__(self, i, j, count, team):
-        super().__init__(team)
+        super().__init__(i, j, team)
 
         self.name = 'icee'
         self.ai = 280
@@ -319,7 +335,8 @@ class Icee(Units):
         self.characteristics = {"base_characteristics": {"attack": 8, "defense": 10, "damage": [3, 7],
                                                          "health": 30, "speed": 6},
                                 "current_health": 30, "current_count": count, "current_arrows": 24,
-                                "is_double": True, "is_shooter": True, "is_flyer": False, "is_jumper": False
+                                "is_double": True, "is_shooter": True, "is_flyer": False, "is_jumper": False,
+                                "is_not_answer": False
                                 }
 
         self.animations = {
@@ -340,7 +357,7 @@ class Icee(Units):
 
         self.image = {"x_size": 196, "y_size": 196 / 1.125, "x_shift": 10, "y_shift": 0}
 
-        self.init(i, j)
+        self.init()
 
     # todo: They cannot be resurrected, their morale is always neutral, and they are immune to mind-affecting spells
     # todo: Receive double damage from spells: Fireball, Inferno, Armageddon.
@@ -352,7 +369,7 @@ class Icee(Units):
 class Welem(Units):
 
     def __init__(self, i, j, count, team):
-        super().__init__(team)
+        super().__init__(i, j, team)
 
         self.name = 'welem'
         self.ai = 315
@@ -360,7 +377,8 @@ class Welem(Units):
         self.characteristics = {"base_characteristics": {"attack": 8, "defense": 10, "damage": [3, 7],
                                                          "health": 30, "speed": 5},
                                 "current_health": 30, "current_count": count, "current_arrows": 0,
-                                "is_double": True, "is_shooter": False, "is_flyer": False, "is_jumper": False
+                                "is_double": True, "is_shooter": False, "is_flyer": False, "is_jumper": False,
+                                "is_not_answer": False
                                 }
 
         self.animations = {
@@ -378,7 +396,7 @@ class Welem(Units):
 
         self.image = {"x_size": 216, "y_size": 216 / 1.125, "x_shift": 0, "y_shift": -10}
 
-        self.init(i, j)
+        self.init()
 
     # todo: They cannot be resurrected, their morale is always neutral, and they are immune to mind-affecting spells
     # todo: Receive double damage from spells: Fireball, Inferno, Armageddon.
@@ -389,7 +407,7 @@ class Welem(Units):
 class Storm(Units):
 
     def __init__(self, i, j, count, team):
-        super().__init__(team)
+        super().__init__(i, j, team)
 
         self.name = 'storm'
         self.ai = 486
@@ -397,7 +415,8 @@ class Storm(Units):
         self.characteristics = {"base_characteristics": {"attack": 9, "defense": 9, "damage": [2, 8],
                                                          "health": 25, "speed": 8},
                                 "current_health": 25, "current_count": count, "current_arrows": 24,
-                                "is_double": False, "is_shooter": True, "is_flyer": False, "is_jumper": False
+                                "is_double": False, "is_shooter": True, "is_flyer": False, "is_jumper": False,
+                                "is_not_answer": False
                                 }
 
         self.animations = {
@@ -418,7 +437,7 @@ class Storm(Units):
 
         self.image = {"x_size": 216, "y_size": 216 / 1.125, "x_shift": -25, "y_shift": -10}
 
-        self.init(i, j)
+        self.init()
 
     # todo: They cannot be resurrected, their morale is always neutral, and they are immune to mind-affecting spells
     # todo: Receive double damage from spells: Lightning, Chain Lightning, Armageddon
@@ -430,7 +449,7 @@ class Storm(Units):
 class Aelem(Units):
 
     def __init__(self, i, j, count, team):
-        super().__init__(team)
+        super().__init__(i, j, team)
 
         self.name = 'aelem'
         self.ai = 356
@@ -438,7 +457,8 @@ class Aelem(Units):
         self.characteristics = {"base_characteristics": {"attack": 9, "defense": 9, "damage": [2, 8],
                                                          "health": 25, "speed": 7},
                                 "current_health": 25, "current_count": count, "current_arrows": 0,
-                                "is_double": False, "is_shooter": False, "is_flyer": False, "is_jumper": False
+                                "is_double": False, "is_shooter": False, "is_flyer": False, "is_jumper": False,
+                                "is_not_answer": False
                                 }
 
         self.animations = {
@@ -456,7 +476,7 @@ class Aelem(Units):
 
         self.image = {"x_size": 216, "y_size": 216 / 1.125, "x_shift": -25, "y_shift": 0}
 
-        self.init(i, j)
+        self.init()
 
     # todo: They cannot be resurrected, their morale is always neutral, and they are immune to mind-affecting spells
     # todo: Receive double damage from spells: Lightning, Chain Lightning, Armageddon
@@ -467,7 +487,7 @@ class Aelem(Units):
 class Sprit(Units):
 
     def __init__(self, i, j, count, team):
-        super().__init__(team)
+        super().__init__(i, j, team)
 
         self.name = 'sprit'
         self.ai = 95
@@ -475,7 +495,8 @@ class Sprit(Units):
         self.characteristics = {"base_characteristics": {"attack": 2, "defense": 2, "damage": [1, 3],
                                                          "health": 3, "speed": 9},
                                 "current_health": 3, "current_count": count, "current_arrows": 0,
-                                "is_double": False, "is_shooter": False, "is_flyer": True, "is_jumper": False
+                                "is_double": False, "is_shooter": False, "is_flyer": True, "is_jumper": False,
+                                "is_not_answer": True
                                 }
 
         self.animations = {
@@ -493,17 +514,13 @@ class Sprit(Units):
 
         self.image = {"x_size": 216, "y_size": 216 / 1.125, "x_shift": -25, "y_shift": -10}
 
-        self.init(i, j)
-
-    # special ability: attack w/o answer
-    def add_animation_attack(self):
-        self.add_animation_attack_no_answer()
+        self.init()
 
 
 class Pixie(Units):
 
     def __init__(self, i, j, count, team):
-        super().__init__(team)
+        super().__init__(i, j, team)
 
         self.name = 'pixie'
         self.ai = 55
@@ -511,7 +528,8 @@ class Pixie(Units):
         self.characteristics = {"base_characteristics": {"attack": 2, "defense": 2, "damage": [1, 2],
                                                          "health": 3, "speed": 7},
                                 "current_health": 3, "current_count": count, "current_arrows": 0,
-                                "is_double": False, "is_shooter": False, "is_flyer": True, "is_jumper": False
+                                "is_double": False, "is_shooter": False, "is_flyer": True, "is_jumper": False,
+                                "is_not_answer": False
                                 }
 
         self.animations = {
@@ -529,4 +547,4 @@ class Pixie(Units):
 
         self.image = {"x_size": 216, "y_size": 216 / 1.125, "x_shift": -25, "y_shift": -10}
 
-        self.init(i, j)
+        self.init()

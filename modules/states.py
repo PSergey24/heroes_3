@@ -1,5 +1,4 @@
 
-
 class States:
 
     # game info:
@@ -12,9 +11,9 @@ class States:
 
     # animations:
     is_animate = False
-    active_animation = 1
-    current_animation = 1
+
     stack_animations = []
+    active = None
 
 
 class Objects:

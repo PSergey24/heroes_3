@@ -55,7 +55,7 @@ class InfoBlock:
 
         max_step = len(Objects.queue.sequence)
         for i, item in reversed(list(enumerate(Objects.queue.sequence))):
-            if item.is_defense is True:
+            if item.status["is_defense"] is True:
                 max_step -= 1
 
         i, step, rnd = 0, 0, copy(States.round)
@@ -123,13 +123,13 @@ class InfoBlock:
     @staticmethod
     def update_button(btn):
         if btn.name == 'wait':
-            if Objects.active_unit.info.is_wait is False:
+            if Objects.active_unit.info.status["is_wait"] is False:
                 btn.switch_to_active()
             else:
                 btn.switch_to_not_active()
 
         if btn.name == 'defense':
-            if Objects.active_unit.info.is_defense is False:
+            if Objects.active_unit.info.status["is_defense"] is False:
                 btn.switch_to_active()
             else:
                 btn.switch_to_not_active()

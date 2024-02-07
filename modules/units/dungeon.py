@@ -1,11 +1,11 @@
 from .units import Units
-from modules.states import Objects
+from modules.states import Objects, States
 
 
 class BDragon(Units):
 
     def __init__(self, i, j, count, team):
-        super().__init__(team)
+        super().__init__(i, j, team)
 
         self.name = 'bdrgn'
         self.ai = 8721
@@ -13,7 +13,8 @@ class BDragon(Units):
         self.characteristics = {"base_characteristics": {"attack": 25, "defense": 25, "damage": [40, 50],
                                                          "health": 300, "speed": 15},
                                 "current_health": 300, "current_count": count, "current_arrows": 0,
-                                "is_double": True, "is_shooter": False, "is_flyer": True, "is_jumper": False
+                                "is_double": True, "is_shooter": False, "is_flyer": True, "is_jumper": False,
+                                "is_not_answer": False
                                 }
 
         self.animations = {
@@ -34,9 +35,12 @@ class BDragon(Units):
 
         self.image = {"x_size": 288, "y_size": 288 / 1.125, "x_shift": -10, "y_shift": -5}
 
-        self.init(i, j)
+        self.init()
 
-    # todo: Dragon's Breath - the attack behind
+    # special ability: fire attack
+    def get_defenders(self):
+        return self.to_fire_attack()
+
     # todo: Immunity to all magic
     # todo: Titan Hatred => +50% additional attack damage
 
@@ -44,7 +48,7 @@ class BDragon(Units):
 class Rdrgn(Units):
 
     def __init__(self, i, j, count, team):
-        super().__init__(team)
+        super().__init__(i, j, team)
 
         self.name = 'rdrgn'
         self.ai = 4702
@@ -52,7 +56,8 @@ class Rdrgn(Units):
         self.characteristics = {"base_characteristics": {"attack": 19, "defense": 19, "damage": [40, 50],
                                                          "health": 180, "speed": 11},
                                 "current_health": 180, "current_count": count, "current_arrows": 0,
-                                "is_double": True, "is_shooter": False, "is_flyer": True, "is_jumper": False
+                                "is_double": True, "is_shooter": False, "is_flyer": True, "is_jumper": False,
+                                "is_not_answer": False
                                 }
 
         self.animations = {
@@ -73,16 +78,19 @@ class Rdrgn(Units):
 
         self.image = {"x_size": 288, "y_size": 288 / 1.125, "x_shift": -10, "y_shift": -5}
 
-        self.init(i, j)
+        self.init()
 
-    # todo: Dragon's Breath - the attack behind
+    # special ability: fire attack
+    def get_defenders(self):
+        return self.to_fire_attack()
+
     # todo: Immunity to all spells of levels 1-3, including positive spells.
 
 
 class Cmcor(Units):
 
     def __init__(self, i, j, count, team):
-        super().__init__(team)
+        super().__init__(i, j, team)
 
         self.name = 'cmcor'
         self.ai = 1589
@@ -90,7 +98,8 @@ class Cmcor(Units):
         self.characteristics = {"base_characteristics": {"attack": 16, "defense": 14, "damage": [14, 20],
                                                          "health": 80, "speed": 11},
                                 "current_health": 80, "current_count": count, "current_arrows": 0,
-                                "is_double": True, "is_shooter": False, "is_flyer": True, "is_jumper": False
+                                "is_double": True, "is_shooter": False, "is_flyer": True, "is_jumper": False,
+                                "is_not_answer": False
                                 }
 
         self.animations = {
@@ -108,7 +117,7 @@ class Cmcor(Units):
 
         self.image = {"x_size": 216, "y_size": 216 / 1.125, "x_shift": 0, "y_shift": 0}
 
-        self.init(i, j)
+        self.init()
 
     # todo: Paralyzing Sting - 20% chance, 3 duration, -25% attack
 
@@ -116,7 +125,7 @@ class Cmcor(Units):
 class Mcore(Units):
 
     def __init__(self, i, j, count, team):
-        super().__init__(team)
+        super().__init__(i, j, team)
 
         self.name = 'mcore'
         self.ai = 1547
@@ -124,7 +133,8 @@ class Mcore(Units):
         self.characteristics = {"base_characteristics": {"attack": 15, "defense": 13, "damage": [14, 20],
                                                          "health": 80, "speed": 7},
                                 "current_health": 80, "current_count": count, "current_arrows": 0,
-                                "is_double": True, "is_shooter": False, "is_flyer": True, "is_jumper": False
+                                "is_double": True, "is_shooter": False, "is_flyer": True, "is_jumper": False,
+                                "is_not_answer": False
                                 }
 
         self.animations = {
@@ -142,13 +152,13 @@ class Mcore(Units):
 
         self.image = {"x_size": 216, "y_size": 216 / 1.125, "x_shift": 10, "y_shift": -15}
 
-        self.init(i, j)
+        self.init()
 
 
 class Minok(Units):
 
     def __init__(self, i, j, count, team):
-        super().__init__(team)
+        super().__init__(i, j, team)
 
         self.name = 'minok'
         self.ai = 1068
@@ -156,7 +166,8 @@ class Minok(Units):
         self.characteristics = {"base_characteristics": {"attack": 15, "defense": 15, "damage": [12, 20],
                                                          "health": 50, "speed": 8},
                                 "current_health": 50, "current_count": count, "current_arrows": 0,
-                                "is_double": False, "is_shooter": False, "is_flyer": False, "is_jumper": False
+                                "is_double": False, "is_shooter": False, "is_flyer": False, "is_jumper": False,
+                                "is_not_answer": False
                                 }
 
         self.animations = {
@@ -174,7 +185,7 @@ class Minok(Units):
 
         self.image = {"x_size": 216, "y_size": 216 / 1.125, "x_shift": -20, "y_shift": -5}
 
-        self.init(i, j)
+        self.init()
 
     # todo: Bravery – unit morale never drops below +1
 
@@ -182,7 +193,7 @@ class Minok(Units):
 class Minot(Units):
 
     def __init__(self, i, j, count, team):
-        super().__init__(team)
+        super().__init__(i, j, team)
 
         self.name = 'minot'
         self.ai = 835
@@ -190,7 +201,8 @@ class Minot(Units):
         self.characteristics = {"base_characteristics": {"attack": 14, "defense": 12, "damage": [12, 20],
                                                          "health": 50, "speed": 6},
                                 "current_health": 50, "current_count": count, "current_arrows": 0,
-                                "is_double": False, "is_shooter": False, "is_flyer": False, "is_jumper": False
+                                "is_double": False, "is_shooter": False, "is_flyer": False, "is_jumper": False,
+                                "is_not_answer": False
                                 }
 
         self.animations = {
@@ -208,7 +220,7 @@ class Minot(Units):
 
         self.image = {"x_size": 216, "y_size": 216 / 1.125, "x_shift": -20, "y_shift": -5}
 
-        self.init(i, j)
+        self.init()
 
     # todo: Bravery – unit morale never drops below +1
 
@@ -216,7 +228,7 @@ class Minot(Units):
 class Meduq(Units):
 
     def __init__(self, i, j, count, team):
-        super().__init__(team)
+        super().__init__(i, j, team)
 
         self.name = 'meduq'
         self.ai = 577
@@ -224,7 +236,8 @@ class Meduq(Units):
         self.characteristics = {"base_characteristics": {"attack": 10, "defense": 10, "damage": [6, 8],
                                                          "health": 30, "speed": 6},
                                 "current_health": 30, "current_count": count, "current_arrows": 8,
-                                "is_double": True, "is_shooter": True, "is_flyer": False, "is_jumper": False
+                                "is_double": True, "is_shooter": True, "is_flyer": False, "is_jumper": False,
+                                "is_not_answer": False
                                 }
 
         self.animations = {
@@ -245,7 +258,7 @@ class Meduq(Units):
 
         self.image = {"x_size": 216, "y_size": 216 / 1.125, "x_shift": 10, "y_shift": -5}
 
-        self.init(i, j)
+        self.init()
 
     # todo: No melee penalty
     # todo: Petrification - 20% chance, duration 3 step, -50% attack after
@@ -254,7 +267,7 @@ class Meduq(Units):
 class Medus(Units):
 
     def __init__(self, i, j, count, team):
-        super().__init__(team)
+        super().__init__(i, j, team)
 
         self.name = 'medus'
         self.ai = 517
@@ -262,7 +275,8 @@ class Medus(Units):
         self.characteristics = {"base_characteristics": {"attack": 9, "defense": 9, "damage": [6, 8],
                                                          "health": 25, "speed": 5},
                                 "current_health": 25, "current_count": count, "current_arrows": 4,
-                                "is_double": True, "is_shooter": True, "is_flyer": False, "is_jumper": False
+                                "is_double": True, "is_shooter": True, "is_flyer": False, "is_jumper": False,
+                                "is_not_answer": False
                                 }
 
         self.animations = {
@@ -283,7 +297,7 @@ class Medus(Units):
 
         self.image = {"x_size": 216, "y_size": 216 / 1.125, "x_shift": 0, "y_shift": -10}
 
-        self.init(i, j)
+        self.init()
 
     # todo: No melee penalty
     # todo: Petrification - 20% chance, duration 3 step, -50% attack after
@@ -292,7 +306,7 @@ class Medus(Units):
 class Eveye(Units):
 
     def __init__(self, i, j, count, team):
-        super().__init__(team)
+        super().__init__(i, j, team)
 
         self.name = 'eveye'
         self.ai = 367
@@ -300,7 +314,8 @@ class Eveye(Units):
         self.characteristics = {"base_characteristics": {"attack": 10, "defense": 8, "damage": [3, 5],
                                                          "health": 22, "speed": 7},
                                 "current_health": 22, "current_count": count, "current_arrows": 24,
-                                "is_double": False, "is_shooter": True, "is_flyer": False, "is_jumper": False
+                                "is_double": False, "is_shooter": True, "is_flyer": False, "is_jumper": False,
+                                "is_not_answer": False
                                 }
 
         self.animations = {
@@ -321,7 +336,7 @@ class Eveye(Units):
 
         self.image = {"x_size": 216, "y_size": 216 / 1.125, "x_shift": -25, "y_shift": -5}
 
-        self.init(i, j)
+        self.init()
 
     # todo: No melee penalty
 
@@ -329,7 +344,7 @@ class Eveye(Units):
 class Behol(Units):
 
     def __init__(self, i, j, count, team):
-        super().__init__(team)
+        super().__init__(i, j, team)
 
         self.name = 'behol'
         self.ai = 336
@@ -337,7 +352,8 @@ class Behol(Units):
         self.characteristics = {"base_characteristics": {"attack": 9, "defense": 7, "damage": [3, 5],
                                                          "health": 22, "speed": 5},
                                 "current_health": 22, "current_count": count, "current_arrows": 12,
-                                "is_double": False, "is_shooter": True, "is_flyer": False, "is_jumper": False
+                                "is_double": False, "is_shooter": True, "is_flyer": False, "is_jumper": False,
+                                "is_not_answer": False
                                 }
 
         self.animations = {
@@ -358,7 +374,7 @@ class Behol(Units):
 
         self.image = {"x_size": 216, "y_size": 216 / 1.125, "x_shift": -25, "y_shift": -5}
 
-        self.init(i, j)
+        self.init()
 
     # todo: No melee penalty
 
@@ -366,7 +382,7 @@ class Behol(Units):
 class Harph(Units):
 
     def __init__(self, i, j, count, team):
-        super().__init__(team)
+        super().__init__(i, j, team)
 
         self.name = 'harph'
         self.ai = 238
@@ -374,10 +390,11 @@ class Harph(Units):
         self.characteristics = {"base_characteristics": {"attack": 6, "defense": 6, "damage": [1, 4],
                                                          "health": 14, "speed": 9},
                                 "current_health": 14, "current_count": count, "current_arrows": 0,
-                                "is_double": False, "is_shooter": False, "is_flyer": True, "is_jumper": False
+                                "is_double": False, "is_shooter": False, "is_flyer": True, "is_jumper": False,
+                                "is_not_answer": True
                                 }
 
-        self.status = {"destination_back": [0, 0]}
+        self.status = {"is_answer": 1, "is_wait": False, "is_defense": False, "destination_back": [0, 0], "is_back": False}
 
         self.animations = {
             "moving": ["54", "55", "56", "57", "58", "59", "60"],
@@ -396,14 +413,28 @@ class Harph(Units):
 
         self.image = {"x_size": 216, "y_size": 216 / 1.125, "x_shift": -20, "y_shift": -5}
 
-        self.init(i, j)
+        self.init()
 
     # special ability: hits and run
-    def reset_moving(self):
+    def init_moving(self):
+        if self.status["is_back"]:
+            self.i, self.j = Objects.cursor.destination_point
+
         self.reset_field()
-        self.init_hex(Objects.cursor.destination_point[0], Objects.cursor.destination_point[1])
+        self.init_hex()
         self.init_field()
-        self.reset_cursor()
+
+        if self.status["is_back"] is False:
+            self.reset_cursor()
+
+        if len(self.next_actions) == 0 and self.status["is_back"] is False:
+            Objects.queue.handle_move()
+            Objects.info_block.handle_move()
+
+        if "moving" in self.next_actions:
+            self.status["is_back"] = not self.status["is_back"]
+        else:
+            self.status["is_back"] = False
 
     def reset_cursor(self):
         Objects.cursor.destination_point = self.status["destination_back"]
@@ -411,24 +442,22 @@ class Harph(Units):
         Objects.cursor.point_attack = None
         Objects.cursor.whom_attack = None
 
-    def add_moving_and_attack(self):
-        self.add_animation_moving()
-        self.add_animation_attack()
-        self.add_animation_moving_back()
+    def add_action_moving_and_attack(self):
+        self.add_action_moving()
+        self.add_action_attack()
 
-    # special ability: attack w/o answer
-    def add_animation_attack(self):
-        self.add_animation_attack_no_answer()
+        if self.characteristics["current_count"] > 0:
+            self.add_animation_moving_back()
 
     def add_animation_moving_back(self):
         self.status["destination_back"] = self.hex[0]
-        self.add_animation_moving()
+        self.add_action_moving()
 
 
 class Harpy(Units):
 
     def __init__(self, i, j, count, team):
-        super().__init__(team)
+        super().__init__(i, j, team)
 
         self.name = 'harpy'
         self.ai = 154
@@ -436,10 +465,11 @@ class Harpy(Units):
         self.characteristics = {"base_characteristics": {"attack": 6, "defense": 5, "damage": [1, 4],
                                                          "health": 14, "speed": 6},
                                 "current_health": 14, "current_count": count, "current_arrows": 0,
-                                "is_double": False, "is_shooter": False, "is_flyer": True, "is_jumper": False
+                                "is_double": False, "is_shooter": False, "is_flyer": True, "is_jumper": False,
+                                "is_not_answer": False
                                 }
 
-        self.status = {"destination_back": [0, 0]}
+        self.status = {"is_answer": 1, "is_wait": False, "is_defense": False, "destination_back": [0, 0], "is_back": False}
 
         self.animations = {
             "moving": ["54", "55", "56", "57", "58", "59", "60"],
@@ -458,14 +488,28 @@ class Harpy(Units):
 
         self.image = {"x_size": 216, "y_size": 216 / 1.125, "x_shift": -20, "y_shift": -5}
 
-        self.init(i, j)
+        self.init()
 
     # special ability: hits and run
-    def reset_moving(self):
+    def init_moving(self):
+        if self.status["is_back"]:
+            self.i, self.j = Objects.cursor.destination_point
+
         self.reset_field()
-        self.init_hex(Objects.cursor.destination_point[0], Objects.cursor.destination_point[1])
+        self.init_hex()
         self.init_field()
-        self.reset_cursor()
+
+        if self.status["is_back"] is False:
+            self.reset_cursor()
+
+        if len(self.next_actions) == 0 and self.status["is_back"] is False:
+            Objects.queue.handle_move()
+            Objects.info_block.handle_move()
+
+        if "moving" in self.next_actions:
+            self.status["is_back"] = not self.status["is_back"]
+        else:
+            self.status["is_back"] = False
 
     def reset_cursor(self):
         Objects.cursor.destination_point = self.status["destination_back"]
@@ -473,20 +517,22 @@ class Harpy(Units):
         Objects.cursor.point_attack = None
         Objects.cursor.whom_attack = None
 
-    def add_moving_and_attack(self):
-        self.add_animation_moving()
-        self.add_animation_attack()
-        self.add_animation_moving_back()
+    def add_action_moving_and_attack(self):
+        self.add_action_moving()
+        self.add_action_attack()
+
+        if self.characteristics["current_count"] > 0:
+            self.add_animation_moving_back()
 
     def add_animation_moving_back(self):
         self.status["destination_back"] = self.hex[0]
-        self.add_animation_moving()
+        self.add_action_moving()
 
 
 class Itrog(Units):
 
     def __init__(self, i, j, count, team):
-        super().__init__(team)
+        super().__init__(i, j, team)
 
         self.name = 'itrog'
         self.ai = 84
@@ -494,7 +540,8 @@ class Itrog(Units):
         self.characteristics = {"base_characteristics": {"attack": 5, "defense": 4, "damage": [1, 3],
                                                          "health": 6, "speed": 5},
                                 "current_health": 6, "current_count": count, "current_arrows": 0,
-                                "is_double": False, "is_shooter": False, "is_flyer": False, "is_jumper": False
+                                "is_double": False, "is_shooter": False, "is_flyer": False, "is_jumper": False,
+                                "is_not_answer": False
                                 }
 
         self.animations = {
@@ -512,7 +559,7 @@ class Itrog(Units):
 
         self.image = {"x_size": 196, "y_size": 196 / 1.125, "x_shift": -15, "y_shift": 0}
 
-        self.init(i, j)
+        self.init()
 
     # todo: Immune to the Blind and Petrify spells of jellyfish and basilisks, as well as to the Death Glare of Gorgons
 
@@ -520,7 +567,7 @@ class Itrog(Units):
 class Trogl(Units):
 
     def __init__(self, i, j, count, team):
-        super().__init__(team)
+        super().__init__(i, j, team)
 
         self.name = 'trogl'
         self.ai = 59
@@ -528,7 +575,8 @@ class Trogl(Units):
         self.characteristics = {"base_characteristics": {"attack": 4, "defense": 3, "damage": [1, 3],
                                                          "health": 4, "speed": 3},
                                 "current_health": 4, "current_count": count, "current_arrows": 0,
-                                "is_double": False, "is_shooter": False, "is_flyer": False, "is_jumper": False
+                                "is_double": False, "is_shooter": False, "is_flyer": False, "is_jumper": False,
+                                "is_not_answer": False
                                 }
 
         self.animations = {
@@ -546,6 +594,6 @@ class Trogl(Units):
 
         self.image = {"x_size": 216, "y_size": 216 / 1.125, "x_shift": -25, "y_shift": -5}
 
-        self.init(i, j)
+        self.init()
 
     # todo: Immune to the Blind and Petrify spells of jellyfish and basilisks, as well as to the Death Glare of Gorgons

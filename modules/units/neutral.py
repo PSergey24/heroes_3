@@ -1,11 +1,11 @@
 from .units import Units
-from modules.states import Objects
+from modules.states import Objects, States
 
 
 class Adrgn(Units):
 
     def __init__(self, i, j, count, team):
-        super().__init__(team)
+        super().__init__(i, j, team)
 
         self.character = 'adrgn'
         self.ai = 78845
@@ -13,7 +13,8 @@ class Adrgn(Units):
         self.characteristics = {"base_characteristics": {"attack": 50, "defense": 50, "damage": [70, 80],
                                                          "health": 1000, "speed": 19},
                                 "current_health": 1000, "current_count": count, "current_arrows": 0,
-                                "is_double": True, "is_shooter": False, "is_flyer": True, "is_jumper": False
+                                "is_double": True, "is_shooter": False, "is_flyer": True, "is_jumper": False,
+                                "is_not_answer": False
                                 }
 
         self.animations = {
@@ -34,8 +35,11 @@ class Adrgn(Units):
 
         self.image = {"x_size": 288, "y_size": 288 / 1.125, "x_shift": -15, "y_shift": 10}
 
-        self.init(i, j)
+        self.init()
+
+    # special ability: fire attack
+    def get_defenders(self):
+        return self.to_fire_attack()
 
     # todo: “Fear” – 10% chance that the enemy unit will miss a turn in battle
     # todo: Immunity to all spells of levels 1-3
-    # todo: fire behind

@@ -81,8 +81,8 @@ class Game:
         Objects.field = Field()
 
     def create_teams(self):
-        self.left_team = [unit('crusd', 8, 0, 62, 1), unit('grelf', 10, 0, 39, 1)]
-        self.right_team = [unit('sword', 9, 7, 25, 2), unit('uwlfr', 7, 13, 8, 2)]
+        self.left_team = [unit('nosfe', 4, 4, 5, 1), unit('magel', 8, 8, 15, 1)]
+        self.right_team = [unit('ddrag', 5, 5, 25, 2), unit('sword', 9, 4, 4, 2), unit('grelf', 8, 4, 38, 2)]
 
     def create_queue(self):
         Objects.queue = Queue(self.left_team, self.right_team)
@@ -121,7 +121,7 @@ class Game:
 
     @staticmethod
     def active_unit_update():
-        if not States.is_animate:
+        if States.is_animate is not True:
             Objects.active_unit.update()
 
     @staticmethod
@@ -130,8 +130,14 @@ class Game:
 
     @staticmethod
     def units_update():
-        States.is_animate = True if len(States.stack_animations) > 0 else False
+        def is_animate():
+            for unit_ in Objects.queue.sequence:
+                if unit_.current_animation != "standing" or len(unit_.next_actions) > 0:
+                    return True
+            return False
+
         [unit_.update() for unit_ in Objects.queue.sequence + Objects.queue.dead_units]
+        States.is_animate = is_animate()
 
     def draw_game(self):
         self.draw_cursor()

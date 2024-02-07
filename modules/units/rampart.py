@@ -1,11 +1,11 @@
 from .units import Units
-from modules.states import Objects
+from modules.states import Objects, States
 
 
 class Ddrag(Units):
 
     def __init__(self, i, j, count, team):
-        super().__init__(team)
+        super().__init__(i, j, team)
 
         self.name = 'ddrag'
         self.ai = 8613
@@ -13,7 +13,8 @@ class Ddrag(Units):
         self.characteristics = {"base_characteristics": {"attack": 27, "defense": 27, "damage": [40, 50],
                                                          "health": 250, "speed": 16},
                                 "current_health": 250, "current_count": count, "current_arrows": 0,
-                                "is_double": True, "is_shooter": False, "is_flyer": True, "is_jumper": False
+                                "is_double": True, "is_shooter": False, "is_flyer": True, "is_jumper": False,
+                                "is_not_answer": False
                                 }
 
         self.animations = {
@@ -34,16 +35,19 @@ class Ddrag(Units):
 
         self.image = {"x_size": 288, "y_size": 288 / 1.125, "x_shift": -10, "y_shift": 20}
 
-        self.init(i, j)
+        self.init()
+
+    # special ability: fire attack
+    def get_defenders(self):
+        return self.to_fire_attack()
 
     # todo: Immunity to all spells of levels 1-4, including positive spells.
-    # todo: fire
 
 
 class Gdrag(Units):
 
     def __init__(self, i, j, count, team):
-        super().__init__(team)
+        super().__init__(i, j, team)
 
         self.name = 'gdrag'
         self.ai = 4872
@@ -51,7 +55,8 @@ class Gdrag(Units):
         self.characteristics = {"base_characteristics": {"attack": 18, "defense": 18, "damage": [40, 50],
                                                          "health": 180, "speed": 10},
                                 "current_health": 180, "current_count": count, "current_arrows": 0,
-                                "is_double": True, "is_shooter": False, "is_flyer": True, "is_jumper": False
+                                "is_double": True, "is_shooter": False, "is_flyer": True, "is_jumper": False,
+                                "is_not_answer": False
                                 }
 
         self.animations = {
@@ -72,16 +77,19 @@ class Gdrag(Units):
 
         self.image = {"x_size": 288, "y_size": 288 / 1.125, "x_shift": -10, "y_shift": 10}
 
-        self.init(i, j)
+        self.init()
+
+    # special ability: fire attack
+    def get_defenders(self):
+        return self.to_fire_attack()
 
     # todo: Immunity to all spells of levels 1-3, including positive spells.
-    # todo: fire
 
 
 class Wunic(Units):
 
     def __init__(self, i, j, count, team):
-        super().__init__(team)
+        super().__init__(i, j, team)
 
         self.name = 'wunic'
         self.ai = 2030
@@ -89,7 +97,8 @@ class Wunic(Units):
         self.characteristics = {"base_characteristics": {"attack": 15, "defense": 14, "damage": [18, 22],
                                                          "health": 110, "speed": 9},
                                 "current_health": 110, "current_count": count, "current_arrows": 0,
-                                "is_double": True, "is_shooter": False, "is_flyer": False, "is_jumper": False
+                                "is_double": True, "is_shooter": False, "is_flyer": False, "is_jumper": False,
+                                "is_not_answer": False
                                 }
 
         self.animations = {
@@ -107,7 +116,7 @@ class Wunic(Units):
 
         self.image = {"x_size": 216, "y_size": 216 / 1.125, "x_shift": 10, "y_shift": -20}
 
-        self.init(i, j)
+        self.init()
 
     # todo: Blinding Strike - 20% chance, 3 step duration; no answer
     # todo: increases the magic resistance of friendly units by 20% in a one-cell radius around the unit. However, the aura does not protect the unicorns themselves.
@@ -116,7 +125,7 @@ class Wunic(Units):
 class Unico(Units):
 
     def __init__(self, i, j, count, team):
-        super().__init__(team)
+        super().__init__(i, j, team)
 
         self.name = 'unico'
         self.ai = 1806
@@ -124,7 +133,8 @@ class Unico(Units):
         self.characteristics = {"base_characteristics": {"attack": 15, "defense": 14, "damage": [18, 22],
                                                          "health": 90, "speed": 7},
                                 "current_health": 90, "current_count": count, "current_arrows": 0,
-                                "is_double": True, "is_shooter": False, "is_flyer": False, "is_jumper": False
+                                "is_double": True, "is_shooter": False, "is_flyer": False, "is_jumper": False,
+                                "is_not_answer": False
                                 }
 
         self.animations = {
@@ -142,7 +152,7 @@ class Unico(Units):
 
         self.image = {"x_size": 216, "y_size": 216 / 1.125, "x_shift": 10, "y_shift": -5}
 
-        self.init(i, j)
+        self.init()
 
     # todo: Blinding Strike - 20% chance, 3 step duration; no answer
     # todo: increases the magic resistance of friendly units by 20% in a one-cell radius around the unit. However, the aura does not protect the unicorns themselves.
@@ -151,7 +161,7 @@ class Unico(Units):
 class Btree(Units):
 
     def __init__(self, i, j, count, team):
-        super().__init__(team)
+        super().__init__(i, j, team)
 
         self.name = 'btree'
         self.ai = 803
@@ -159,7 +169,8 @@ class Btree(Units):
         self.characteristics = {"base_characteristics": {"attack": 9, "defense": 12, "damage": [10, 14],
                                                          "health": 65, "speed": 4},
                                 "current_health": 65, "current_count": count, "current_arrows": 0,
-                                "is_double": False, "is_shooter": False, "is_flyer": False, "is_jumper": False
+                                "is_double": False, "is_shooter": False, "is_flyer": False, "is_jumper": False,
+                                "is_not_answer": False
                                 }
 
         self.animations = {
@@ -177,7 +188,7 @@ class Btree(Units):
 
         self.image = {"x_size": 216, "y_size": 216 / 1.125, "x_shift": -20, "y_shift": -10}
 
-        self.init(i, j)
+        self.init()
 
     # todo: the attacked unit loses the ability to move until the dendroids themselves move or are destroyed.
 
@@ -185,7 +196,7 @@ class Btree(Units):
 class Tree(Units):
 
     def __init__(self, i, j, count, team):
-        super().__init__(team)
+        super().__init__(i, j, team)
 
         self.name = 'tree'
         self.ai = 517
@@ -193,7 +204,8 @@ class Tree(Units):
         self.characteristics = {"base_characteristics": {"attack": 9, "defense": 12, "damage": [10, 14],
                                                          "health": 55, "speed": 3},
                                 "current_health": 55, "current_count": count, "current_arrows": 0,
-                                "is_double": False, "is_shooter": False, "is_flyer": False, "is_jumper": False
+                                "is_double": False, "is_shooter": False, "is_flyer": False, "is_jumper": False,
+                                "is_not_answer": False
                                 }
 
         self.animations = {
@@ -211,7 +223,7 @@ class Tree(Units):
 
         self.image = {"x_size": 216, "y_size": 216 / 1.125, "x_shift": -20, "y_shift": -10}
 
-        self.init(i, j)
+        self.init()
 
     # todo: the attacked unit loses the ability to move until the dendroids themselves move or are destroyed.
 
@@ -219,7 +231,7 @@ class Tree(Units):
 class Apegs(Units):
 
     def __init__(self, i, j, count, team):
-        super().__init__(team)
+        super().__init__(i, j, team)
 
         self.name = 'apegs'
         self.ai = 532
@@ -227,7 +239,8 @@ class Apegs(Units):
         self.characteristics = {"base_characteristics": {"attack": 9, "defense": 10, "damage": [5, 9],
                                                          "health": 30, "speed": 12},
                                 "current_health": 30, "current_count": count, "current_arrows": 0,
-                                "is_double": True, "is_shooter": False, "is_flyer": True, "is_jumper": False
+                                "is_double": True, "is_shooter": False, "is_flyer": True, "is_jumper": False,
+                                "is_not_answer": False
                                 }
 
         self.animations = {
@@ -245,7 +258,7 @@ class Apegs(Units):
 
         self.image = {"x_size": 216, "y_size": 216 / 1.125, "x_shift": 10, "y_shift": -15}
 
-        self.init(i, j)
+        self.init()
 
     # todo: Pegasus units increase the cost of all spells for enemy sorcerers by 2 points.
 
@@ -253,7 +266,7 @@ class Apegs(Units):
 class Pegas(Units):
 
     def __init__(self, i, j, count, team):
-        super().__init__(team)
+        super().__init__(i, j, team)
 
         self.name = 'pegas'
         self.ai = 518
@@ -261,7 +274,8 @@ class Pegas(Units):
         self.characteristics = {"base_characteristics": {"attack": 9, "defense": 8, "damage": [5, 9],
                                                          "health": 30, "speed": 8},
                                 "current_health": 30, "current_count": count, "current_arrows": 0,
-                                "is_double": True, "is_shooter": False, "is_flyer": True, "is_jumper": False
+                                "is_double": True, "is_shooter": False, "is_flyer": True, "is_jumper": False,
+                                "is_not_answer": False
                                 }
 
         self.animations = {
@@ -279,7 +293,7 @@ class Pegas(Units):
 
         self.image = {"x_size": 216, "y_size": 216 / 1.125, "x_shift": 10, "y_shift": -15}
 
-        self.init(i, j)
+        self.init()
 
     # todo: Pegasus units increase the cost of all spells for enemy sorcerers by 2 points.
 
@@ -287,7 +301,7 @@ class Pegas(Units):
 class Grelf(Units):
 
     def __init__(self, i, j, count, team):
-        super().__init__(team)
+        super().__init__(i, j, team)
 
         self.name = 'grelf'
         self.ai = 331
@@ -295,8 +309,11 @@ class Grelf(Units):
         self.characteristics = {"base_characteristics": {"attack": 9, "defense": 5, "damage": [3, 5],
                                                          "health": 15, "speed": 7},
                                 "current_health": 15, "current_count": count, "current_arrows": 48,
-                                "is_double": False, "is_shooter": True, "is_flyer": False, "is_jumper": False
+                                "is_double": False, "is_shooter": True, "is_flyer": False, "is_jumper": False,
+                                "is_not_answer": False
                                 }
+
+        self.status = {"is_answer": 1, "is_wait": False, "is_defense": False, "is_second_shoot": False}
 
         self.animations = {
             "moving": ["54", "55", "56", "57", "58", "59", "60", "61"],
@@ -316,17 +333,19 @@ class Grelf(Units):
 
         self.image = {"x_size": 216, "y_size": 216 / 1.125, "x_shift": -25, "y_shift": -10}
 
-        self.init(i, j)
+        self.init()
 
     # special ability: double shoot
-    def add_animation_shoot(self):
-        self.add_animation_double_shoot_()
+    def add_action_shoot(self):
+        self.update_fight_info()
+        self.add_action_shoot_()
+        self.add_action_second_shoot_()
 
 
 class Elf(Units):
 
     def __init__(self, i, j, count, team):
-        super().__init__(team)
+        super().__init__(i, j, team)
 
         self.name = 'elf'
         self.ai = 234
@@ -334,7 +353,8 @@ class Elf(Units):
         self.characteristics = {"base_characteristics": {"attack": 9, "defense": 5, "damage": [3, 5],
                                                          "health": 15, "speed": 6},
                                 "current_health": 15, "current_count": count, "current_arrows": 24,
-                                "is_double": False, "is_shooter": True, "is_flyer": False, "is_jumper": False
+                                "is_double": False, "is_shooter": True, "is_flyer": False, "is_jumper": False,
+                                "is_not_answer": False
                                 }
 
         self.animations = {
@@ -355,13 +375,13 @@ class Elf(Units):
 
         self.image = {"x_size": 130, "y_size": 130 / 1.125, "x_shift": 0, "y_shift": 10}
 
-        self.init(i, j)
+        self.init()
 
 
 class Bdwar(Units):
 
     def __init__(self, i, j, count, team):
-        super().__init__(team)
+        super().__init__(i, j, team)
 
         self.name = 'bdwar'
         self.ai = 209
@@ -369,7 +389,8 @@ class Bdwar(Units):
         self.characteristics = {"base_characteristics": {"attack": 7, "defense": 7, "damage": [2, 4],
                                                          "health": 20, "speed": 5},
                                 "current_health": 20, "current_count": count, "current_arrows": 0,
-                                "is_double": False, "is_shooter": False, "is_flyer": False, "is_jumper": False
+                                "is_double": False, "is_shooter": False, "is_flyer": False, "is_jumper": False,
+                                "is_not_answer": False
                                 }
 
         self.animations = {
@@ -387,7 +408,7 @@ class Bdwar(Units):
 
         self.image = {"x_size": 216, "y_size": 216 / 1.125, "x_shift": -20, "y_shift": 0}
 
-        self.init(i, j)
+        self.init()
 
     # todo: Magic resistance 40%
 
@@ -395,7 +416,7 @@ class Bdwar(Units):
 class Dwarf(Units):
 
     def __init__(self, i, j, count, team):
-        super().__init__(team)
+        super().__init__(i, j, team)
 
         self.name = 'dwarf'
         self.ai = 138
@@ -403,7 +424,8 @@ class Dwarf(Units):
         self.characteristics = {"base_characteristics": {"attack": 6, "defense": 7, "damage": [2, 4],
                                                          "health": 20, "speed": 3},
                                 "current_health": 20, "current_count": count, "current_arrows": 0,
-                                "is_double": False, "is_shooter": False, "is_flyer": False, "is_jumper": False
+                                "is_double": False, "is_shooter": False, "is_flyer": False, "is_jumper": False,
+                                "is_not_answer": False
                                 }
 
         self.animations = {
@@ -421,7 +443,7 @@ class Dwarf(Units):
 
         self.image = {"x_size": 216, "y_size": 216 / 1.125, "x_shift": -20, "y_shift": -10}
 
-        self.init(i, j)
+        self.init()
 
     # todo: Magic resistance 20%
 
@@ -429,7 +451,7 @@ class Dwarf(Units):
 class Ecent(Units):
 
     def __init__(self, i, j, count, team):
-        super().__init__(team)
+        super().__init__(i, j, team)
 
         self.name = 'ecent'
         self.ai = 138
@@ -437,7 +459,8 @@ class Ecent(Units):
         self.characteristics = {"base_characteristics": {"attack": 6, "defense": 3, "damage": [2, 3],
                                                          "health": 10, "speed": 8},
                                 "current_health": 10, "current_count": count, "current_arrows": 0,
-                                "is_double": True, "is_shooter": False, "is_flyer": False, "is_jumper": False
+                                "is_double": True, "is_shooter": False, "is_flyer": False, "is_jumper": False,
+                                "is_not_answer": False
                                 }
 
         self.animations = {
@@ -455,13 +478,13 @@ class Ecent(Units):
 
         self.image = {"x_size": 216, "y_size": 216 / 1.125, "x_shift": 10, "y_shift": -5}
 
-        self.init(i, j)
+        self.init()
 
 
 class Centr(Units):
 
     def __init__(self, i, j, count, team):
-        super().__init__(team)
+        super().__init__(i, j, team)
 
         self.name = 'centr'
         self.ai = 100
@@ -469,7 +492,8 @@ class Centr(Units):
         self.characteristics = {"base_characteristics": {"attack": 5, "defense": 3, "damage": [2, 3],
                                                          "health": 8, "speed": 6},
                                 "current_health": 8, "current_count": count, "current_arrows": 0,
-                                "is_double": True, "is_shooter": False, "is_flyer": False, "is_jumper": False
+                                "is_double": True, "is_shooter": False, "is_flyer": False, "is_jumper": False,
+                                "is_not_answer": False
                                 }
 
         self.animations = {
@@ -487,4 +511,4 @@ class Centr(Units):
 
         self.image = {"x_size": 216, "y_size": 216 / 1.125, "x_shift": 10, "y_shift": -5}
 
-        self.init(i, j)
+        self.init()

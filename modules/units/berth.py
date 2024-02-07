@@ -1,11 +1,11 @@
 from .units import Units
-from modules.states import Objects
+from modules.states import Objects, States
 
 
 class Haspid(Units):
 
     def __init__(self, i, j, count, team):
-        super().__init__(team)
+        super().__init__(i, j, team)
 
         self.name = 'haspid'
         self.ai = 7220
@@ -13,7 +13,8 @@ class Haspid(Units):
         self.characteristics = {"base_characteristics": {"attack": 29, "defense": 20, "damage": [30, 55],
                                                          "health": 300, "speed": 12},
                                 "current_health": 300, "current_count": count, "current_arrows": 0,
-                                "is_double": True, "is_shooter": False, "is_flyer": False, "is_jumper": False
+                                "is_double": True, "is_shooter": False, "is_flyer": False, "is_jumper": False,
+                                "is_not_answer": False
                                 }
 
         self.animations = {
@@ -31,7 +32,7 @@ class Haspid(Units):
 
         self.image = {"x_size": 288, "y_size": 288 / 1.125, "x_shift": -10, "y_shift": -25}
 
-        self.init(i, j)
+        self.init()
 
     # todo: Poisoning - When attacked, there is a 30% chance that units of the target enemy squad will be poisoned with poison - each of them will have their health reduced by 10% of their original health each turn for 3 turns (up to 50%). Only affects living beings.
     # todo: Revenge - Every time a squad of asps suffers losses in health and numbers, their damage parameter increases
@@ -40,7 +41,7 @@ class Haspid(Units):
 class Serpent(Units):
 
     def __init__(self, i, j, count, team):
-        super().__init__(team)
+        super().__init__(i, j, team)
 
         self.name = 'serpent'
         self.ai = 3953
@@ -48,7 +49,8 @@ class Serpent(Units):
         self.characteristics = {"base_characteristics": {"attack": 22, "defense": 13, "damage": [30, 55],
                                                          "health": 180, "speed": 9},
                                 "current_health": 180, "current_count": count, "current_arrows": 0,
-                                "is_double": True, "is_shooter": False, "is_flyer": False, "is_jumper": False
+                                "is_double": True, "is_shooter": False, "is_flyer": False, "is_jumper": False,
+                                "is_not_answer": False
                                 }
 
         self.animations = {
@@ -66,7 +68,7 @@ class Serpent(Units):
 
         self.image = {"x_size": 216, "y_size": 216 / 1.125, "x_shift": 5, "y_shift": 10}
 
-        self.init(i, j)
+        self.init()
 
     # todo: Poisoning - When attacked, there is a 30% chance that units of the target enemy squad will be poisoned with poison - each of them will have their health reduced by 10% of their original health each turn for 3 turns (up to 50%). Only affects living beings.
 
@@ -74,7 +76,7 @@ class Serpent(Units):
 class Nixwarr(Units):
 
     def __init__(self, i, j, count, team):
-        super().__init__(team)
+        super().__init__(i, j, team)
 
         self.name = 'nixwarr'
         self.ai = 2116
@@ -82,7 +84,8 @@ class Nixwarr(Units):
         self.characteristics = {"base_characteristics": {"attack": 14, "defense": 17, "damage": [18, 22],
                                                          "health": 100, "speed": 7},
                                 "current_health": 100, "current_count": count, "current_arrows": 0,
-                                "is_double": False, "is_shooter": False, "is_flyer": False, "is_jumper": False
+                                "is_double": False, "is_shooter": False, "is_flyer": False, "is_jumper": False,
+                                "is_not_answer": False
                                 }
 
         self.animations = {
@@ -100,7 +103,7 @@ class Nixwarr(Units):
 
         self.image = {"x_size": 288, "y_size": 288 / 1.125, "x_shift": -40, "y_shift": -20}
 
-        self.init(i, j)
+        self.init()
 
     # todo: Fortified Hide - When calculating damage from an enemy attack, ignore 60% of the attack parameter
 
@@ -108,7 +111,7 @@ class Nixwarr(Units):
 class Nix(Units):
 
     def __init__(self, i, j, count, team):
-        super().__init__(team)
+        super().__init__(i, j, team)
 
         self.name = 'nix'
         self.ai = 1415
@@ -116,7 +119,8 @@ class Nix(Units):
         self.characteristics = {"base_characteristics": {"attack": 13, "defense": 16, "damage": [18, 20],
                                                          "health": 90, "speed": 6},
                                 "current_health": 90, "current_count": count, "current_arrows": 0,
-                                "is_double": False, "is_shooter": False, "is_flyer": False, "is_jumper": False
+                                "is_double": False, "is_shooter": False, "is_flyer": False, "is_jumper": False,
+                                "is_not_answer": False
                                 }
 
         self.animations = {
@@ -134,7 +138,7 @@ class Nix(Units):
 
         self.image = {"x_size": 196, "y_size": 196 / 1.125, "x_shift": -15, "y_shift": -5}
 
-        self.init(i, j)
+        self.init()
 
     # todo: Fortified Hide - When calculating damage from an enemy attack, ignore 30% of the attack parameter
 
@@ -142,7 +146,7 @@ class Nix(Units):
 class Sorcss(Units):
 
     def __init__(self, i, j, count, team):
-        super().__init__(team)
+        super().__init__(i, j, team)
 
         self.name = 'sorcss'
         self.ai = 852
@@ -150,7 +154,8 @@ class Sorcss(Units):
         self.characteristics = {"base_characteristics": {"attack": 12, "defense": 9, "damage": [10, 16],
                                                          "health": 35, "speed": 7},
                                 "current_health": 35, "current_count": count, "current_arrows": 12,
-                                "is_double": False, "is_shooter": True, "is_flyer": False, "is_jumper": False
+                                "is_double": False, "is_shooter": True, "is_flyer": False, "is_jumper": False,
+                                "is_not_answer": False
                                 }
 
         self.animations = {
@@ -171,7 +176,7 @@ class Sorcss(Units):
 
         self.image = {"x_size": 216, "y_size": 216 / 1.125, "x_shift": -25, "y_shift": -5}
 
-        self.init(i, j)
+        self.init()
 
     # todo: Curse Shot - weakness or destructive ray.
 
@@ -179,7 +184,7 @@ class Sorcss(Units):
 class Priest(Units):
 
     def __init__(self, i, j, count, team):
-        super().__init__(team)
+        super().__init__(i, j, team)
 
         self.name = 'priest'
         self.ai = 790
@@ -187,7 +192,8 @@ class Priest(Units):
         self.characteristics = {"base_characteristics": {"attack": 12, "defense": 7, "damage": [10, 14],
                                                          "health": 35, "speed": 6},
                                 "current_health": 35, "current_count": count, "current_arrows": 12,
-                                "is_double": False, "is_shooter": True, "is_flyer": False, "is_jumper": False
+                                "is_double": False, "is_shooter": True, "is_flyer": False, "is_jumper": False,
+                                "is_not_answer": False
                                 }
 
         self.animations = {
@@ -208,7 +214,7 @@ class Priest(Units):
 
         self.image = {"x_size": 216, "y_size": 216 / 1.125, "x_shift": -25, "y_shift": -5}
 
-        self.init(i, j)
+        self.init()
 
     # todo: Curse Shot - weakness or destructive ray.
 
@@ -216,7 +222,7 @@ class Priest(Units):
 class Assidup(Units):
 
     def __init__(self, i, j, count, team):
-        super().__init__(team)
+        super().__init__(i, j, team)
 
         self.name = 'assidup'
         self.ai = 645
@@ -224,7 +230,8 @@ class Assidup(Units):
         self.characteristics = {"base_characteristics": {"attack": 11, "defense": 8, "damage": [6, 10],
                                                          "health": 30, "speed": 11},
                                 "current_health": 30, "current_count": count, "current_arrows": 0,
-                                "is_double": True, "is_shooter": False, "is_flyer": True, "is_jumper": False
+                                "is_double": True, "is_shooter": False, "is_flyer": True, "is_jumper": False,
+                                "is_not_answer": False
                                 }
 
         self.animations = {
@@ -242,7 +249,7 @@ class Assidup(Units):
 
         self.image = {"x_size": 216, "y_size": 216 / 1.125, "x_shift": 0, "y_shift": -5}
 
-        self.init(i, j)
+        self.init()
 
     # todo: Ferocity - If the Assids kill at least one creature from the enemy unit, then they strike a second time. As a rule, the second blow is delivered after a retaliatory attack.
 
@@ -250,7 +257,7 @@ class Assidup(Units):
 class Assid(Units):
 
     def __init__(self, i, j, count, team):
-        super().__init__(team)
+        super().__init__(i, j, team)
 
         self.name = 'assid'
         self.ai = 502
@@ -258,7 +265,8 @@ class Assid(Units):
         self.characteristics = {"base_characteristics": {"attack": 10, "defense": 8, "damage": [6, 9],
                                                          "health": 30, "speed": 9},
                                 "current_health": 30, "current_count": count, "current_arrows": 0,
-                                "is_double": True, "is_shooter": False, "is_flyer": True, "is_jumper": False
+                                "is_double": True, "is_shooter": False, "is_flyer": True, "is_jumper": False,
+                                "is_not_answer": False
                                 }
 
         self.animations = {
@@ -276,13 +284,13 @@ class Assid(Units):
 
         self.image = {"x_size": 216, "y_size": 216 / 1.125, "x_shift": 0, "y_shift": -5}
 
-        self.init(i, j)
+        self.init()
 
 
 class Pr3up(Units):
 
     def __init__(self, i, j, count, team):
-        super().__init__(team)
+        super().__init__(i, j, team)
 
         self.name = 'pr3up'
         self.ai = 602
@@ -290,7 +298,8 @@ class Pr3up(Units):
         self.characteristics = {"base_characteristics": {"attack": 12, "defense": 11, "damage": [3, 7],
                                                          "health": 16, "speed": 8},
                                 "current_health": 16, "current_count": count, "current_arrows": 12,
-                                "is_double": False, "is_shooter": True, "is_flyer": False, "is_jumper": False
+                                "is_double": False, "is_shooter": True, "is_flyer": False, "is_jumper": False,
+                                "is_not_answer": True
                                 }
 
         self.animations = {
@@ -311,11 +320,7 @@ class Pr3up(Units):
 
         self.image = {"x_size": 216, "y_size": 216 / 1.125, "x_shift": -25, "y_shift": -5}
 
-        self.init(i, j)
-
-    # special ability: attack w/o answer
-    def add_animation_attack(self):
-        self.add_animation_attack_no_answer()
+        self.init()
 
     # todo: There is no melee penalty.
     # todo: Accurate shot
@@ -324,7 +329,7 @@ class Pr3up(Units):
 class Corsair(Units):
 
     def __init__(self, i, j, count, team):
-        super().__init__(team)
+        super().__init__(i, j, team)
 
         self.name = 'corsair'
         self.ai = 407
@@ -332,7 +337,8 @@ class Corsair(Units):
         self.characteristics = {"base_characteristics": {"attack": 10, "defense": 8, "damage": [3, 7],
                                                          "health": 15, "speed": 7},
                                 "current_health": 15, "current_count": count, "current_arrows": 4,
-                                "is_double": False, "is_shooter": True, "is_flyer": False, "is_jumper": False
+                                "is_double": False, "is_shooter": True, "is_flyer": False, "is_jumper": False,
+                                "is_not_answer": True
                                 }
 
         self.animations = {
@@ -353,11 +359,7 @@ class Corsair(Units):
 
         self.image = {"x_size": 216, "y_size": 216 / 1.125, "x_shift": -25, "y_shift": -5}
 
-        self.init(i, j)
-
-    # special ability: attack w/o answer
-    def add_animation_attack(self):
-        self.add_animation_attack_no_answer()
+        self.init()
 
     # todo: There is no melee penalty.
 
@@ -365,7 +367,7 @@ class Corsair(Units):
 class Pirate(Units):
 
     def __init__(self, i, j, count, team):
-        super().__init__(team)
+        super().__init__(i, j, team)
 
         self.name = 'pirate'
         self.ai = 312
@@ -373,7 +375,8 @@ class Pirate(Units):
         self.characteristics = {"base_characteristics": {"attack": 8, "defense": 6, "damage": [3, 7],
                                                          "health": 15, "speed": 6},
                                 "current_health": 15, "current_count": count, "current_arrows": 4,
-                                "is_double": False, "is_shooter": True, "is_flyer": False, "is_jumper": False
+                                "is_double": False, "is_shooter": True, "is_flyer": False, "is_jumper": False,
+                                "is_not_answer": False
                                 }
 
         self.animations = {
@@ -394,7 +397,7 @@ class Pirate(Units):
 
         self.image = {"x_size": 216, "y_size": 216 / 1.125, "x_shift": -25, "y_shift": -5}
 
-        self.init(i, j)
+        self.init()
 
     # todo: There is no melee penalty.
 
@@ -402,7 +405,7 @@ class Pirate(Units):
 class Swash(Units):
 
     def __init__(self, i, j, count, team):
-        super().__init__(team)
+        super().__init__(i, j, team)
 
         self.name = 'swash'
         self.ai = 174
@@ -410,7 +413,8 @@ class Swash(Units):
         self.characteristics = {"base_characteristics": {"attack": 8, "defense": 6, "damage": [3, 4],
                                                          "health": 15, "speed": 6},
                                 "current_health": 15, "current_count": count, "current_arrows": 0,
-                                "is_double": False, "is_shooter": False, "is_flyer": False, "is_jumper": False
+                                "is_double": False, "is_shooter": False, "is_flyer": False, "is_jumper": False,
+                                "is_not_answer": False
                                 }
 
         self.animations = {
@@ -428,13 +432,13 @@ class Swash(Units):
 
         self.image = {"x_size": 216, "y_size": 216 / 1.125, "x_shift": -25, "y_shift": -5}
 
-        self.init(i, j)
+        self.init()
 
 
 class Seadog(Units):
 
     def __init__(self, i, j, count, team):
-        super().__init__(team)
+        super().__init__(i, j, team)
 
         self.name = 'seadog'
         self.ai = 155
@@ -442,7 +446,8 @@ class Seadog(Units):
         self.characteristics = {"base_characteristics": {"attack": 7, "defense": 4, "damage": [2, 4],
                                                          "health": 15, "speed": 5},
                                 "current_health": 15, "current_count": count, "current_arrows": 0,
-                                "is_double": False, "is_shooter": False, "is_flyer": False, "is_jumper": False
+                                "is_double": False, "is_shooter": False, "is_flyer": False, "is_jumper": False,
+                                "is_not_answer": False
                                 }
 
         self.animations = {
@@ -460,13 +465,13 @@ class Seadog(Units):
 
         self.image = {"x_size": 216, "y_size": 216 / 1.125, "x_shift": -25, "y_shift": -5}
 
-        self.init(i, j)
+        self.init()
 
 
 class Oceanid(Units):
 
     def __init__(self, i, j, count, team):
-        super().__init__(team)
+        super().__init__(i, j, team)
 
         self.name = 'oceanid'
         self.ai = 75
@@ -474,7 +479,8 @@ class Oceanid(Units):
         self.characteristics = {"base_characteristics": {"attack": 6, "defense": 2, "damage": [1, 3],
                                                          "health": 4, "speed": 8},
                                 "current_health": 4, "current_count": count, "current_arrows": 0,
-                                "is_double": False, "is_shooter": False, "is_flyer": False, "is_jumper": True
+                                "is_double": False, "is_shooter": False, "is_flyer": False, "is_jumper": True,
+                                "is_not_answer": False
                                 }
 
         self.animations = {
@@ -494,11 +500,15 @@ class Oceanid(Units):
 
         self.image = {"x_size": 216, "y_size": 216 / 1.125, "x_shift": -25, "y_shift": 0}
 
-        self.init(i, j)
+        self.init()
 
-    def add_animation_moving(self):
-        self.add_animation(self, "start_moving")
-        self.add_animation(self, "stop_moving")
+    # special ability: is jumper
+    def add_action_moving(self):
+        self.i, self.j = Objects.cursor.destination_point
+        self.next_actions.append("start_moving")
+        self.next_actions.append("stop_moving")
+
+        States.stack_animations.extend([[self], [self]])
 
     # todo: Immune to Ice magic
 
@@ -506,7 +516,7 @@ class Oceanid(Units):
 class Nimph(Units):
 
     def __init__(self, i, j, count, team):
-        super().__init__(team)
+        super().__init__(i, j, team)
 
         self.name = 'nimph'
         self.ai = 57
@@ -514,7 +524,8 @@ class Nimph(Units):
         self.characteristics = {"base_characteristics": {"attack": 5, "defense": 2, "damage": [1, 2],
                                                          "health": 4, "speed": 6},
                                 "current_health": 4, "current_count": count, "current_arrows": 0,
-                                "is_double": False, "is_shooter": False, "is_flyer": False, "is_jumper": True
+                                "is_double": False, "is_shooter": False, "is_flyer": False, "is_jumper": True,
+                                "is_not_answer": False
                                 }
 
         self.animations = {
@@ -534,10 +545,14 @@ class Nimph(Units):
 
         self.image = {"x_size": 216, "y_size": 216 / 1.125, "x_shift": -25, "y_shift": 0}
 
-        self.init(i, j)
+        self.init()
 
-    def add_animation_moving(self):
-        self.add_animation(self, "start_moving")
-        self.add_animation(self, "stop_moving")
+    # special ability: is jumper
+    def add_action_moving(self):
+        self.i, self.j = Objects.cursor.destination_point
+        self.next_actions.append("start_moving")
+        self.next_actions.append("stop_moving")
+
+        States.stack_animations.extend([[self], [self]])
 
     # todo: Immune to Ice magic

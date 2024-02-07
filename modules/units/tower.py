@@ -1,11 +1,11 @@
 from .units import Units
-from modules.states import Objects
+from modules.states import Objects, States
 
 
 class Gtita(Units):
 
     def __init__(self, i, j, count, team):
-        super().__init__(team)
+        super().__init__(i, j, team)
 
         self.name = 'gtita'
         self.ai = 7500
@@ -13,7 +13,8 @@ class Gtita(Units):
         self.characteristics = {"base_characteristics": {"attack": 24, "defense": 24, "damage": [40, 60],
                                                          "health": 300, "speed": 11},
                                 "current_health": 300, "current_count": count, "current_arrows": 24,
-                                "is_double": False, "is_shooter": True, "is_flyer": False, "is_jumper": False
+                                "is_double": False, "is_shooter": True, "is_flyer": False, "is_jumper": False,
+                                "is_not_answer": False
                                 }
 
         self.animations = {
@@ -34,7 +35,7 @@ class Gtita(Units):
 
         self.image = {"x_size": 216, "y_size": 216 / 1.125, "x_shift": -25, "y_shift": -5}
 
-        self.init(i, j)
+        self.init()
 
     # todo: Mind Control Immunity – The unit is immune to mind-affecting spells.
     # todo: Hatred of Black Dragons => +50% additional attack damage.
@@ -44,7 +45,7 @@ class Gtita(Units):
 class Ltita(Units):
 
     def __init__(self, i, j, count, team):
-        super().__init__(team)
+        super().__init__(i, j, team)
 
         self.name = 'ltita'
         self.ai = 3718
@@ -52,7 +53,8 @@ class Ltita(Units):
         self.characteristics = {"base_characteristics": {"attack": 19, "defense": 16, "damage": [40, 60],
                                                          "health": 150, "speed": 7},
                                 "current_health": 150, "current_count": count, "current_arrows": 0,
-                                "is_double": False, "is_shooter": False, "is_flyer": False, "is_jumper": False
+                                "is_double": False, "is_shooter": False, "is_flyer": False, "is_jumper": False,
+                                "is_not_answer": False
                                 }
 
         self.animations = {
@@ -70,7 +72,7 @@ class Ltita(Units):
 
         self.image = {"x_size": 216, "y_size": 216 / 1.125, "x_shift": -25, "y_shift": -5}
 
-        self.init(i, j)
+        self.init()
 
     # todo: Mind Control Immunity – The unit is immune to mind-affecting spells.
 
@@ -78,7 +80,7 @@ class Ltita(Units):
 class Nagag(Units):
 
     def __init__(self, i, j, count, team):
-        super().__init__(team)
+        super().__init__(i, j, team)
 
         self.name = 'nagag'
         self.ai = 2840
@@ -86,7 +88,8 @@ class Nagag(Units):
         self.characteristics = {"base_characteristics": {"attack": 16, "defense": 13, "damage": [30, 30],
                                                          "health": 110, "speed": 7},
                                 "current_health": 110, "current_count": count, "current_arrows": 0,
-                                "is_double": True, "is_shooter": False, "is_flyer": False, "is_jumper": False
+                                "is_double": True, "is_shooter": False, "is_flyer": False, "is_jumper": False,
+                                "is_not_answer": True
                                 }
 
         self.animations = {
@@ -104,17 +107,13 @@ class Nagag(Units):
 
         self.image = {"x_size": 216, "y_size": 216 / 1.125, "x_shift": 5, "y_shift": -10}
 
-        self.init(i, j)
-
-    # special ability: attack w/o answer
-    def add_animation_attack(self):
-        self.add_animation_attack_no_answer()
+        self.init()
 
 
 class Naga(Units):
 
     def __init__(self, i, j, count, team):
-        super().__init__(team)
+        super().__init__(i, j, team)
 
         self.name = 'naga'
         self.ai = 2016
@@ -122,7 +121,8 @@ class Naga(Units):
         self.characteristics = {"base_characteristics": {"attack": 16, "defense": 13, "damage": [20, 20],
                                                          "health": 110, "speed": 5},
                                 "current_health": 110, "current_count": count, "current_arrows": 0,
-                                "is_double": True, "is_shooter": False, "is_flyer": False, "is_jumper": False
+                                "is_double": True, "is_shooter": False, "is_flyer": False, "is_jumper": False,
+                                "is_not_answer": True
                                 }
 
         self.animations = {
@@ -140,17 +140,13 @@ class Naga(Units):
 
         self.image = {"x_size": 216, "y_size": 216 / 1.125, "x_shift": 5, "y_shift": -10}
 
-        self.init(i, j)
-
-    # special ability: attack w/o answer
-    def add_animation_attack(self):
-        self.add_animation_attack_no_answer()
+        self.init()
 
 
 class Sulta(Units):
 
     def __init__(self, i, j, count, team):
-        super().__init__(team)
+        super().__init__(i, j, team)
 
         self.name = 'sulta'
         self.ai = 942
@@ -158,7 +154,8 @@ class Sulta(Units):
         self.characteristics = {"base_characteristics": {"attack": 12, "defense": 12, "damage": [13, 16],
                                                          "health": 40, "speed": 11},
                                 "current_health": 40, "current_count": count, "current_arrows": 0,
-                                "is_double": False, "is_shooter": False, "is_flyer": True, "is_jumper": False
+                                "is_double": False, "is_shooter": False, "is_flyer": True, "is_jumper": False,
+                                "is_not_answer": False
                                 }
 
         self.animations = {
@@ -176,7 +173,7 @@ class Sulta(Units):
 
         self.image = {"x_size": 216, "y_size": 216 / 1.125, "x_shift": -25, "y_shift": 0}
 
-        self.init(i, j)
+        self.init()
 
     # todo: Hatred of Efreets and Efreet Sultans => +50% additional damage when attacking and counterattacking.
     # todo: 3 times per battle, the High Djinn can cast a random advanced buff spell on the target friendly unit.
@@ -185,7 +182,7 @@ class Sulta(Units):
 class Genie(Units):
 
     def __init__(self, i, j, count, team):
-        super().__init__(team)
+        super().__init__(i, j, team)
 
         self.name = 'genie'
         self.ai = 884
@@ -193,7 +190,8 @@ class Genie(Units):
         self.characteristics = {"base_characteristics": {"attack": 12, "defense": 12, "damage": [13, 16],
                                                          "health": 40, "speed": 7},
                                 "current_health": 40, "current_count": count, "current_arrows": 0,
-                                "is_double": False, "is_shooter": False, "is_flyer": True, "is_jumper": False
+                                "is_double": False, "is_shooter": False, "is_flyer": True, "is_jumper": False,
+                                "is_not_answer": False
                                 }
 
         self.animations = {
@@ -211,7 +209,7 @@ class Genie(Units):
 
         self.image = {"x_size": 216, "y_size": 216 / 1.125, "x_shift": -25, "y_shift": 0}
 
-        self.init(i, j)
+        self.init()
 
     # todo: Hatred of Efreets and Efreet Sultans => +50% additional damage when attacking and counterattacking.
 
@@ -219,7 +217,7 @@ class Genie(Units):
 class Amage(Units):
 
     def __init__(self, i, j, count, team):
-        super().__init__(team)
+        super().__init__(i, j, team)
 
         self.name = 'amage'
         self.ai = 680
@@ -227,7 +225,8 @@ class Amage(Units):
         self.characteristics = {"base_characteristics": {"attack": 12, "defense": 9, "damage": [7, 9],
                                                          "health": 30, "speed": 7},
                                 "current_health": 30, "current_count": count, "current_arrows": 24,
-                                "is_double": False, "is_shooter": True, "is_flyer": False, "is_jumper": False
+                                "is_double": False, "is_shooter": True, "is_flyer": False, "is_jumper": False,
+                                "is_not_answer": False
                                 }
 
         self.animations = {
@@ -248,7 +247,7 @@ class Amage(Units):
 
         self.image = {"x_size": 216, "y_size": 216 / 1.125, "x_shift": -25, "y_shift": -5}
 
-        self.init(i, j)
+        self.init()
 
     # todo: No penalty - fight in hand-to-hand combat at full strength.
     # todo: There is no penalty when shooting through fortress walls
@@ -258,7 +257,7 @@ class Amage(Units):
 class Mage(Units):
 
     def __init__(self, i, j, count, team):
-        super().__init__(team)
+        super().__init__(i, j, team)
 
         self.name = 'mage'
         self.ai = 570
@@ -266,7 +265,8 @@ class Mage(Units):
         self.characteristics = {"base_characteristics": {"attack": 11, "defense": 8, "damage": [7, 9],
                                                          "health": 25, "speed": 5},
                                 "current_health": 25, "current_count": count, "current_arrows": 24,
-                                "is_double": False, "is_shooter": True, "is_flyer": False, "is_jumper": False
+                                "is_double": False, "is_shooter": True, "is_flyer": False, "is_jumper": False,
+                                "is_not_answer": False
                                 }
 
         self.animations = {
@@ -287,7 +287,7 @@ class Mage(Units):
 
         self.image = {"x_size": 120, "y_size": 120 / 1.125, "x_shift": 0, "y_shift": 10}
 
-        self.init(i, j)
+        self.init()
 
     # todo: No penalty - fight in hand-to-hand combat at full strength.
     # todo: There is no penalty when shooting through fortress walls
@@ -297,7 +297,7 @@ class Mage(Units):
 class Igole(Units):
 
     def __init__(self, i, j, count, team):
-        super().__init__(team)
+        super().__init__(i, j, team)
 
         self.name = 'igole'
         self.ai = 412
@@ -305,7 +305,8 @@ class Igole(Units):
         self.characteristics = {"base_characteristics": {"attack": 9, "defense": 10, "damage": [4, 5],
                                                          "health": 35, "speed": 5},
                                 "current_health": 35, "current_count": count, "current_arrows": 0,
-                                "is_double": False, "is_shooter": False, "is_flyer": False, "is_jumper": False
+                                "is_double": False, "is_shooter": False, "is_flyer": False, "is_jumper": False,
+                                "is_not_answer": False
                                 }
 
         self.animations = {
@@ -323,7 +324,7 @@ class Igole(Units):
 
         self.image = {"x_size": 216, "y_size": 216 / 1.125, "x_shift": -25, "y_shift": -10}
 
-        self.init(i, j)
+        self.init()
 
     # todo: can not be resurrected; fighting spirit is always neutral
     # todo: Absorb Magic - Offensive spells only deal 25% damage to these units.
@@ -332,7 +333,7 @@ class Igole(Units):
 class Sgole(Units):
 
     def __init__(self, i, j, count, team):
-        super().__init__(team)
+        super().__init__(i, j, team)
 
         self.name = 'sgole'
         self.ai = 250
@@ -340,7 +341,8 @@ class Sgole(Units):
         self.characteristics = {"base_characteristics": {"attack": 7, "defense": 10, "damage": [4, 5],
                                                          "health": 30, "speed": 3},
                                 "current_health": 30, "current_count": count, "current_arrows": 0,
-                                "is_double": False, "is_shooter": False, "is_flyer": False, "is_jumper": False
+                                "is_double": False, "is_shooter": False, "is_flyer": False, "is_jumper": False,
+                                "is_not_answer": False
                                 }
 
         self.animations = {
@@ -358,7 +360,7 @@ class Sgole(Units):
 
         self.image = {"x_size": 216, "y_size": 216 / 1.125, "x_shift": -25, "y_shift": 0}
 
-        self.init(i, j)
+        self.init()
 
     # todo: can not be resurrected; fighting spirit is always neutral
     # todo: Absorb Magic - Offensive spells only deal 50% damage to these units.
@@ -367,7 +369,7 @@ class Sgole(Units):
 class Ogarg(Units):
 
     def __init__(self, i, j, count, team):
-        super().__init__(team)
+        super().__init__(i, j, team)
 
         self.name = 'ogarg'
         self.ai = 201
@@ -375,7 +377,8 @@ class Ogarg(Units):
         self.characteristics = {"base_characteristics": {"attack": 7, "defense": 7, "damage": [2, 3],
                                                          "health": 16, "speed": 9},
                                 "current_health": 16, "current_count": count, "current_arrows": 0,
-                                "is_double": False, "is_shooter": False, "is_flyer": True, "is_jumper": False
+                                "is_double": False, "is_shooter": False, "is_flyer": True, "is_jumper": False,
+                                "is_not_answer": False
                                 }
 
         self.animations = {
@@ -393,7 +396,7 @@ class Ogarg(Units):
 
         self.image = {"x_size": 216, "y_size": 216 / 1.125, "x_shift": -25, "y_shift": 0}
 
-        self.init(i, j)
+        self.init()
 
     # todo: can not be resurrected
 
@@ -401,7 +404,7 @@ class Ogarg(Units):
 class Gargo(Units):
 
     def __init__(self, i, j, count, team):
-        super().__init__(team)
+        super().__init__(i, j, team)
 
         self.name = 'gargo'
         self.ai = 165
@@ -409,7 +412,8 @@ class Gargo(Units):
         self.characteristics = {"base_characteristics": {"attack": 6, "defense": 6, "damage": [2, 3],
                                                          "health": 16, "speed": 6},
                                 "current_health": 16, "current_count": count, "current_arrows": 0,
-                                "is_double": False, "is_shooter": False, "is_flyer": True, "is_jumper": False
+                                "is_double": False, "is_shooter": False, "is_flyer": True, "is_jumper": False,
+                                "is_not_answer": False
                                 }
 
         self.animations = {
@@ -427,7 +431,7 @@ class Gargo(Units):
 
         self.image = {"x_size": 216, "y_size": 216 / 1.125, "x_shift": -25, "y_shift": 0}
 
-        self.init(i, j)
+        self.init()
 
     # todo: can not be resurrected
 
@@ -435,7 +439,7 @@ class Gargo(Units):
 class GremM(Units):
 
     def __init__(self, i, j, count, team):
-        super().__init__(team)
+        super().__init__(i, j, team)
 
         self.name = 'gremm'
         self.ai = 66
@@ -443,7 +447,8 @@ class GremM(Units):
         self.characteristics = {"base_characteristics": {"attack": 4, "defense": 4, "damage": [1, 2],
                                                          "health": 4, "speed": 5},
                                 "current_health": 4, "current_count": count, "current_arrows": 8,
-                                "is_double": False, "is_shooter": True, "is_flyer": False, "is_jumper": False
+                                "is_double": False, "is_shooter": True, "is_flyer": False, "is_jumper": False,
+                                "is_not_answer": False
                                 }
 
         self.animations = {
@@ -464,13 +469,13 @@ class GremM(Units):
 
         self.image = {"x_size": 190, "y_size": 190 / 1.125, "x_shift": -15, "y_shift": 0}
 
-        self.init(i, j)
+        self.init()
 
 
 class Grema(Units):
 
     def __init__(self, i, j, count, team):
-        super().__init__(team)
+        super().__init__(i, j, team)
 
         self.name = 'grema'
         self.ai = 44
@@ -478,7 +483,8 @@ class Grema(Units):
         self.characteristics = {"base_characteristics": {"attack": 3, "defense": 3, "damage": [1, 2],
                                                          "health": 4, "speed": 4},
                                 "current_health": 4, "current_count": count, "current_arrows": 0,
-                                "is_double": False, "is_shooter": False, "is_flyer": False, "is_jumper": False
+                                "is_double": False, "is_shooter": False, "is_flyer": False, "is_jumper": False,
+                                "is_not_answer": False
                                 }
 
         self.animations = {
@@ -496,4 +502,4 @@ class Grema(Units):
 
         self.image = {"x_size": 216, "y_size": 216 / 1.125, "x_shift": -20, "y_shift": 10}
 
-        self.init(i, j)
+        self.init()

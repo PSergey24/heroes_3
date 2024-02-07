@@ -1,4 +1,3 @@
-
 from modules.settings import Settings
 from modules.states import Objects
 
@@ -41,3 +40,26 @@ class Tools:
                     return True
         return False
 
+    def get_neighbors(self, row, col):
+        """
+        Function will return list of neighbors in the adjacent position.
+        :param row: unit's row
+        :param col: unit's col
+        :return: list
+        """
+        neighbors = []
+        x, y, z = self.offset2cube(row, col)
+        for i in range(6):
+            nb_x, nb_y, nb_z = self.cube_neighbor((x, y, z), i)
+            nb_r, nb_c = self.cube2offset(nb_x, nb_y, nb_z)
+            if 0 <= nb_c < Settings.n_columns and 0 <= nb_r < Settings.n_rows:
+                unit = Objects.field.hexagons[nb_r][nb_c].engaged
+                if unit is not None:
+                    neighbors.append(unit)
+        return neighbors
+
+    @staticmethod
+    def get_unit(row, col):
+        if 0 <= col < Settings.n_columns and 0 <= row < Settings.n_rows:
+            return Objects.field.hexagons[row][col].engaged
+        return None
