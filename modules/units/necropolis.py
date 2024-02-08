@@ -179,7 +179,9 @@ class PLich(Units):
 
         self.init()
 
-        # todo: cloud of death - all teams in radius
+    # special ability: cloud attack
+    def get_defenders(self):
+        return self.to_cloud_attack()
 
 
 class Lich(Units):
@@ -217,7 +219,9 @@ class Lich(Units):
 
         self.init()
 
-        # todo: cloud of death - all teams in radius
+    # special ability: cloud attack
+    def get_defenders(self):
+        return self.to_cloud_attack()
 
 
 class Nosfe(Units):

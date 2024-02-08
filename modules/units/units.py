@@ -253,10 +253,24 @@ class Units:
     def update_fight_info(self):
         self.to_attack = self.get_defenders()
 
-    # get defenders: default, to_fire_attack, to_circular_attack, three_heads_attack
+    # get defenders: default, to_cloud_attack, to_fire_attack, to_circular_attack, three_heads_attack
     @staticmethod
     def get_defenders():
         return [Objects.cursor.whom_attack]
+
+    @staticmethod
+    def to_cloud_attack():
+        """
+        Special ability for lich, plich, magog
+        The function returns units that will be mass attacked
+        :return: list
+        """
+        defenders = [Objects.cursor.whom_attack]
+        if Objects.cursor.action.find("shoot") != -1:
+            neighbors = Objects.tools.get_neighbors(Objects.cursor.offset[0], Objects.cursor.offset[1])
+            neighbors = [item for item in neighbors if item.characteristics["is"] == "alive"]
+            defenders.extend(neighbors)
+        return list(set(defenders))
 
     def to_fire_attack(self):
         """

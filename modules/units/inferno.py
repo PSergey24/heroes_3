@@ -404,7 +404,9 @@ class Magog(Units):
 
         self.init()
 
-    # todo: Fireball attack - damage not only to the target unit, but to all units within a radius of cell
+    # special ability: fire-ball attack
+    def get_defenders(self):
+        return self.to_cloud_attack()
 
 
 class Gog(Units):
