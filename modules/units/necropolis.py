@@ -14,7 +14,7 @@ class Hdrgn(Units):
                                                          "health": 200, "speed": 14},
                                 "current_health": 200, "current_count": count, "current_arrows": 0,
                                 "is_double": True, "is_shooter": False, "is_flyer": True, "is_jumper": False,
-                                "is_not_answer": False
+                                "is": "walking_dead", "is_not_answer": False
                                 }
 
         self.animations = {
@@ -50,7 +50,7 @@ class Ndrgn(Units):
                                                          "health": 150, "speed": 9},
                                 "current_health": 150, "current_count": count, "current_arrows": 0,
                                 "is_double": True, "is_shooter": False, "is_flyer": True, "is_jumper": False,
-                                "is_not_answer": False
+                                "is": "walking_dead", "is_not_answer": False
                                 }
 
         self.animations = {
@@ -85,7 +85,7 @@ class Blord(Units):
                                                          "health": 120, "speed": 9},
                                 "current_health": 120, "current_count": count, "current_arrows": 0,
                                 "is_double": True, "is_shooter": False, "is_flyer": False, "is_jumper": False,
-                                "is_not_answer": False
+                                "is": "walking_dead", "is_not_answer": False
                                 }
 
         self.animations = {
@@ -121,7 +121,7 @@ class Bknig(Units):
                                                          "health": 120, "speed": 7},
                                 "current_health": 120, "current_count": count, "current_arrows": 0,
                                 "is_double": True, "is_shooter": False, "is_flyer": False, "is_jumper": False,
-                                "is_not_answer": False
+                                "is": "walking_dead", "is_not_answer": False
                                 }
 
         self.animations = {
@@ -156,7 +156,7 @@ class PLich(Units):
                                                          "health": 40, "speed": 7},
                                 "current_health": 40, "current_count": count, "current_arrows": 24,
                                 "is_double": False, "is_shooter": True, "is_flyer": False, "is_jumper": False,
-                                "is_not_answer": False
+                                "is": "walking_dead", "is_not_answer": False, "is_melee_penalty": True
                                 }
 
         self.animations = {
@@ -194,7 +194,7 @@ class Lich(Units):
                                                          "health": 30, "speed": 6},
                                 "current_health": 30, "current_count": count, "current_arrows": 12,
                                 "is_double": False, "is_shooter": True, "is_flyer": False, "is_jumper": False,
-                                "is_not_answer": False
+                                "is": "walking_dead", "is_not_answer": False, "is_melee_penalty": True
                                 }
 
         self.animations = {
@@ -232,7 +232,7 @@ class Nosfe(Units):
                                                          "health": 40, "speed": 9},
                                 "current_health": 40, "current_count": count, "current_arrows": 0,
                                 "is_double": False, "is_shooter": False, "is_flyer": True, "is_jumper": False,
-                                "is_not_answer": True
+                                "is": "walking_dead", "is_not_answer": True
                                 }
 
         self.animations = {
@@ -267,7 +267,7 @@ class Vamp(Units):
                                                          "health": 30, "speed": 6},
                                 "current_health": 30, "current_count": count, "current_arrows": 0,
                                 "is_double": False, "is_shooter": False, "is_flyer": True, "is_jumper": False,
-                                "is_not_answer": True
+                                "is": "walking_dead", "is_not_answer": True
                                 }
 
         self.animations = {
@@ -300,7 +300,7 @@ class Wrait(Units):
                                                          "health": 18, "speed": 7},
                                 "current_health": 18, "current_count": count, "current_arrows": 0,
                                 "is_double": False, "is_shooter": False, "is_flyer": True, "is_jumper": False,
-                                "is_not_answer": False
+                                "is": "walking_dead", "is_not_answer": False
                                 }
 
         self.animations = {
@@ -336,7 +336,7 @@ class Wight(Units):
                                                          "health": 18, "speed": 5},
                                 "current_health": 18, "current_count": count, "current_arrows": 0,
                                 "is_double": False, "is_shooter": False, "is_flyer": True, "is_jumper": False,
-                                "is_not_answer": False
+                                "is": "walking_dead", "is_not_answer": False
                                 }
 
         self.animations = {
@@ -371,7 +371,7 @@ class Zomlo(Units):
                                                          "health": 20, "speed": 4},
                                 "current_health": 20, "current_count": count, "current_arrows": 0,
                                 "is_double": False, "is_shooter": False, "is_flyer": False, "is_jumper": False,
-                                "is_not_answer": False
+                                "is": "walking_dead", "is_not_answer": False
                                 }
 
         self.animations = {
@@ -404,7 +404,7 @@ class Zombi(Units):
                                                          "health": 15, "speed": 3},
                                 "current_health": 15, "current_count": count, "current_arrows": 0,
                                 "is_double": False, "is_shooter": False, "is_flyer": False, "is_jumper": False,
-                                "is_not_answer": False
+                                "is": "walking_dead", "is_not_answer": False
                                 }
 
         self.animations = {
@@ -437,7 +437,7 @@ class Wskel(Units):
                                                          "health": 6, "speed": 5},
                                 "current_health": 6, "current_count": count, "current_arrows": 0,
                                 "is_double": False, "is_shooter": False, "is_flyer": False, "is_jumper": False,
-                                "is_not_answer": False
+                                "is": "walking_dead", "is_not_answer": False
                                 }
 
         self.animations = {
@@ -470,7 +470,7 @@ class Skele(Units):
                                                          "health": 6, "speed": 4},
                                 "current_health": 6, "current_count": count, "current_arrows": 0,
                                 "is_double": False, "is_shooter": False, "is_flyer": False, "is_jumper": False,
-                                "is_not_answer": False
+                                "is": "walking_dead", "is_not_answer": False
                                 }
 
         self.animations = {

@@ -14,7 +14,7 @@ class Adevl(Units):
                                                          "health": 200, "speed": 17},
                                 "current_health": 200, "current_count": count, "current_arrows": 0,
                                 "is_double": False, "is_shooter": False, "is_flyer": False, "is_jumper": True,
-                                "is_not_answer": True
+                                "is": "alive", "is_not_answer": True
                                 }
 
         self.animations = {
@@ -36,7 +36,6 @@ class Adevl(Units):
 
         self.init()
 
-        # todo: Hatred of Angels and Archangels => +50% additional attack damage.
         # todo: Failure => -1point to good fortune of all enemy warriors; works even after the destruction of devils.
 
     # special ability: is jumper
@@ -60,7 +59,7 @@ class Devil(Units):
                                                          "health": 160, "speed": 11},
                                 "current_health": 160, "current_count": count, "current_arrows": 0,
                                 "is_double": False, "is_shooter": False, "is_flyer": False, "is_jumper": True,
-                                "is_not_answer": True
+                                "is": "alive", "is_not_answer": True
                                 }
 
         self.animations = {
@@ -82,7 +81,6 @@ class Devil(Units):
 
         self.init()
 
-        # todo: Hatred of Angels and Archangels => +50% additional attack damage.
         # todo: Failure => -1point to good fortune of all enemy warriors; works even after the destruction of devils.
 
     # special ability: is jumper
@@ -106,7 +104,7 @@ class Efres(Units):
                                                          "health": 90, "speed": 13},
                                 "current_health": 90, "current_count": count, "current_arrows": 0,
                                 "is_double": False, "is_shooter": False, "is_flyer": True, "is_jumper": False,
-                                "is_not_answer": False
+                                "is": "alive", "is_not_answer": False
                                 }
 
         self.animations = {
@@ -128,7 +126,6 @@ class Efres(Units):
         self.init()
 
         # todo: Immune to all Fire Magic spells
-        # todo: Hatred of Djinn and High Djinn => +50% additional attack damage.
         # todo: Fire Shield – deals damage equal to 20% of that received in melee combat.
 
 
@@ -144,7 +141,7 @@ class Efree(Units):
                                                          "health": 90, "speed": 9},
                                 "current_health": 90, "current_count": count, "current_arrows": 0,
                                 "is_double": False, "is_shooter": False, "is_flyer": True, "is_jumper": False,
-                                "is_not_answer": False
+                                "is": "alive", "is_not_answer": False
                                 }
 
         self.animations = {
@@ -166,7 +163,6 @@ class Efree(Units):
         self.init()
 
         # todo: Immune to all Fire Magic spells
-        # todo: Hatred of Djinn and High Djinn => +50% additional attack damage.
 
 
 class Pfoe(Units):
@@ -181,7 +177,7 @@ class Pfoe(Units):
                                                          "health": 45, "speed": 7},
                                 "current_health": 45, "current_count": count, "current_arrows": 0,
                                 "is_double": False, "is_shooter": False, "is_flyer": False, "is_jumper": False,
-                                "is_not_answer": False
+                                "is": "alive", "is_not_answer": False
                                 }
 
         self.animations = {
@@ -216,7 +212,7 @@ class Pfien(Units):
                                                          "health": 45, "speed": 6},
                                 "current_health": 45, "current_count": count, "current_arrows": 0,
                                 "is_double": False, "is_shooter": False, "is_flyer": False, "is_jumper": False,
-                                "is_not_answer": False
+                                "is": "alive", "is_not_answer": False
                                 }
 
         self.animations = {
@@ -249,7 +245,7 @@ class Thdem(Units):
                                                          "health": 40, "speed": 6},
                                 "current_health": 40, "current_count": count, "current_arrows": 0,
                                 "is_double": False, "is_shooter": False, "is_flyer": False, "is_jumper": False,
-                                "is_not_answer": False
+                                "is": "alive", "is_not_answer": False
                                 }
 
         self.animations = {
@@ -282,7 +278,7 @@ class Ohdem(Units):
                                                          "health": 35, "speed": 5},
                                 "current_health": 35, "current_count": count, "current_arrows": 0,
                                 "is_double": False, "is_shooter": False, "is_flyer": False, "is_jumper": False,
-                                "is_not_answer": False
+                                "is": "alive", "is_not_answer": False
                                 }
 
         self.animations = {
@@ -315,7 +311,7 @@ class Cerbu(Units):
                                                          "health": 25, "speed": 8},
                                 "current_health": 25, "current_count": count, "current_arrows": 0,
                                 "is_double": True, "is_shooter": False, "is_flyer": False, "is_jumper": False,
-                                "is_not_answer": True
+                                "is": "alive", "is_not_answer": True
                                 }
 
         self.animations = {
@@ -352,7 +348,7 @@ class Hhoun(Units):
                                                          "health": 25, "speed": 7},
                                 "current_health": 25, "current_count": count, "current_arrows": 0,
                                 "is_double": True, "is_shooter": False, "is_flyer": False, "is_jumper": False,
-                                "is_not_answer": False
+                                "is": "alive", "is_not_answer": False
                                 }
 
         self.animations = {
@@ -385,7 +381,7 @@ class Magog(Units):
                                                          "health": 13, "speed": 6},
                                 "current_health": 13, "current_count": count, "current_arrows": 24,
                                 "is_double": False, "is_shooter": True, "is_flyer": False, "is_jumper": False,
-                                "is_not_answer": False
+                                "is": "alive", "is_not_answer": False, "is_melee_penalty": True
                                 }
 
         self.animations = {
@@ -423,7 +419,7 @@ class Gog(Units):
                                                          "health": 13, "speed": 4},
                                 "current_health": 13, "current_count": count, "current_arrows": 12,
                                 "is_double": False, "is_shooter": True, "is_flyer": False, "is_jumper": False,
-                                "is_not_answer": False
+                                "is": "alive", "is_not_answer": False, "is_melee_penalty": True
                                 }
 
         self.animations = {
@@ -459,7 +455,7 @@ class Famil(Units):
                                                          "health": 4, "speed": 7},
                                 "current_health": 4, "current_count": count, "current_arrows": 0,
                                 "is_double": False, "is_shooter": False, "is_flyer": False, "is_jumper": False,
-                                "is_not_answer": False
+                                "is": "alive", "is_not_answer": False
                                 }
 
         self.animations = {
@@ -494,7 +490,7 @@ class Imp(Units):
                                                          "health": 4, "speed": 5},
                                 "current_health": 4, "current_count": count, "current_arrows": 0,
                                 "is_double": False, "is_shooter": False, "is_flyer": False, "is_jumper": False,
-                                "is_not_answer": False
+                                "is": "alive", "is_not_answer": False
                                 }
 
         self.animations = {

@@ -14,7 +14,7 @@ class Haspid(Units):
                                                          "health": 300, "speed": 12},
                                 "current_health": 300, "current_count": count, "current_arrows": 0,
                                 "is_double": True, "is_shooter": False, "is_flyer": False, "is_jumper": False,
-                                "is_not_answer": False
+                                "is": "alive", "is_not_answer": False
                                 }
 
         self.animations = {
@@ -50,7 +50,7 @@ class Serpent(Units):
                                                          "health": 180, "speed": 9},
                                 "current_health": 180, "current_count": count, "current_arrows": 0,
                                 "is_double": True, "is_shooter": False, "is_flyer": False, "is_jumper": False,
-                                "is_not_answer": False
+                                "is": "alive", "is_not_answer": False
                                 }
 
         self.animations = {
@@ -85,7 +85,7 @@ class Nixwarr(Units):
                                                          "health": 100, "speed": 7},
                                 "current_health": 100, "current_count": count, "current_arrows": 0,
                                 "is_double": False, "is_shooter": False, "is_flyer": False, "is_jumper": False,
-                                "is_not_answer": False
+                                "is": "alive", "is_not_answer": False
                                 }
 
         self.animations = {
@@ -120,7 +120,7 @@ class Nix(Units):
                                                          "health": 90, "speed": 6},
                                 "current_health": 90, "current_count": count, "current_arrows": 0,
                                 "is_double": False, "is_shooter": False, "is_flyer": False, "is_jumper": False,
-                                "is_not_answer": False
+                                "is": "alive", "is_not_answer": False
                                 }
 
         self.animations = {
@@ -155,7 +155,7 @@ class Sorcss(Units):
                                                          "health": 35, "speed": 7},
                                 "current_health": 35, "current_count": count, "current_arrows": 12,
                                 "is_double": False, "is_shooter": True, "is_flyer": False, "is_jumper": False,
-                                "is_not_answer": False
+                                "is": "alive", "is_not_answer": False, "is_melee_penalty": True
                                 }
 
         self.animations = {
@@ -193,7 +193,7 @@ class Priest(Units):
                                                          "health": 35, "speed": 6},
                                 "current_health": 35, "current_count": count, "current_arrows": 12,
                                 "is_double": False, "is_shooter": True, "is_flyer": False, "is_jumper": False,
-                                "is_not_answer": False
+                                "is": "alive", "is_not_answer": False, "is_melee_penalty": True
                                 }
 
         self.animations = {
@@ -231,7 +231,7 @@ class Assidup(Units):
                                                          "health": 30, "speed": 11},
                                 "current_health": 30, "current_count": count, "current_arrows": 0,
                                 "is_double": True, "is_shooter": False, "is_flyer": True, "is_jumper": False,
-                                "is_not_answer": False
+                                "is": "alive", "is_not_answer": False
                                 }
 
         self.animations = {
@@ -266,7 +266,7 @@ class Assid(Units):
                                                          "health": 30, "speed": 9},
                                 "current_health": 30, "current_count": count, "current_arrows": 0,
                                 "is_double": True, "is_shooter": False, "is_flyer": True, "is_jumper": False,
-                                "is_not_answer": False
+                                "is": "alive", "is_not_answer": False
                                 }
 
         self.animations = {
@@ -299,7 +299,7 @@ class Pr3up(Units):
                                                          "health": 16, "speed": 8},
                                 "current_health": 16, "current_count": count, "current_arrows": 12,
                                 "is_double": False, "is_shooter": True, "is_flyer": False, "is_jumper": False,
-                                "is_not_answer": True
+                                "is": "alive", "is_not_answer": True, "is_melee_penalty": False
                                 }
 
         self.animations = {
@@ -322,7 +322,6 @@ class Pr3up(Units):
 
         self.init()
 
-    # todo: There is no melee penalty.
     # todo: Accurate shot
 
 
@@ -338,7 +337,7 @@ class Corsair(Units):
                                                          "health": 15, "speed": 7},
                                 "current_health": 15, "current_count": count, "current_arrows": 4,
                                 "is_double": False, "is_shooter": True, "is_flyer": False, "is_jumper": False,
-                                "is_not_answer": True
+                                "is": "alive", "is_not_answer": True, "is_melee_penalty": False
                                 }
 
         self.animations = {
@@ -360,8 +359,6 @@ class Corsair(Units):
         self.image = {"x_size": 216, "y_size": 216 / 1.125, "x_shift": -25, "y_shift": -5}
 
         self.init()
-
-    # todo: There is no melee penalty.
 
 
 class Pirate(Units):
@@ -376,7 +373,7 @@ class Pirate(Units):
                                                          "health": 15, "speed": 6},
                                 "current_health": 15, "current_count": count, "current_arrows": 4,
                                 "is_double": False, "is_shooter": True, "is_flyer": False, "is_jumper": False,
-                                "is_not_answer": False
+                                "is": "alive", "is_not_answer": False, "is_melee_penalty": False
                                 }
 
         self.animations = {
@@ -399,8 +396,6 @@ class Pirate(Units):
 
         self.init()
 
-    # todo: There is no melee penalty.
-
 
 class Swash(Units):
 
@@ -414,7 +409,7 @@ class Swash(Units):
                                                          "health": 15, "speed": 6},
                                 "current_health": 15, "current_count": count, "current_arrows": 0,
                                 "is_double": False, "is_shooter": False, "is_flyer": False, "is_jumper": False,
-                                "is_not_answer": False
+                                "is": "alive", "is_not_answer": False
                                 }
 
         self.animations = {
@@ -447,7 +442,7 @@ class Seadog(Units):
                                                          "health": 15, "speed": 5},
                                 "current_health": 15, "current_count": count, "current_arrows": 0,
                                 "is_double": False, "is_shooter": False, "is_flyer": False, "is_jumper": False,
-                                "is_not_answer": False
+                                "is": "alive", "is_not_answer": False
                                 }
 
         self.animations = {
@@ -480,7 +475,7 @@ class Oceanid(Units):
                                                          "health": 4, "speed": 8},
                                 "current_health": 4, "current_count": count, "current_arrows": 0,
                                 "is_double": False, "is_shooter": False, "is_flyer": False, "is_jumper": True,
-                                "is_not_answer": False
+                                "is": "alive", "is_not_answer": False
                                 }
 
         self.animations = {
@@ -525,7 +520,7 @@ class Nimph(Units):
                                                          "health": 4, "speed": 6},
                                 "current_health": 4, "current_count": count, "current_arrows": 0,
                                 "is_double": False, "is_shooter": False, "is_flyer": False, "is_jumper": True,
-                                "is_not_answer": False
+                                "is": "alive", "is_not_answer": False
                                 }
 
         self.animations = {

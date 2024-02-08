@@ -14,7 +14,7 @@ class Adrgn(Units):
                                                          "health": 1000, "speed": 19},
                                 "current_health": 1000, "current_count": count, "current_arrows": 0,
                                 "is_double": True, "is_shooter": False, "is_flyer": True, "is_jumper": False,
-                                "is_not_answer": False
+                                "is": "alive", "is_not_answer": False
                                 }
 
         self.animations = {

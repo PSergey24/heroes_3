@@ -1,17 +1,28 @@
 import random
-import copy
 from modules.settings import Settings
+from modules.states import Objects, States
 
 
 class DamageCounter:
 
     def __init__(self):
-        pass
+        self.with_hatred = {"gtita": ["bdrgn"], "bdrgn": ["gtita"],
+                            "rangl": ["adevl", "devil"], "angel": ["adevl", "devil"],
+                            "adevl": ["rangl", "angel"], "devil": ["rangl", "angel"],
+                            "sulta": ["efres", "efree"], "genie": ["efres", "efree"],
+                            "efres": ["sulta", "genie"], "efree": ["sulta", "genie"]
+                            }
 
     def count_damage(self, attacker, defender):
         k_damage = self.get_damage_k(attacker, defender)
         k_luck = self.get_luck_k()
-        damage = round(attacker.characteristics["current_count"] * random.randint(attacker.characteristics["base_characteristics"]["damage"][0], attacker.characteristics["base_characteristics"]["damage"][1]) * k_damage * k_luck, 1)
+        k_melee_penalty = self.get_melee_penalty(attacker)
+        k_hatred = self.get_hatred_k(attacker, defender)
+
+        base_damage = attacker.characteristics["current_count"] * random.randint(attacker.characteristics["base_characteristics"]["damage"][0], attacker.characteristics["base_characteristics"]["damage"][1])
+        base_damage *= k_hatred
+
+        damage = round(base_damage * k_damage * k_luck * k_melee_penalty * States.penalty_shooter, 1)
         print(f"{attacker.name} attack to {defender.name} with damage {damage}")
         return damage
 
@@ -28,6 +39,17 @@ class DamageCounter:
 
     @staticmethod
     def get_luck_k():
+        return 1
+
+    @staticmethod
+    def get_melee_penalty(attacker):
+        if attacker.characteristics["is_shooter"] and attacker.characteristics["is_melee_penalty"] and len(attacker.next_actions) > 0 and attacker.next_actions[-1].find("attack") != -1:
+            return 0.5
+        return 1
+
+    def get_hatred_k(self, attacker, defender):
+        if attacker.name in self.with_hatred and defender.name in self.with_hatred[attacker.name]:
+            return 1.5
         return 1
 
     @staticmethod

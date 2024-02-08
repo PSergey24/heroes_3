@@ -14,7 +14,7 @@ class BDragon(Units):
                                                          "health": 300, "speed": 15},
                                 "current_health": 300, "current_count": count, "current_arrows": 0,
                                 "is_double": True, "is_shooter": False, "is_flyer": True, "is_jumper": False,
-                                "is_not_answer": False
+                                "is": "alive", "is_not_answer": False
                                 }
 
         self.animations = {
@@ -42,7 +42,6 @@ class BDragon(Units):
         return self.to_fire_attack()
 
     # todo: Immunity to all magic
-    # todo: Titan Hatred => +50% additional attack damage
 
 
 class Rdrgn(Units):
@@ -57,7 +56,7 @@ class Rdrgn(Units):
                                                          "health": 180, "speed": 11},
                                 "current_health": 180, "current_count": count, "current_arrows": 0,
                                 "is_double": True, "is_shooter": False, "is_flyer": True, "is_jumper": False,
-                                "is_not_answer": False
+                                "is": "alive", "is_not_answer": False
                                 }
 
         self.animations = {
@@ -99,7 +98,7 @@ class Cmcor(Units):
                                                          "health": 80, "speed": 11},
                                 "current_health": 80, "current_count": count, "current_arrows": 0,
                                 "is_double": True, "is_shooter": False, "is_flyer": True, "is_jumper": False,
-                                "is_not_answer": False
+                                "is": "alive", "is_not_answer": False
                                 }
 
         self.animations = {
@@ -134,7 +133,7 @@ class Mcore(Units):
                                                          "health": 80, "speed": 7},
                                 "current_health": 80, "current_count": count, "current_arrows": 0,
                                 "is_double": True, "is_shooter": False, "is_flyer": True, "is_jumper": False,
-                                "is_not_answer": False
+                                "is": "alive", "is_not_answer": False
                                 }
 
         self.animations = {
@@ -167,7 +166,7 @@ class Minok(Units):
                                                          "health": 50, "speed": 8},
                                 "current_health": 50, "current_count": count, "current_arrows": 0,
                                 "is_double": False, "is_shooter": False, "is_flyer": False, "is_jumper": False,
-                                "is_not_answer": False
+                                "is": "alive", "is_not_answer": False
                                 }
 
         self.animations = {
@@ -202,7 +201,7 @@ class Minot(Units):
                                                          "health": 50, "speed": 6},
                                 "current_health": 50, "current_count": count, "current_arrows": 0,
                                 "is_double": False, "is_shooter": False, "is_flyer": False, "is_jumper": False,
-                                "is_not_answer": False
+                                "is": "alive", "is_not_answer": False
                                 }
 
         self.animations = {
@@ -237,7 +236,7 @@ class Meduq(Units):
                                                          "health": 30, "speed": 6},
                                 "current_health": 30, "current_count": count, "current_arrows": 8,
                                 "is_double": True, "is_shooter": True, "is_flyer": False, "is_jumper": False,
-                                "is_not_answer": False
+                                "is": "alive", "is_not_answer": False, "is_melee_penalty": False
                                 }
 
         self.animations = {
@@ -260,7 +259,6 @@ class Meduq(Units):
 
         self.init()
 
-    # todo: No melee penalty
     # todo: Petrification - 20% chance, duration 3 step, -50% attack after
 
 
@@ -276,7 +274,7 @@ class Medus(Units):
                                                          "health": 25, "speed": 5},
                                 "current_health": 25, "current_count": count, "current_arrows": 4,
                                 "is_double": True, "is_shooter": True, "is_flyer": False, "is_jumper": False,
-                                "is_not_answer": False
+                                "is": "alive", "is_not_answer": False, "is_melee_penalty": False
                                 }
 
         self.animations = {
@@ -299,7 +297,6 @@ class Medus(Units):
 
         self.init()
 
-    # todo: No melee penalty
     # todo: Petrification - 20% chance, duration 3 step, -50% attack after
 
 
@@ -315,7 +312,7 @@ class Eveye(Units):
                                                          "health": 22, "speed": 7},
                                 "current_health": 22, "current_count": count, "current_arrows": 24,
                                 "is_double": False, "is_shooter": True, "is_flyer": False, "is_jumper": False,
-                                "is_not_answer": False
+                                "is": "alive", "is_not_answer": False, "is_melee_penalty": False
                                 }
 
         self.animations = {
@@ -337,8 +334,6 @@ class Eveye(Units):
         self.image = {"x_size": 216, "y_size": 216 / 1.125, "x_shift": -25, "y_shift": -5}
 
         self.init()
-
-    # todo: No melee penalty
 
 
 class Behol(Units):
@@ -353,7 +348,7 @@ class Behol(Units):
                                                          "health": 22, "speed": 5},
                                 "current_health": 22, "current_count": count, "current_arrows": 12,
                                 "is_double": False, "is_shooter": True, "is_flyer": False, "is_jumper": False,
-                                "is_not_answer": False
+                                "is": "alive", "is_not_answer": False, "is_melee_penalty": False
                                 }
 
         self.animations = {
@@ -376,8 +371,6 @@ class Behol(Units):
 
         self.init()
 
-    # todo: No melee penalty
-
 
 class Harph(Units):
 
@@ -391,7 +384,7 @@ class Harph(Units):
                                                          "health": 14, "speed": 9},
                                 "current_health": 14, "current_count": count, "current_arrows": 0,
                                 "is_double": False, "is_shooter": False, "is_flyer": True, "is_jumper": False,
-                                "is_not_answer": True
+                                "is": "alive", "is_not_answer": True
                                 }
 
         self.status = {"is_answer": 1, "is_wait": False, "is_defense": False, "destination_back": [0, 0], "is_back": False}
@@ -466,7 +459,7 @@ class Harpy(Units):
                                                          "health": 14, "speed": 6},
                                 "current_health": 14, "current_count": count, "current_arrows": 0,
                                 "is_double": False, "is_shooter": False, "is_flyer": True, "is_jumper": False,
-                                "is_not_answer": False
+                                "is": "alive", "is_not_answer": False
                                 }
 
         self.status = {"is_answer": 1, "is_wait": False, "is_defense": False, "destination_back": [0, 0], "is_back": False}
@@ -541,7 +534,7 @@ class Itrog(Units):
                                                          "health": 6, "speed": 5},
                                 "current_health": 6, "current_count": count, "current_arrows": 0,
                                 "is_double": False, "is_shooter": False, "is_flyer": False, "is_jumper": False,
-                                "is_not_answer": False
+                                "is": "alive", "is_not_answer": False
                                 }
 
         self.animations = {
@@ -576,7 +569,7 @@ class Trogl(Units):
                                                          "health": 4, "speed": 3},
                                 "current_health": 4, "current_count": count, "current_arrows": 0,
                                 "is_double": False, "is_shooter": False, "is_flyer": False, "is_jumper": False,
-                                "is_not_answer": False
+                                "is": "alive", "is_not_answer": False
                                 }
 
         self.animations = {

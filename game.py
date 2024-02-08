@@ -81,8 +81,8 @@ class Game:
         Objects.field = Field()
 
     def create_teams(self):
-        self.left_team = [unit('nosfe', 4, 4, 5, 1), unit('magel', 8, 8, 15, 1)]
-        self.right_team = [unit('ddrag', 5, 5, 25, 2), unit('sword', 9, 4, 4, 2), unit('grelf', 8, 4, 38, 2)]
+        self.left_team = [unit('efres', 4, 4, 15, 1), unit('magel', 8, 8, 15, 1)]
+        self.right_team = [unit('ddrag', 5, 5, 25, 2), unit('sulta', 9, 5, 20, 2), unit('grelf', 8, 4, 38, 2)]
 
     def create_queue(self):
         Objects.queue = Queue(self.left_team, self.right_team)

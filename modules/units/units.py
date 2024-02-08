@@ -22,7 +22,7 @@ class Units:
                                                          "health": None, "speed": None},
                                 "current_health": 0, "current_count": 0, "current_arrows": 0,
                                 "is_double": False, "is_shooter": False, "is_flyer": False, "is_jumper": False,
-                                "is_not_answer": False
+                                "is": None, "is_not_answer": False
                                 }
 
         self.status = {"is_answer": 1, "is_wait": False, "is_defense": False}

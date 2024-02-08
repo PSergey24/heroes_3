@@ -14,7 +14,7 @@ class Abehe(Units):
                                                          "health": 300, "speed": 9},
                                 "current_health": 300, "current_count": count, "current_arrows": 0,
                                 "is_double": True, "is_shooter": False, "is_flyer": False, "is_jumper": False,
-                                "is_not_answer": False
+                                "is": "alive", "is_not_answer": False
                                 }
 
         self.animations = {
@@ -49,7 +49,7 @@ class Ybehe(Units):
                                                          "health": 160, "speed": 6},
                                 "current_health": 160, "current_count": count, "current_arrows": 0,
                                 "is_double": True, "is_shooter": False, "is_flyer": False, "is_jumper": False,
-                                "is_not_answer": False
+                                "is": "alive", "is_not_answer": False
                                 }
 
         self.animations = {
@@ -84,7 +84,7 @@ class Cyclr(Units):
                                                          "health": 70, "speed": 8},
                                 "current_health": 70, "current_count": count, "current_arrows": 24,
                                 "is_double": False, "is_shooter": True, "is_flyer": False, "is_jumper": False,
-                                "is_not_answer": False
+                                "is": "alive", "is_not_answer": False, "is_melee_penalty": True
                                 }
 
         self.animations = {
@@ -122,7 +122,7 @@ class Cyclp(Units):
                                                          "health": 70, "speed": 6},
                                 "current_health": 70, "current_count": count, "current_arrows": 16,
                                 "is_double": False, "is_shooter": True, "is_flyer": False, "is_jumper": False,
-                                "is_not_answer": False
+                                "is": "alive", "is_not_answer": False, "is_melee_penalty": True
                                 }
 
         self.animations = {
@@ -160,7 +160,7 @@ class Tbird(Units):
                                                          "health": 60, "speed": 11},
                                 "current_health": 60, "current_count": count, "current_arrows": 0,
                                 "is_double": True, "is_shooter": False, "is_flyer": True, "is_jumper": False,
-                                "is_not_answer": False
+                                "is": "alive", "is_not_answer": False
                                 }
 
         self.animations = {
@@ -195,7 +195,7 @@ class Roc(Units):
                                                          "health": 60, "speed": 7},
                                 "current_health": 60, "current_count": count, "current_arrows": 0,
                                 "is_double": True, "is_shooter": False, "is_flyer": True, "is_jumper": False,
-                                "is_not_answer": False
+                                "is": "alive", "is_not_answer": False
                                 }
 
         self.animations = {
@@ -228,7 +228,7 @@ class Ogmag(Units):
                                                          "health": 60, "speed": 5},
                                 "current_health": 60, "current_count": count, "current_arrows": 0,
                                 "is_double": False, "is_shooter": False, "is_flyer": False, "is_jumper": False,
-                                "is_not_answer": False
+                                "is": "alive", "is_not_answer": False
                                 }
 
         self.animations = {
@@ -263,7 +263,7 @@ class Ogre(Units):
                                                          "health": 40, "speed": 4},
                                 "current_health": 40, "current_count": count, "current_arrows": 0,
                                 "is_double": False, "is_shooter": False, "is_flyer": False, "is_jumper": False,
-                                "is_not_answer": False
+                                "is": "alive", "is_not_answer": False
                                 }
 
         self.animations = {
@@ -296,7 +296,7 @@ class Orcch(Units):
                                                          "health": 20, "speed": 5},
                                 "current_health": 20, "current_count": count, "current_arrows": 24,
                                 "is_double": False, "is_shooter": True, "is_flyer": False, "is_jumper": False,
-                                "is_not_answer": False
+                                "is": "alive", "is_not_answer": False, "is_melee_penalty": True
                                 }
 
         self.animations = {
@@ -332,7 +332,7 @@ class Orc(Units):
                                                          "health": 15, "speed": 4},
                                 "current_health": 15, "current_count": count, "current_arrows": 12,
                                 "is_double": False, "is_shooter": True, "is_flyer": False, "is_jumper": False,
-                                "is_not_answer": False
+                                "is": "alive", "is_not_answer": False, "is_melee_penalty": True
                                 }
 
         self.animations = {
@@ -368,7 +368,7 @@ class Uwlfr(Units):
                                                          "health": 10, "speed": 8},
                                 "current_health": 10, "current_count": count, "current_arrows": 0,
                                 "is_double": True, "is_shooter": False, "is_flyer": False, "is_jumper": False,
-                                "is_not_answer": False
+                                "is": "alive", "is_not_answer": False
                                 }
 
         self.status = {"is_answer": 1, "is_wait": False, "is_defense": False, "is_second_attack": False}
@@ -410,7 +410,7 @@ class Bwlfr(Units):
                                                          "health": 10, "speed": 6},
                                 "current_health": 10, "current_count": count, "current_arrows": 0,
                                 "is_double": True, "is_shooter": False, "is_flyer": False, "is_jumper": False,
-                                "is_not_answer": False
+                                "is": "alive", "is_not_answer": False
                                 }
 
         self.animations = {
@@ -443,7 +443,7 @@ class Hgobl(Units):
                                                          "health": 5, "speed": 7},
                                 "current_health": 5, "current_count": count, "current_arrows": 0,
                                 "is_double": False, "is_shooter": False, "is_flyer": False, "is_jumper": False,
-                                "is_not_answer": False
+                                "is": "alive", "is_not_answer": False
                                 }
 
         self.animations = {
@@ -476,7 +476,7 @@ class Gobli(Units):
                                                          "health": 5, "speed": 5},
                                 "current_health": 5, "current_count": count, "current_arrows": 0,
                                 "is_double": False, "is_shooter": False, "is_flyer": False, "is_jumper": False,
-                                "is_not_answer": False
+                                "is": "alive", "is_not_answer": False
                                 }
 
         self.animations = {

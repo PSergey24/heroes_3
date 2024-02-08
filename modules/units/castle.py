@@ -14,7 +14,7 @@ class Rangl(Units):
                                                          "health": 250, "speed": 18},
                                 "current_health": 250, "current_count": count, "current_arrows": 0,
                                 "is_double": True, "is_shooter": False, "is_flyer": True, "is_jumper": False,
-                                "is_not_answer": False
+                                "is": "alive", "is_not_answer": False
                                 }
 
         self.animations = {
@@ -34,7 +34,6 @@ class Rangl(Units):
 
         self.init()
 
-    # todo: Hatred of Devils and Archdevils => +50% additional attack damage.
     # todo: Inspiration => +1 units. to the morale of all allied soldiers; works even after the destruction of angels.
     # todo: Resurrection of allies - once per battle, resurrect of dead friendly units, 100 health - one archangel
 
@@ -51,7 +50,7 @@ class Angel(Units):
                                                          "health": 200, "speed": 12},
                                 "current_health": 200, "current_count": count, "current_arrows": 0,
                                 "is_double": False, "is_shooter": False, "is_flyer": True, "is_jumper": False,
-                                "is_not_answer": False
+                                "is": "alive", "is_not_answer": False
                                 }
 
         self.animations = {
@@ -71,7 +70,6 @@ class Angel(Units):
 
         self.init()
 
-    # todo: Hatred of Devils and Archdevils => +50% additional attack damage.
     # todo: Inspiration => +1 units. to the morale of all allied soldiers; works even after the destruction of angels.
 
 
@@ -87,7 +85,7 @@ class Champ(Units):
                                                          "health": 100, "speed": 9},
                                 "current_health": 100, "current_count": count, "current_arrows": 0,
                                 "is_double": True, "is_shooter": False, "is_flyer": False, "is_jumper": False,
-                                "is_not_answer": False
+                                "is": "alive", "is_not_answer": False
                                 }
 
         self.animations = {
@@ -122,7 +120,7 @@ class Cavlr(Units):
                                                          "health": 100, "speed": 7},
                                 "current_health": 100, "current_count": count, "current_arrows": 0,
                                 "is_double": True, "is_shooter": False, "is_flyer": False, "is_jumper": False,
-                                "is_not_answer": False
+                                "is": "alive", "is_not_answer": False
                                 }
 
         self.animations = {
@@ -157,7 +155,7 @@ class Zealt(Units):
                                                          "health": 30, "speed": 7},
                                 "current_health": 30, "current_count": count, "current_arrows": 24,
                                 "is_double": False, "is_shooter": True, "is_flyer": False, "is_jumper": False,
-                                "is_not_answer": False
+                                "is": "alive", "is_not_answer": False, "is_melee_penalty": False
                                 }
 
         self.animations = {
@@ -180,8 +178,6 @@ class Zealt(Units):
 
         self.init()
 
-    # todo: No penalty in hand-to-hand combat.
-
 
 class Monkk(Units):
 
@@ -195,7 +191,7 @@ class Monkk(Units):
                                                          "health": 30, "speed": 5},
                                 "current_health": 30, "current_count": count, "current_arrows": 12,
                                 "is_double": False, "is_shooter": True, "is_flyer": False, "is_jumper": False,
-                                "is_not_answer": False
+                                "is": "alive", "is_not_answer": False, "is_melee_penalty": True
                                 }
 
         self.animations = {
@@ -231,7 +227,7 @@ class Crusd(Units):
                                                          "health": 35, "speed": 6},
                                 "current_health": 35, "current_count": count, "current_arrows": 0,
                                 "is_double": False, "is_shooter": False, "is_flyer": False, "is_jumper": False,
-                                "is_not_answer": False
+                                "is": "alive", "is_not_answer": False
                                 }
 
         self.status = {"is_answer": 1, "is_wait": False, "is_defense": False, "is_second_attack": False}
@@ -273,7 +269,7 @@ class Sword(Units):
                                                          "health": 35, "speed": 5},
                                 "current_health": 35, "current_count": count, "current_arrows": 0,
                                 "is_double": False, "is_shooter": False, "is_flyer": False, "is_jumper": False,
-                                "is_not_answer": False
+                                "is": "alive", "is_not_answer": False
                                 }
 
         self.animations = {
@@ -306,7 +302,7 @@ class RGrif(Units):
                                                          "health": 25, "speed": 9},
                                 "current_health": 25, "current_count": count, "current_arrows": 0,
                                 "is_double": True, "is_shooter": False, "is_flyer": True, "is_jumper": False,
-                                "is_not_answer": False
+                                "is": "alive", "is_not_answer": False
                                 }
 
         self.status = {"is_answer": float('inf'), "is_wait": False, "is_defense": False}
@@ -344,7 +340,7 @@ class Griff(Units):
                                                          "health": 25, "speed": 6},
                                 "current_health": 25, "current_count": count, "current_arrows": 0,
                                 "is_double": True, "is_shooter": False, "is_flyer": True, "is_jumper": False,
-                                "is_not_answer": False
+                                "is": "alive", "is_not_answer": False
                                 }
 
         self.status = {"is_answer": 2, "is_wait": False, "is_defense": False}
@@ -382,7 +378,7 @@ class Hcbow(Units):
                                                          "health": 10, "speed": 6},
                                 "current_health": 10, "current_count": count, "current_arrows": 24,
                                 "is_double": False, "is_shooter": True, "is_flyer": False, "is_jumper": False,
-                                "is_not_answer": False
+                                "is": "alive", "is_not_answer": False, "is_melee_penalty": True
                                 }
 
         self.status = {"is_answer": 1, "is_wait": False, "is_defense": False, "is_second_shoot": False}
@@ -426,7 +422,7 @@ class Lcbow(Units):
                                                          "health": 10, "speed": 4},
                                 "current_health": 10, "current_count": count, "current_arrows": 12,
                                 "is_double": False, "is_shooter": True, "is_flyer": False, "is_jumper": False,
-                                "is_not_answer": False
+                                "is": "alive", "is_not_answer": False, "is_melee_penalty": True
                                 }
 
         self.animations = {
@@ -462,7 +458,7 @@ class Halbd(Units):
                                                          "health": 10, "speed": 5},
                                 "current_health": 10, "current_count": count, "current_arrows": 0,
                                 "is_double": False, "is_shooter": False, "is_flyer": False, "is_jumper": False,
-                                "is_not_answer": False
+                                "is": "alive", "is_not_answer": False
                                 }
 
         self.animations = {
@@ -497,7 +493,7 @@ class Pkman(Units):
                                                          "health": 10, "speed": 4},
                                 "current_health": 10, "current_count": count, "current_arrows": 0,
                                 "is_double": False, "is_shooter": False, "is_flyer": False, "is_jumper": False,
-                                "is_not_answer": False
+                                "is": "alive", "is_not_answer": False
                                 }
 
         self.animations = {

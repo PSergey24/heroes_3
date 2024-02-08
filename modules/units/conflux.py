@@ -14,7 +14,7 @@ class Phx(Units):
                                                          "health": 200, "speed": 21},
                                 "current_health": 200, "current_count": count, "current_arrows": 0,
                                 "is_double": True, "is_shooter": False, "is_flyer": True, "is_jumper": False,
-                                "is_not_answer": False
+                                "is": "alive", "is_not_answer": False
                                 }
 
         self.animations = {
@@ -53,7 +53,7 @@ class Fbird(Units):
                                                          "health": 150, "speed": 15},
                                 "current_health": 150, "current_count": count, "current_arrows": 0,
                                 "is_double": True, "is_shooter": False, "is_flyer": True, "is_jumper": False,
-                                "is_not_answer": False
+                                "is": "alive", "is_not_answer": False
                                 }
 
         self.animations = {
@@ -92,7 +92,7 @@ class Magel(Units):
                                                          "health": 80, "speed": 9},
                                 "current_health": 80, "current_count": count, "current_arrows": 0,
                                 "is_double": False, "is_shooter": False, "is_flyer": False, "is_jumper": False,
-                                "is_not_answer": True
+                                "is": "elemental", "is_not_answer": True
                                 }
 
         self.animations = {
@@ -132,7 +132,7 @@ class Psyel(Units):
                                                          "health": 75, "speed": 7},
                                 "current_health": 75, "current_count": count, "current_arrows": 0,
                                 "is_double": False, "is_shooter": False, "is_flyer": False, "is_jumper": False,
-                                "is_not_answer": True
+                                "is": "elemental", "is_not_answer": True
                                 }
 
         self.animations = {
@@ -172,7 +172,7 @@ class Ston(Units):
                                                          "health": 40, "speed": 6},
                                 "current_health": 40, "current_count": count, "current_arrows": 0,
                                 "is_double": False, "is_shooter": False, "is_flyer": False, "is_jumper": False,
-                                "is_not_answer": False
+                                "is": "elemental", "is_not_answer": False
                                 }
 
         self.animations = {
@@ -211,7 +211,7 @@ class Eelem(Units):
                                                          "health": 40, "speed": 4},
                                 "current_health": 40, "current_count": count, "current_arrows": 0,
                                 "is_double": False, "is_shooter": False, "is_flyer": False, "is_jumper": False,
-                                "is_not_answer": False
+                                "is": "elemental", "is_not_answer": False
                                 }
 
         self.animations = {
@@ -249,7 +249,7 @@ class Nrg(Units):
                                                          "health": 35, "speed": 8},
                                 "current_health": 35, "current_count": count, "current_arrows": 0,
                                 "is_double": False, "is_shooter": False, "is_flyer": False, "is_jumper": True,
-                                "is_not_answer": False
+                                "is": "elemental", "is_not_answer": False
                                 }
 
         self.animations = {
@@ -298,7 +298,7 @@ class Felem(Units):
                                                          "health": 35, "speed": 6},
                                 "current_health": 35, "current_count": count, "current_arrows": 0,
                                 "is_double": False, "is_shooter": False, "is_flyer": False, "is_jumper": False,
-                                "is_not_answer": False
+                                "is": "elemental", "is_not_answer": False
                                 }
 
         self.animations = {
@@ -336,7 +336,7 @@ class Icee(Units):
                                                          "health": 30, "speed": 6},
                                 "current_health": 30, "current_count": count, "current_arrows": 24,
                                 "is_double": True, "is_shooter": True, "is_flyer": False, "is_jumper": False,
-                                "is_not_answer": False
+                                "is": "elemental", "is_not_answer": False, "is_melee_penalty": True
                                 }
 
         self.animations = {
@@ -378,7 +378,7 @@ class Welem(Units):
                                                          "health": 30, "speed": 5},
                                 "current_health": 30, "current_count": count, "current_arrows": 0,
                                 "is_double": True, "is_shooter": False, "is_flyer": False, "is_jumper": False,
-                                "is_not_answer": False
+                                "is": "elemental", "is_not_answer": False
                                 }
 
         self.animations = {
@@ -416,7 +416,7 @@ class Storm(Units):
                                                          "health": 25, "speed": 8},
                                 "current_health": 25, "current_count": count, "current_arrows": 24,
                                 "is_double": False, "is_shooter": True, "is_flyer": False, "is_jumper": False,
-                                "is_not_answer": False
+                                "is": "elemental", "is_not_answer": False, "is_melee_penalty": True
                                 }
 
         self.animations = {
@@ -458,7 +458,7 @@ class Aelem(Units):
                                                          "health": 25, "speed": 7},
                                 "current_health": 25, "current_count": count, "current_arrows": 0,
                                 "is_double": False, "is_shooter": False, "is_flyer": False, "is_jumper": False,
-                                "is_not_answer": False
+                                "is": "elemental", "is_not_answer": False
                                 }
 
         self.animations = {
@@ -496,7 +496,7 @@ class Sprit(Units):
                                                          "health": 3, "speed": 9},
                                 "current_health": 3, "current_count": count, "current_arrows": 0,
                                 "is_double": False, "is_shooter": False, "is_flyer": True, "is_jumper": False,
-                                "is_not_answer": True
+                                "is": "alive", "is_not_answer": True
                                 }
 
         self.animations = {
@@ -529,7 +529,7 @@ class Pixie(Units):
                                                          "health": 3, "speed": 7},
                                 "current_health": 3, "current_count": count, "current_arrows": 0,
                                 "is_double": False, "is_shooter": False, "is_flyer": True, "is_jumper": False,
-                                "is_not_answer": False
+                                "is": "alive", "is_not_answer": False
                                 }
 
         self.animations = {

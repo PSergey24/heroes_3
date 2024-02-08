@@ -14,7 +14,7 @@ class Gtita(Units):
                                                          "health": 300, "speed": 11},
                                 "current_health": 300, "current_count": count, "current_arrows": 24,
                                 "is_double": False, "is_shooter": True, "is_flyer": False, "is_jumper": False,
-                                "is_not_answer": False
+                                "is": "alive", "is_not_answer": False, "is_melee_penalty": False
                                 }
 
         self.animations = {
@@ -38,8 +38,6 @@ class Gtita(Units):
         self.init()
 
     # todo: Mind Control Immunity – The unit is immune to mind-affecting spells.
-    # todo: Hatred of Black Dragons => +50% additional attack damage.
-    # todo: No penalty - fight in hand-to-hand combat at full strength.
 
 
 class Ltita(Units):
@@ -54,7 +52,7 @@ class Ltita(Units):
                                                          "health": 150, "speed": 7},
                                 "current_health": 150, "current_count": count, "current_arrows": 0,
                                 "is_double": False, "is_shooter": False, "is_flyer": False, "is_jumper": False,
-                                "is_not_answer": False
+                                "is": "alive", "is_not_answer": False
                                 }
 
         self.animations = {
@@ -89,7 +87,7 @@ class Nagag(Units):
                                                          "health": 110, "speed": 7},
                                 "current_health": 110, "current_count": count, "current_arrows": 0,
                                 "is_double": True, "is_shooter": False, "is_flyer": False, "is_jumper": False,
-                                "is_not_answer": True
+                                "is": "alive", "is_not_answer": True
                                 }
 
         self.animations = {
@@ -122,7 +120,7 @@ class Naga(Units):
                                                          "health": 110, "speed": 5},
                                 "current_health": 110, "current_count": count, "current_arrows": 0,
                                 "is_double": True, "is_shooter": False, "is_flyer": False, "is_jumper": False,
-                                "is_not_answer": True
+                                "is": "alive", "is_not_answer": True
                                 }
 
         self.animations = {
@@ -155,7 +153,7 @@ class Sulta(Units):
                                                          "health": 40, "speed": 11},
                                 "current_health": 40, "current_count": count, "current_arrows": 0,
                                 "is_double": False, "is_shooter": False, "is_flyer": True, "is_jumper": False,
-                                "is_not_answer": False
+                                "is": "alive", "is_not_answer": False
                                 }
 
         self.animations = {
@@ -175,7 +173,6 @@ class Sulta(Units):
 
         self.init()
 
-    # todo: Hatred of Efreets and Efreet Sultans => +50% additional damage when attacking and counterattacking.
     # todo: 3 times per battle, the High Djinn can cast a random advanced buff spell on the target friendly unit.
 
 
@@ -191,7 +188,7 @@ class Genie(Units):
                                                          "health": 40, "speed": 7},
                                 "current_health": 40, "current_count": count, "current_arrows": 0,
                                 "is_double": False, "is_shooter": False, "is_flyer": True, "is_jumper": False,
-                                "is_not_answer": False
+                                "is": "alive", "is_not_answer": False
                                 }
 
         self.animations = {
@@ -211,8 +208,6 @@ class Genie(Units):
 
         self.init()
 
-    # todo: Hatred of Efreets and Efreet Sultans => +50% additional damage when attacking and counterattacking.
-
 
 class Amage(Units):
 
@@ -226,7 +221,7 @@ class Amage(Units):
                                                          "health": 30, "speed": 7},
                                 "current_health": 30, "current_count": count, "current_arrows": 24,
                                 "is_double": False, "is_shooter": True, "is_flyer": False, "is_jumper": False,
-                                "is_not_answer": False
+                                "is": "alive", "is_not_answer": False, "is_melee_penalty": False
                                 }
 
         self.animations = {
@@ -249,7 +244,6 @@ class Amage(Units):
 
         self.init()
 
-    # todo: No penalty - fight in hand-to-hand combat at full strength.
     # todo: There is no penalty when shooting through fortress walls
     # todo: reduces the cost of all spells for heroes by 2 points.
 
@@ -266,7 +260,7 @@ class Mage(Units):
                                                          "health": 25, "speed": 5},
                                 "current_health": 25, "current_count": count, "current_arrows": 24,
                                 "is_double": False, "is_shooter": True, "is_flyer": False, "is_jumper": False,
-                                "is_not_answer": False
+                                "is": "alive", "is_not_answer": False, "is_melee_penalty": False
                                 }
 
         self.animations = {
@@ -289,7 +283,6 @@ class Mage(Units):
 
         self.init()
 
-    # todo: No penalty - fight in hand-to-hand combat at full strength.
     # todo: There is no penalty when shooting through fortress walls
     # todo: reduces the cost of all spells for heroes by 2 points.
 
@@ -306,7 +299,7 @@ class Igole(Units):
                                                          "health": 35, "speed": 5},
                                 "current_health": 35, "current_count": count, "current_arrows": 0,
                                 "is_double": False, "is_shooter": False, "is_flyer": False, "is_jumper": False,
-                                "is_not_answer": False
+                                "is": "golems", "is_not_answer": False
                                 }
 
         self.animations = {
@@ -342,7 +335,7 @@ class Sgole(Units):
                                                          "health": 30, "speed": 3},
                                 "current_health": 30, "current_count": count, "current_arrows": 0,
                                 "is_double": False, "is_shooter": False, "is_flyer": False, "is_jumper": False,
-                                "is_not_answer": False
+                                "is": "golems", "is_not_answer": False
                                 }
 
         self.animations = {
@@ -378,7 +371,7 @@ class Ogarg(Units):
                                                          "health": 16, "speed": 9},
                                 "current_health": 16, "current_count": count, "current_arrows": 0,
                                 "is_double": False, "is_shooter": False, "is_flyer": True, "is_jumper": False,
-                                "is_not_answer": False
+                                "is": "gargoyles", "is_not_answer": False
                                 }
 
         self.animations = {
@@ -413,7 +406,7 @@ class Gargo(Units):
                                                          "health": 16, "speed": 6},
                                 "current_health": 16, "current_count": count, "current_arrows": 0,
                                 "is_double": False, "is_shooter": False, "is_flyer": True, "is_jumper": False,
-                                "is_not_answer": False
+                                "is": "gargoyles", "is_not_answer": False
                                 }
 
         self.animations = {
@@ -448,7 +441,7 @@ class GremM(Units):
                                                          "health": 4, "speed": 5},
                                 "current_health": 4, "current_count": count, "current_arrows": 8,
                                 "is_double": False, "is_shooter": True, "is_flyer": False, "is_jumper": False,
-                                "is_not_answer": False
+                                "is": "alive", "is_not_answer": False, "is_melee_penalty": True
                                 }
 
         self.animations = {
@@ -484,7 +477,7 @@ class Grema(Units):
                                                          "health": 4, "speed": 4},
                                 "current_health": 4, "current_count": count, "current_arrows": 0,
                                 "is_double": False, "is_shooter": False, "is_flyer": False, "is_jumper": False,
-                                "is_not_answer": False
+                                "is": "alive", "is_not_answer": False
                                 }
 
         self.animations = {
