@@ -151,7 +151,7 @@ class Units:
             Objects.queue.handle_move()
             Objects.info_block.handle_move()
 
-        if "is_second_attack" in self.status and len(self.next_actions) > 0 and self.next_actions[0].find("attack") != -1:
+        if "is_second_attack" in self.status and len(self.next_actions) > 0 and self.next_actions[-1].find("attack") != -1:
             self.status["is_second_attack"] = not self.status["is_second_attack"]
         else:
             self.status["is_second_attack"] = False
@@ -161,7 +161,7 @@ class Units:
             Objects.queue.handle_move()
             Objects.info_block.handle_move()
 
-        if "is_second_shoot" in self.status and len(self.next_actions) > 0 and self.next_actions[0].find("shoot") != -1:
+        if "is_second_shoot" in self.status and len(self.next_actions) > 0 and self.next_actions[-1].find("shoot") != -1:
             self.status["is_second_shoot"] = not self.status["is_second_shoot"]
         else:
             self.status["is_second_shoot"] = False

@@ -160,3 +160,8 @@ class Field:
 
     def draw(self, screen):
         [item.draw(screen) for rows in self.hexagons for item in rows]
+
+    # AI methods:
+    def field_update(self):
+        self.update_default_hexagons()
+        self.update_active_hexagons()
