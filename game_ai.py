@@ -10,6 +10,7 @@ from modules.queue_ import Queue
 from modules.field import Field
 from modules.units import unit
 from modules.active_unit import ActiveUnit
+from modules.render.renderer import BattleRenderer
 
 
 class GameAI:
@@ -48,7 +49,8 @@ class GameAI:
 
         self.screen = pygame.display.set_mode(window_size)
         pygame.display.set_caption('Heroes III of might and magic')
-        self.bg = pygame.transform.scale(pygame.image.load(os.path.join("data/bg", "CmBkDrDd.bmp")), window_size)
+        self.renderer = BattleRenderer(self.screen)
+        self.renderer.load_background("CmBkDrDd.bmp")
 
     def create_game(self):
         self.create_workers()
@@ -111,11 +113,12 @@ class GameAI:
         States.is_animate = is_animate()
 
     def draw_game(self):
+        self.renderer.draw_background()
         self.draw_field()
         self.draw_units()
 
     def draw_field(self):
-        Objects.field.draw(self.screen)
+        self.renderer.draw_field(Objects.field)
 
     def draw_units(self):
         [item.draw(self.screen) for item in sorted(Objects.queue.dead_units + Objects.queue.sequence, key=lambda x: x.hex[0][0], reverse=False)]

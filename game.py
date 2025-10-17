@@ -9,6 +9,7 @@ from modules.damage_counter import DamageCounter
 from modules.cursor import Cursor
 from modules.queue_ import Queue
 from modules.field import Field
+from modules.render.renderer import BattleRenderer
 from modules.units import unit
 from modules.active_unit import ActiveUnit
 from modules.info_block import InfoBlock
@@ -18,11 +19,7 @@ class Game:
 
     def __init__(self):
         self.screen = None
-        self.bg = None
-
-        self.left_team = None
-        self.right_team = None
-
+        self.renderer = None
         self.init()
 
     def init(self):
@@ -33,7 +30,7 @@ class Game:
         run = True
 
         while run:
-            self.screen.blit(self.bg, (0, 0))
+            self.renderer.tick(60)
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -41,14 +38,12 @@ class Game:
 
                 if event.type == pygame.MOUSEMOTION and States.is_animate is False:
                     self.handle_motion()
-
                 if event.type == pygame.MOUSEBUTTONDOWN and States.is_animate is False:
                     self.handle_click()
 
+            self.update_frame()
             self.draw_game()
             pygame.display.update()
-
-            self.update_frame()
         pygame.quit()
 
     def create_window(self):
@@ -56,7 +51,9 @@ class Game:
 
         self.screen = pygame.display.set_mode(window_size)
         pygame.display.set_caption('Heroes III of might and magic')
-        self.bg = pygame.transform.scale(pygame.image.load(os.path.join("data/bg", "CmBkDrDd.bmp")), window_size)
+        self.renderer = BattleRenderer(self.screen)
+        self.renderer.load_background("CmBkDrDd.bmp")
+        self.renderer.on_unit_move_complete = self.on_unit_move_complete
 
     def create_game(self):
         self.create_workers()
@@ -106,6 +103,29 @@ class Game:
         Objects.cursor.handle_click()
         Objects.active_unit.handle_click()
 
+    def on_unit_move_complete(self):
+        pass
+
+    def draw_game(self):
+        self.renderer.draw_background()
+        self.draw_cursor()
+        self.draw_info_block()
+        self.draw_field()
+        self.draw_units()
+
+    @staticmethod
+    def draw_cursor():
+        Objects.cursor.draw()
+
+    def draw_field(self):
+        self.renderer.draw_field(Objects.field)
+
+    def draw_units(self):
+        self.renderer.draw_units(Objects.queue.dead_units + Objects.queue.sequence)
+
+    def update_animation_tick(self):
+        pass
+
     def update_frame(self):
         self.update_round_info()
         self.active_unit_update()
@@ -139,24 +159,7 @@ class Game:
         [unit_.update() for unit_ in Objects.queue.sequence + Objects.queue.dead_units]
         States.is_animate = is_animate()
 
-    def draw_game(self):
-        self.draw_cursor()
-        self.draw_info_block()
-        self.draw_field()
-        self.draw_units()
-
-    @staticmethod
-    def draw_cursor():
-        Objects.cursor.draw()
-
-    def draw_info_block(self):
-        Objects.info_block.draw(self.screen)
-
-    def draw_field(self):
-        Objects.field.draw(self.screen)
-
-    def draw_units(self):
-        [item.draw(self.screen) for item in sorted(Objects.queue.dead_units + Objects.queue.sequence, key=lambda x: x.hex[0][0], reverse=False)]
+    
 
 
 if __name__ == '__main__':

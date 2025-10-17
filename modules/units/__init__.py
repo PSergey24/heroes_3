@@ -1,3 +1,3 @@
-from .unit import unit
+from .registry import unit
 
 __all__ = [unit]

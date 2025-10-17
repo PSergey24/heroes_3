@@ -19,3 +19,17 @@
 
 #### -----
 #### Feel free to contact with me, if you have questions, suggestions or ideas related to this project, machine learning or game development
+
+## Установка окружения и зависимостей
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+```
+
+## Поезные команды
+
+```bash
+git checkout -b branch_name - создать и переключиться на новую ветку
+```

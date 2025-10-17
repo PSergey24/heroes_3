@@ -24,8 +24,18 @@ class Cursor:
 
         self.init()
 
+    # simple cache for cursor images to avoid disk I/O on each mouse move
+    _image_cache = {}
+
+    @classmethod
+    def _load_cached(cls, filename):
+        path = os.path.join("data/rcom/clean", filename)
+        if path not in cls._image_cache:
+            cls._image_cache[path] = pygame.image.load(path).convert_alpha()
+        return cls._image_cache[path]
+
     def init(self):
-        self.img = pygame.image.load(os.path.join(f"data/rcom/clean/Crcom000.png"))
+        self.img = self._load_cached("Crcom000.png")
         self.point_attack, self.whom_attack, self.direction_to_fire, self.direction_to_three_heads = None, None, None, None
         self.destination_point = None
         self.action = None
@@ -63,9 +73,9 @@ class Cursor:
 
     def update_image(self):
         if 0 <= self.offset[0] < Settings.n_rows and 0 <= self.offset[1] < Settings.n_columns and States.is_animate is False:
-            self.img = pygame.image.load(os.path.join(f"data/rcom/clean/Crcom009.png"))
+            self.img = self._load_cached("Crcom009.png")
             if Objects.active_unit.info.characteristics["is_flyer"]:
-                self.img = pygame.image.load(os.path.join(f"data/rcom/clean/Crcom012.png"))
+                self.img = self._load_cached("Crcom012.png")
 
             if Objects.active_unit.info.characteristics["is_double"]:
                 dist_l = Objects.tools.cube_distance(Objects.tools.offset2cube(Objects.active_unit.info.hex[0][0], Objects.active_unit.info.hex[0][1]), self.cube)
@@ -75,7 +85,7 @@ class Cursor:
                 distance = Objects.tools.cube_distance(Objects.tools.offset2cube(Objects.active_unit.info.hex[0][0], Objects.active_unit.info.hex[0][1]), self.cube)
 
             if (self.offset[0], self.offset[1]) not in Objects.active_unit.reachable_points:
-                self.img = pygame.image.load(os.path.join(f"data/rcom/clean/Crcom006.png"))
+                self.img = self._load_cached("Crcom006.png")
 
             is_double_back = False
             if Objects.active_unit.info.characteristics["is_double"]:
@@ -85,7 +95,7 @@ class Cursor:
                                   Objects.field.hexagons[self.offset[0]][self.offset[1] + 1].engaged is None)
 
             if Objects.field.hexagons[self.offset[0]][self.offset[1]].engaged is not None and Objects.field.hexagons[self.offset[0]][self.offset[1]].engaged.team == Objects.active_unit.info.team and not is_double_back:
-                self.img = pygame.image.load(os.path.join(f"data/rcom/clean/Crcom028.png"))
+                self.img = self._load_cached("Crcom028.png")
 
             if States.btn_shooter:
                 if Objects.field.hexagons[self.offset[0]][self.offset[1]].engaged is not None and Objects.field.hexagons[self.offset[0]][self.offset[1]].engaged.team != Objects.active_unit.info.team:
@@ -95,10 +105,10 @@ class Cursor:
                         self.point_attack = Objects.active_unit.info.hex[0]
                         if distance <= 10:
                             States.penalty_shooter = 1
-                            self.img = pygame.image.load(os.path.join(f"data/rcom/clean/Crcom023.png"))
+                            self.img = self._load_cached("Crcom023.png")
                         else:
                             States.penalty_shooter = 0.5
-                            self.img = pygame.image.load(os.path.join(f"data/rcom/clean/Crcom026.png"))
+                            self.img = self._load_cached("Crcom026.png")
             elif Objects.field.hexagons[self.offset[0]][self.offset[1]].engaged is not None and Objects.field.hexagons[self.offset[0]][self.offset[1]].engaged.team != Objects.active_unit.info.team:
                 if distance <= Objects.active_unit.info.characteristics["base_characteristics"]["speed"] + 1:
                     degree = self.get_degree()
@@ -198,30 +208,30 @@ class Cursor:
     def update_cursor_by_direction(self, direction):
         if direction == 0:
             self.direction_to_fire, self.direction_to_three_heads = 3, 3
-            self.img = pygame.image.load(os.path.join(f"data/rcom/clean/Crcom021.png"))
+            self.img = self._load_cached("Crcom021.png")
         if direction == 1:
             self.direction_to_fire, self.direction_to_three_heads = 4, 4
-            self.img = pygame.image.load(os.path.join(f"data/rcom/clean/Crcom020.png"))
+            self.img = self._load_cached("Crcom020.png")
         if (direction == 2 and not Objects.active_unit.info.characteristics["is_double"]) or (direction == 3 and Objects.active_unit.info.characteristics["is_double"]):
             self.direction_to_fire, self.direction_to_three_heads = 5, 5
-            self.img = pygame.image.load(os.path.join(f"data/rcom/clean/Crcom018.png"))
+            self.img = self._load_cached("Crcom018.png")
         if (direction == 3 and not Objects.active_unit.info.characteristics["is_double"]) or (direction == 4 and Objects.active_unit.info.characteristics["is_double"]):
             self.direction_to_fire, self.direction_to_three_heads = 0, 0
-            self.img = pygame.image.load(os.path.join(f"data/rcom/clean/Crcom017.png"))
+            self.img = self._load_cached("Crcom017.png")
         if (direction == 4 and not Objects.active_unit.info.characteristics["is_double"]) or (direction == 5 and Objects.active_unit.info.characteristics["is_double"]):
             self.direction_to_fire, self.direction_to_three_heads = 1, 1
-            self.img = pygame.image.load(os.path.join(f"data/rcom/clean/Crcom016.png"))
+            self.img = self._load_cached("Crcom016.png")
         if (direction == 5 and not Objects.active_unit.info.characteristics["is_double"]) or (direction == 7 and Objects.active_unit.info.characteristics["is_double"]):
             self.direction_to_fire, self.direction_to_three_heads = 2, 2
-            self.img = pygame.image.load(os.path.join(f"data/rcom/clean/Crcom022.png"))
+            self.img = self._load_cached("Crcom022.png")
         if direction == 2 and Objects.active_unit.info.characteristics["is_double"]:
             self.direction_to_fire = 4 if Objects.active_unit.info.team == 1 else 5
             self.direction_to_three_heads = 6
-            self.img = pygame.image.load(os.path.join(f"data/rcom/clean/Crcom019.png"))
+            self.img = self._load_cached("Crcom019.png")
         if direction == 6 and Objects.active_unit.info.characteristics["is_double"]:
             self.direction_to_fire = 2 if Objects.active_unit.info.team == 1 else 1
             self.direction_to_three_heads = 7
-            self.img = pygame.image.load(os.path.join(f"data/rcom/clean/Crcom015.png"))
+            self.img = self._load_cached("Crcom015.png")
 
     def get_point_attack(self, direction):
         if Objects.active_unit.info.characteristics["is_double"]:

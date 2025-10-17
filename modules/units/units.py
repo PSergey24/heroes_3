@@ -85,9 +85,14 @@ class Units:
 
     def get_surface(self, image):
         direction = False if self.team == 1 else True
-
-        item = pygame.image.load(os.path.join(f"data/units/{self.name}/clean/c{self.name}{image}.png"))
-        item = pygame.transform.scale(item, (self.image["x_size"], self.image["y_size"]))
+        path = os.path.join(f"data/units/{self.name}/clean/c{self.name}{image}.png")
+        try:
+            item = pygame.image.load(path).convert_alpha()
+            item = pygame.transform.scale(item, (self.image["x_size"], self.image["y_size"]))
+        except Exception:
+            # Fallback placeholder if sprite is missing in the dev environment
+            item = pygame.Surface((self.image["x_size"], self.image["y_size"]), pygame.SRCALPHA)
+            pygame.draw.rect(item, (200, 50, 50, 180), item.get_rect(), border_radius=6)
         item = pygame.transform.flip(item, direction, False)
         return item
 
